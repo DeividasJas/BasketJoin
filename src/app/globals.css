@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+*,
+::after,
+::before {
+  box-sizing: border-box;
+  /* background: hsla(0, 63%, 77%, 0.7);  */
+
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
