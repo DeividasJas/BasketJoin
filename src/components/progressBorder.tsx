@@ -8,7 +8,7 @@ export default function ProgressBorder({
   children: React.ReactNode;
 }) {
   const size = 67;
-  const thickness = 3;
+  const thickness = 2.5;
   const color = '#71717a';
   const trailColor = '#d6d6d6';
   const duration = 1.1;

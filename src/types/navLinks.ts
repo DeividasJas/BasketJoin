@@ -1,7 +1,3 @@
-const response = await fetch('/api');
-const isAuth: boolean = await response.json();
-console.log('Is user authenticated:', isAuth);
-
 export type Links = {
   label: string;
   href?: string;

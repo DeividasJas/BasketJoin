@@ -1,5 +1,5 @@
 'use client';
-import Header from './header';
+
 import { useMediaQuery } from 'react-responsive';
 
 export default function ProjectContainer({

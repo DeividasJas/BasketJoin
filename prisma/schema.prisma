@@ -15,30 +15,30 @@ generator client {
 
 model User {
   id                String             @id
-  email             String             @unique @default("")
+  email             String             @default("")
   familyName        String
   givenName         String
-  picture           String?
   username          String?
   phoneNumber       String?
-  createdAt         DateTime?           @default(now())
-  modifiedAt        DateTime?           @default(now())
+  picture           String?
+  createdAt         DateTime?          @default(now())
+  modifiedAt        DateTime?          @default(now())
   posts             Post[]
   gameRegistrations GameRegistration[]
 }
 
 model Game {
-  id                BigInt             @id @default(autoincrement())
-  gameDate          DateTime
+  id                Int                @id @default(autoincrement())
+  gameDate          DateTime           @unique
   createdAt         DateTime           @default(now())
-  modifiedAt        DateTime           @default(now())
+  modifiedAt        DateTime           @updatedAt
   gameRegistrations GameRegistration[]
 }
 
 model GameRegistration {
-  id         BigInt   @id @default(autoincrement())
+  id         String   @id @default(cuid())
   userId     String
-  gameId     BigInt
+  gameId     Int
   givenName  String
   familyName String
   email      String?

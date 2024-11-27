@@ -1,9 +1,9 @@
 import {
-  RegisterLink,
-  LoginLink,
   LogoutLink,
 } from '@kinde-oss/kinde-auth-nextjs/components';
 export default function Profile() {
+
+
   return (
     <>
       <div className='bg-zinc-800 px-2 py-6 rounded-md mt-10 flex flex-col place-items-center'>

@@ -1,12 +1,5 @@
 import Image from 'next/image';
-
-import {
-  RegisterLink,
-  LoginLink,
-} from '@kinde-oss/kinde-auth-nextjs/components';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
-
-import { getUsers } from '@/actions/actions';
 
 export default async function Home() {
   const { getUser, isAuthenticated } = getKindeServerSession();

@@ -44,3 +44,5 @@ next-env.d.ts
 stack.md
 
 notes.md
+
+prisma/migrations

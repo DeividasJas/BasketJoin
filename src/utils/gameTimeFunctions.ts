@@ -1,7 +1,9 @@
+
+
 export function getNextGamesDates(count: number = 4): Date[] {
   const nextGames: Date[] = [];
   const now = new Date();
-  
+
   // Find the next upcoming Wednesday at 10 PM
   const nextWednesday = new Date(now);
   nextWednesday.setDate(now.getDate() + ((2 - now.getDay() + 7) % 7)); // 3 represents Wednesday
@@ -15,7 +17,7 @@ export function getNextGamesDates(count: number = 4): Date[] {
   // Generate the next 'count' number of dates
   for (let i = 0; i < count; i++) {
     const gameDate = new Date(nextWednesday);
-    gameDate.setDate(nextWednesday.getDate() + (i * 7));
+    gameDate.setDate(nextWednesday.getDate() + i * 7);
     nextGames.push(gameDate);
   }
 
@@ -25,5 +27,43 @@ export function getNextGamesDates(count: number = 4): Date[] {
     return getNextGamesDates(count);
   }
 
+  // console.log(nextGames[0].toISOString());
+
+  const newGameDate = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/api/games', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ data: nextGames[0] }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      // console.log(data); // Log the response from the API
+    } catch (err) {
+      console.error('Error posting new game date:', err);
+    }
+  };
+
+  newGameDate();
+
   return nextGames;
 }
+
+export const latestGame = async () => {
+  const response = await fetch('/api/games', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  const gameData = await response.json();
+  // console.log('GAME DATA', gameData);
+  return gameData;
+};
