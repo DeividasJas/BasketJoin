@@ -1,5 +1,5 @@
 import { latestGameAndPlayers } from '@/actions/actions';
-import { GameRegistration, User, Game, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 
 export type KindeUser = {
   id: string;
@@ -10,10 +10,10 @@ export type KindeUser = {
   phone_number?: string;
 };
 
-export type Player = GameRegistration & {
-  user: User;
-  game: Game;
-};
+// export type Player = GameRegistration & {
+//   user: User;
+//   game: Game;
+// };
 
 export type GameAndPlayers = Prisma.PromiseReturnType<
   typeof latestGameAndPlayers
@@ -25,3 +25,9 @@ export type IsPlaying = Prisma.PromiseReturnType<
 export type LatestGame = Prisma.PromiseReturnType<
   typeof latestGameAndPlayers
 >['latestGame'];
+export type Player = Prisma.PromiseReturnType<
+  typeof latestGameAndPlayers
+>['participants'];
+
+
+export type SinglePlayer = NonNullable<Player>[number];

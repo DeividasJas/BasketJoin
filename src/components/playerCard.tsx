@@ -1,10 +1,9 @@
-import { Player } from '@/types/user';
-import { User } from '@prisma/client';
+import { SinglePlayer } from '@/types/user';
 import Image from 'next/image';
 
-export default function PlayerCard({ player }: { player: User }) {
+export default function PlayerCard({ player }: { player: SinglePlayer }) {
   // console.log(player);
-  
+
   return (
     <>
       <div className='flex flex-col place-items-center mx-4'>
@@ -27,7 +26,6 @@ export default function PlayerCard({ player }: { player: User }) {
         <h5 className='leading-none mt-2'>
           {player.givenName} {player.familyName}
         </h5>
-
       </div>
     </>
   );

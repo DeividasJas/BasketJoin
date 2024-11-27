@@ -2,21 +2,17 @@
 import { toast } from 'sonner';
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 import { redirect, usePathname } from 'next/navigation';
-import { latestGame } from '@/utils/gameTimeFunctions';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
 import { useState } from 'react';
-import { isPlaying } from '@/types/user';
-
-
-// import { KindeUser } from '@kinde-oss/kinde-auth-nextjs/types';
+import { IsPlaying } from '@/types/user';
 
 export default function RegistrationBtn({
-  setChange,
-  isActive,
+  setChange = () => {},  // Default no-op function
+  isActive = false,      // Default to false
 }: {
-  isActive: isPlaying;
-  setChange: React.Dispatch<React.SetStateAction<boolean>>;
+  setChange?: React.Dispatch<React.SetStateAction<boolean>>;
+  isActive?: IsPlaying;
 }) {
   const [isLoading, setIsLoading] = useState(false);
 
@@ -30,15 +26,13 @@ export default function RegistrationBtn({
     setIsLoading((prev: boolean) => !prev);
 
     const fetchUser = async () => {
-      const response = await fetch('/api/user', {
+        await fetch('/api/user', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ user }),
       });
-
-      const userData = await response.json();
     };
     fetchUser();
 
@@ -50,7 +44,6 @@ export default function RegistrationBtn({
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            // game: await latestGame(),
             user,
           }),
         });
@@ -75,22 +68,21 @@ export default function RegistrationBtn({
     };
     registrationResults();
   };
+
   return (
-    <>
-      <Button
-        className=' border-zinc-600 px-2 py-1 rounded-md border-2 w-full xs:w-fit hover:scale-105 animate-in'
-        disabled={isActive}
-        onClick={handleClick}
-      >
-        {isLoading ? (
-          <>
-            <Loader2 className='animate-spin' />
-            Please wait
-          </>
-        ) : (
-          <>Join Game</>
-        )}
-      </Button>
-    </>
+    <Button
+      className='border-zinc-600 px-2 py-1 rounded-md border-2 w-full xs:w-fit hover:scale-105 animate-in'
+      disabled={isActive}
+      onClick={handleClick}
+    >
+      {isLoading ? (
+        <>
+          <Loader2 className='animate-spin' />
+          Please wait
+        </>
+      ) : (
+        <>Join Game</>
+      )}
+    </Button>
   );
 }

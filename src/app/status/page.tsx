@@ -1,7 +1,6 @@
 import { latestGameAndPlayers } from '@/actions/actions';
 import NextGameCountdown from '@/components/nextGameCountdown';
 import PlayersList from '@/components/playersList';
-import dynamic from 'next/dynamic';
 
 import { Toaster } from 'sonner';
 
@@ -17,7 +16,7 @@ export default async function Status() {
         <h1 className='text-center text-3xl font-bold'>Game Status</h1>
         <NextGameCountdown></NextGameCountdown>
         <h3>
-          {gameAndPlayers.latestGame.gameDate
+          {gameAndPlayers?.latestGame?.gameDate
             .toLocaleString('lt-LT', {
               hour: '2-digit',
               minute: '2-digit',

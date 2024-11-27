@@ -5,14 +5,14 @@ import { useState } from 'react';
 import { cancelRegistration } from '@/actions/actions';
 import { toast } from 'sonner';
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
-import { isPlaying, LatestGame } from '@/types/user';
+import { IsPlaying, LatestGame } from '@/types/user';
 
 export function CancelRegistrationBtn({
   setChange,
   latestGame,
   isActive,
 }: {
-  isActive: isPlaying;
+  isActive: IsPlaying;
   setChange: React.Dispatch<React.SetStateAction<boolean>>;
   latestGame: LatestGame;
 }) {
@@ -30,7 +30,7 @@ export function CancelRegistrationBtn({
           gameId: latestGame.id,
         });
 
-        if (registrationResult.success) {
+        if (registrationResult?.success) {
           setChange((prev) => !prev);
           toast('Registration canceled 😭 ❌ 🏀 ', {
             style: {
@@ -41,6 +41,8 @@ export function CancelRegistrationBtn({
           toast.error('Registration not found');
         }
       } catch (error) {
+        console.error(error);
+        ;
         toast.error('An error occurred');
       } finally {
         setIsLoading(false);

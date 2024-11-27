@@ -3,15 +3,15 @@
 import { latestGameAndPlayers } from '@/actions/actions';
 import PlayerCard from './playerCard';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useState, useEffect, Suspense, Fragment } from 'react';
+import { useState, useEffect, Fragment } from 'react';
 import { CancelRegistrationBtn } from './cancelRegistrationBtn';
 import RegistrationBtn from './registrationBtn';
-import { LatestGame } from '@/types/user';
+import { GameAndPlayers, LatestGame } from '@/types/user';
 import { IsPlaying } from '@/types/user';
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
-  visible: (index) => ({
+  visible: (index: number) => ({
     opacity: 1,
     y: 0,
     transition: {
@@ -23,7 +23,7 @@ const itemVariants = {
 export default function PlayersList({
   gameAndPlayers,
 }: {
-  gameAndPlayers: gameAndPlayers;
+  gameAndPlayers: GameAndPlayers;
 }) {
   const [players, setPlayers] = useState(gameAndPlayers.participants);
   const [latestGame, setLatestGame] = useState<LatestGame>(

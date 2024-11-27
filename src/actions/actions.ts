@@ -24,10 +24,11 @@ export const cancelRegistration = async ({
     });
     // revalidatePath('/status')
     return { success: true, registration };
-  } catch (error) {
-    console.error(error.message);
-
-    return { success: false, message: 'Registration not found' };
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error((error as Error).message);
+      return { success: false, message: 'Registration not found' };
+    }
   }
 };
 

@@ -1,5 +1,3 @@
-
-
 export function getNextGamesDates(count: number = 4): Date[] {
   const nextGames: Date[] = [];
   const now = new Date();
@@ -43,7 +41,7 @@ export function getNextGamesDates(count: number = 4): Date[] {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
 
-      const data = await response.json();
+      // const data = await response.json();
       // console.log(data); // Log the response from the API
     } catch (err) {
       console.error('Error posting new game date:', err);
