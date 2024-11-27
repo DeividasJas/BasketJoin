@@ -29,7 +29,7 @@ export function getNextGamesDates(count: number = 4): Date[] {
 
   const newGameDate = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/games', {
+      const response = await fetch('/api/games', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
