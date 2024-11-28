@@ -174,8 +174,13 @@ export const registerUserToGame = async (user: KindeUser, gameId: number) => {
 export const registerToGame = async (user: KindeUser, gameId: number) => {
   try {
     const url = process.env.NEXT_PUBLIC_SITE_URL;
+<<<<<<< HEAD
     console.log('server', url);
 
+=======
+      console.log('server', url);
+    
+>>>>>>> 7a3ef3b (vercel fix)
     // Validate inputs before sending
     if (!user?.id || !gameId) {
       throw new Error('Missing required fields');
