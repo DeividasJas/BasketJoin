@@ -4,6 +4,7 @@ import { KindeUser } from '../types/user';
 // import { revalidatePath } from 'next/cache';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 
+
 const { getUser } = getKindeServerSession();
 
 export const cancelRegistration = async ({
@@ -210,12 +211,15 @@ export const registerUserToGame = async (user: KindeUser, gameId: number) => {
 // };
 export const registerToGame = async (user: KindeUser, gameId: number) => {
   try {
+    const url = process.env.SITE_URL
+    console.log('server url', url);
+    
     // Validate inputs before sending
     if (!user?.id || !gameId) {
       throw new Error('Missing required fields');
     }
 
-    const response = await fetch('/api/registration', {
+    const response = await fetch(`${url}/api/registration`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

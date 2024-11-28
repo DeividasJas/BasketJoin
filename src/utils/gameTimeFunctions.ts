@@ -29,7 +29,9 @@ export function getNextGamesDates(count: number = 4): Date[] {
 
   const newGameDate = async () => {
     try {
-      const response = await fetch('/api/games', {
+      const url = process.env.NEXT_PUBLIC_SITE_URL;
+      console.log('from GAME TIME url', url);
+      const response = await fetch(`${url}/api/games`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
