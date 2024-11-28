@@ -211,8 +211,8 @@ export const registerUserToGame = async (user: KindeUser, gameId: number) => {
 // };
 export const registerToGame = async (user: KindeUser, gameId: number) => {
   try {
-    const url = process.env.SITE_URL
-    console.log('server url', url);
+    const url = process.env.NEXT_PUBLIC_SITE_URL;
+      console.log('server', url);
     
     // Validate inputs before sending
     if (!user?.id || !gameId) {
