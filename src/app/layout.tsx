@@ -8,6 +8,7 @@ import { AuthProvider } from '@/utils/AuthProvide';
 // import ProjectContainer from '@/components/projectContainer';
 import Header from '@/components/header';
 import Footer from '@/components/footer';
+import { Toaster } from 'sonner';
 
 const roboto = Roboto({
   weight: ['400', '700'],
@@ -31,11 +32,12 @@ export default function RootLayout({
       <html lang='en'>
         <body
           // className={`${roboto.className} bg-gradient-to-t from-orange-200 via-orange-100 to-orange-100 flex flex-col min-h-screen max-w-[1100px] mx-auto`}
-          className={`${roboto.className} bg-gradient-to-t bg-zinc-900 flex flex-col min-h-screen max-w-[1100px] mx-auto text-zinc-300`}
+          className={`${roboto.className} bg-gradient-to-t bg-zinc-950 flex flex-col min-h-screen max-w-[1100px] mx-auto text-zinc-300`}
         >
           <Header />
           <main className='grow px-4 pt-2'>{children}</main>
           <Footer />
+          <Toaster richColors />
         </body>
       </html>
     </AuthProvider>

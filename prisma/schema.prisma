@@ -39,8 +39,8 @@ model GameRegistration {
   id         String   @id @default(cuid())
   userId     String
   gameId     Int
-  givenName  String
-  familyName String
+  givenName  String?
+  familyName String?
   email      String?
   createdAt  DateTime @default(now())
   modifiedAt DateTime @default(now())

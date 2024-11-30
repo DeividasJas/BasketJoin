@@ -34,7 +34,7 @@ export default async function Header() {
         />
       </Link>
       <nav>
-        <ul className='flex justify-around w-full py-2 border-t-2 border-zinc-800 rounded'>
+        <ul className='flex justify-around w-full py-2 border-t-2 border-zinc-900 rounded'>
           {getFilteredLinks().map((link) => (
             <NavLinkBox key={link.label} link={link} />
           ))}

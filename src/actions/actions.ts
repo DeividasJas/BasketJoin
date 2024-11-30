@@ -4,8 +4,18 @@ import { KindeUser } from '../types/user';
 // import { revalidatePath } from 'next/cache';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 
-
 const { getUser } = getKindeServerSession();
+
+export const getUserById = async (userId: string) => {
+  console.log('USERID', userId);
+
+  const user = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+  });
+  return { success: true, user };
+};
 
 export const cancelRegistration = async ({
   userId,
@@ -124,16 +134,6 @@ export const getLatestGame = async () => {
   return latestGame;
 };
 
-// 9999999999999999999999999999999
-export const testAction = async () => {
-  console.log('hello');
-
-  const test = await prisma.game.findMany();
-  console.log('ddddd', test);
-
-  return test;
-};
-
 export const getUsers = async () => {
   const users = await prisma.user.findMany();
   return users;
@@ -171,49 +171,11 @@ export const registerUserToGame = async (user: KindeUser, gameId: number) => {
   return newUser;
 };
 
-// export const getNextGame = async () => {
-//   // const nextGame = await prisma.game.findFirst({
-//   //   orderBy: {
-//   //     gameDate: 'asc',
-//   //   },
-//   // });
-//   // console.log(nextGame);
-//   const nextGame = await prisma.game.findFirst()
-//   console.log('what up');
-
-//   // return 'hehehe'
-//   return nextGame;
-// };
-
-// export async function getNextGame() {
-//   try {
-//     const nextGame = await prisma.game.findFirst(); // Perform your query here
-//     console.log('Next game:', nextGame);
-//     return nextGame;
-//   } catch (error) {
-//     console.error('Error fetching next game:', error);
-//     throw new Error('Failed to fetch next game.');
-//   }
-// }
-
-// export const registerToGame = async (user: KindeUser, gameId: number) => {
-//   const response = await  fetch('/api/registration', {
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/json',
-//     },
-//     body: JSON.stringify({ user, gameId }),
-//   })
-
-//   const data = response.json()
-//   console.log('IN ACCCCCTIONS',data);
-//   return response;
-// };
 export const registerToGame = async (user: KindeUser, gameId: number) => {
   try {
     const url = process.env.NEXT_PUBLIC_SITE_URL;
-      console.log('server', url);
-    
+    console.log('server', url);
+
     // Validate inputs before sending
     if (!user?.id || !gameId) {
       throw new Error('Missing required fields');

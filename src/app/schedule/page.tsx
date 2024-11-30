@@ -11,7 +11,7 @@ export default async function Schedule() {
   console.log(latestGame);
 
   return (
-    <div className='bg-zinc-800 px-2 py-6 rounded-md mt-10'>
+    <div className='bg-zinc-900 px-2 py-6 rounded-md mt-10'>
       <h1 className='text-center text-3xl font-bold'>Schedule</h1>
       <h3 className='my-4 text-lg ml-[20px]'>Next game starts in:</h3>
       

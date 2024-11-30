@@ -8,8 +8,8 @@ import { useState } from 'react';
 import { IsPlaying } from '@/types/user';
 
 export default function RegistrationBtn({
-  setChange = () => {},  // Default no-op function
-  isActive = false,      // Default to false
+  setChange = () => {},
+  isActive = false,
 }: {
   setChange?: React.Dispatch<React.SetStateAction<boolean>>;
   isActive?: IsPlaying;
@@ -18,34 +18,34 @@ export default function RegistrationBtn({
 
   const pathname = usePathname();
 
-  const { user, isLoading: kindeLoading } = useKindeBrowserClient();
+  // const { user, isLoading: kindeLoading } = useKindeBrowserClient();
 
   const handleClick = () => {
-    if (kindeLoading || !user) return;
+    // if (kindeLoading || !user) return;
 
     setIsLoading((prev: boolean) => !prev);
 
-    const fetchUser = async () => {
-        await fetch('/api/user', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ user }),
-      });
-    };
-    fetchUser();
+    // const fetchUser = async () => {
+    //     await fetch('/api/user', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify({ user }),
+    //   });
+    // };
+    // fetchUser();
 
     const registrationResults = async () => {
       try {
         const response = await fetch('/api/registration', {
-          method: 'POST',
+          method: 'GET',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({
-            user,
-          }),
+          // body: JSON.stringify({
+          //   user,
+          // }),
         });
 
         const registrationData = await response.json();

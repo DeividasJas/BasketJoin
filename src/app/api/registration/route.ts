@@ -1,47 +1,62 @@
 import { getLatestGame } from '@/actions/actions';
 import changeKindeUser from '@/utils/changeKindeUser';
 import { prisma } from '@/utils/prisma';
+import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { revalidatePath } from 'next/cache';
 import { NextResponse, NextRequest } from 'next/server';
 
-export async function POST(req: NextRequest) {
+export async function GET(req: NextRequest) {
   try {
-    const body = await req.json();
+    // const body = await req.json();
     const latestGame = await getLatestGame();
     console.log('LATEST GAME', latestGame);
 
-    if (!body.user || !latestGame)
+    if (!latestGame)
       return NextResponse.json(
         { error: 'Missing user or game data' },
         { status: 400 }
       );
 
-    console.log('BODYY', body);
+    // console.log('BODYY', body);
 
-    const goodUser = changeKindeUser(body.user);
+    // const goodUser = changeKindeUser(body.user);
+    const { getUser } = getKindeServerSession();
+    const user = await getUser();
+
+    const goodUser = await prisma.user.findUnique({
+      where: {
+        id: user?.id,
+      },
+    });
+
+    if (!goodUser)
+      return NextResponse.json(
+        { error: 'Missing user or game data' },
+        { status: 400 }
+      );
 
     const result = await prisma.$transaction(async (tx) => {
       // Upsert the user first
-      const user = await tx.user.upsert({
-        where: { id: goodUser.id },
-        update: {
-          email: goodUser.email || '',
-          familyName: goodUser.familyName,
-          givenName: goodUser.givenName,
-          picture: goodUser.picture,
-          username: goodUser.username || null,
-          phoneNumber: goodUser.phoneNumber || null,
-        },
-        create: {
-          id: goodUser.id,
-          email: goodUser.email || '',
-          familyName: goodUser.familyName,
-          givenName: goodUser.givenName,
-          picture: goodUser.picture,
-          username: goodUser.username || null,
-          phoneNumber: goodUser.phoneNumber || null,
-        },
-      });
+      // const user = await tx.user.upsert({
+      //   where: { id: goodUser.id },
+      //   update: {
+      //     email: goodUser.email || '',
+      //     familyName: goodUser.familyName,
+      //     givenName: goodUser.givenName,
+      //     picture: goodUser.picture,
+      //     username: goodUser.username || null,
+      //     phoneNumber: goodUser.phoneNumber || null,
+      //   },
+      //   create: {
+      //     id: goodUser.id,
+      //     email: goodUser.email || '',
+      //     familyName: goodUser.familyName,
+      //     givenName: goodUser.givenName,
+      //     picture: goodUser.picture,
+      //     username: goodUser.username || null,
+      //     phoneNumber: goodUser.phoneNumber || null,
+      //   },
+      // });
 
       // Then create the game registration
       const existingRegistration = await tx.gameRegistration.findUnique({
@@ -59,8 +74,8 @@ export async function POST(req: NextRequest) {
         const newRegistration = await tx.gameRegistration.create({
           data: {
             userId: user.id,
-            givenName: user.givenName,
-            familyName: user.familyName,
+            givenName: user.given_name ?? '',
+            familyName: user.family_name ?? '',
             email: user.email,
             gameId: latestGame.id, // Changed from body.game.id to latestGame.id
           },

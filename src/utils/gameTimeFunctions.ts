@@ -28,10 +28,12 @@ export function getNextGamesDates(count: number = 4): Date[] {
   // console.log(nextGames[0].toISOString());
 
   const newGameDate = async () => {
+    console.log('NEXT GAMES',nextGames[0]);
+    
     try {
       const url = process.env.NEXT_PUBLIC_SITE_URL;
       console.log('from GAME TIME url', url);
-      const response = await fetch(`${url}/api/games`, {
+      const response = await fetch(`http://localhost:3000/api/games`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -39,12 +41,11 @@ export function getNextGamesDates(count: number = 4): Date[] {
         body: JSON.stringify({ data: nextGames[0] }),
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
+console.log(response);
 
-      // const data = await response.json();
-      // console.log(data); // Log the response from the API
+
+      const data = await response.json();
+      console.log(data); // Log the response from the API
     } catch (err) {
       console.error('Error posting new game date:', err);
     }
