@@ -1,11 +1,11 @@
-'use client';
-import { Loader2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { useState } from 'react';
-import { cancelRegistration } from '@/actions/actions';
-import { toast } from 'sonner';
-import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
-import { IsPlaying, LatestGame } from '@/types/user';
+"use client";
+import { Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { cancelRegistration } from "@/actions/actions";
+import { toast } from "sonner";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+import { IsPlaying, LatestGame } from "@/types/user";
 
 export function CancelRegistrationBtn({
   setChange,
@@ -32,18 +32,17 @@ export function CancelRegistrationBtn({
 
         if (registrationResult?.success) {
           setChange((prev) => !prev);
-          toast('Registration canceled 😭 ❌ 🏀 ', {
+          toast("Registration canceled 😭 ❌ 🏀 ", {
             style: {
-              maxWidth: 'content',
+              maxWidth: "content",
             },
           });
         } else {
-          toast.error('Registration not found');
+          toast.error("Registration not found");
         }
       } catch (error) {
         console.error(error);
-        ;
-        toast.error('An error occurred');
+        toast.error("An error occurred");
       } finally {
         setIsLoading(false);
       }
@@ -56,13 +55,13 @@ export function CancelRegistrationBtn({
     <>
       <Button
         disabled={!isActive}
-        variant={isLoading ? 'default' : 'destructive'}
+        variant={isLoading ? "default" : "destructive"}
         onClick={handleClick}
-        className='px-2 py-1 rounded-md w-full animate-in'
+        className={`w-full rounded-md px-2 py-1 animate-in ${isLoading && "border"}`}
       >
         {isLoading ? (
           <>
-            <Loader2 className='animate-spin' />
+            <Loader2 className="animate-spin" />
             Please wait
           </>
         ) : (

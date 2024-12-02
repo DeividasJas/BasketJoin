@@ -1,3 +1,5 @@
+import { postNewGame } from "@/actions/actions";
+
 export function getNextGamesDates(count: number = 4): Date[] {
   const nextGames: Date[] = [];
   const now = new Date();
@@ -28,26 +30,22 @@ export function getNextGamesDates(count: number = 4): Date[] {
   // console.log(nextGames[0].toISOString());
 
   const newGameDate = async () => {
-    console.log('NEXT GAMES',nextGames[0]);
-    
     try {
-      const url = process.env.NEXT_PUBLIC_SITE_URL;
-      console.log('from GAME TIME url', url);
-      const response = await fetch(`http://localhost:3000/api/games`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ data: nextGames[0] }),
-      });
+      // const response = await fetch(`http://localhost:3000/api/games`, {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify({ data: nextGames[0]}),
+      // });
 
-console.log(response);
+      // const data = await response.json();
+      // console.log(data); // Log the response from the API
 
-
-      const data = await response.json();
-      console.log(data); // Log the response from the API
+      const response = await postNewGame(nextGames[0]);
+      console.log("NEW GAME RESPONSE", response);
     } catch (err) {
-      console.error('Error posting new game date:', err);
+      console.error("Error posting new game date:", err);
     }
   };
 
@@ -56,15 +54,15 @@ console.log(response);
   return nextGames;
 }
 
-export const latestGame = async () => {
-  const response = await fetch('/api/games', {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+// export const latestGame = async () => {
+//   const response = await fetch("/api/games", {
+//     method: "GET",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//   });
 
-  const gameData = await response.json();
-  // console.log('GAME DATA', gameData);
-  return gameData;
-};
+//   const gameData = await response.json();
+//   // console.log('GAME DATA', gameData);
+//   return gameData;
+// };

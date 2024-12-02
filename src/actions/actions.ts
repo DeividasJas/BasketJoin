@@ -1,13 +1,123 @@
-'use server';
-import { prisma } from '@/utils/prisma';
-import { KindeUser } from '../types/user';
+"use server";
+import { prisma } from "@/utils/prisma";
+import { KindeUser } from "../types/user";
 // import { revalidatePath } from 'next/cache';
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
 const { getUser } = getKindeServerSession();
 
+export const registerToGame = async () => {
+  try {
+    const kindeUser = await getUser();
+    const latestGame = await prisma.game.findFirst({
+      orderBy: {
+        gameDate: "desc",
+      },
+    });
+
+    if (!latestGame) return { success: false, message: "No games found" };
+
+    const existingRegistration = await prisma.gameRegistration.findFirst({
+      where: {
+        userId: kindeUser?.id,
+        gameId: latestGame?.id,
+      },
+    });
+
+    if (existingRegistration)
+      return {
+        success: true,
+        message: "You are already registered for this game",
+      };
+
+    const newRegistration = await prisma.gameRegistration.create({
+      data: {
+        userId: kindeUser?.id,
+        familyName: kindeUser?.family_name,
+        givenName: kindeUser?.given_name,
+        gameId: latestGame?.id,
+      },
+    });
+    if (!newRegistration)
+      return { success: false, message: "Registration failed" };
+
+    return {
+      success: true,
+      message: "Registration successful",
+      registration: newRegistration,
+    };
+  } catch (error) {
+    console.error(error.message);
+    return { success: false, message: error.message };
+  }
+};
+
+export const postNewGame = async ({ date }: { date: Date }) => {
+  try {
+    const latestGame = await prisma.game.findFirst({
+      orderBy: {
+        gameDate: "desc",
+      },
+    });
+
+    if (!latestGame) return { success: false, message: "No games found" };
+
+    if (latestGame?.gameDate < date) {
+      const newGame = await prisma.game.create({
+        data: {
+          gameDate: date,
+        },
+      });
+
+      if (newGame)
+        return { success: true, message: "Game successfully created", newGame };
+    }
+
+    return { success: false, message: "Game already exists" };
+  } catch (error) {
+    console.error(error.message);
+  }
+};
+
+export const addNewUser = async () => {
+  try {
+    const kindeUser = await getUser();
+
+    if (!kindeUser) return { success: false, message: "User not found" };
+
+    //   //   Check or create user with memoization
+    const user = await prisma.user.upsert({
+      where: {
+        id: kindeUser.id,
+      },
+      update: {
+        email: kindeUser.email || "",
+        familyName: kindeUser.family_name || "",
+        givenName: kindeUser.given_name || "",
+        picture: kindeUser.picture,
+        username: kindeUser.username,
+        phoneNumber: kindeUser.phone_number,
+      },
+      create: {
+        id: kindeUser.id,
+        email: kindeUser.email || "",
+        familyName: kindeUser.family_name || "",
+        givenName: kindeUser.given_name || "",
+        picture: kindeUser.picture,
+        username: kindeUser.username,
+        phoneNumber: kindeUser.phone_number,
+      },
+    });
+
+    return { success: true, user, message: "User created successfully" };
+  } catch (error) {
+    console.error(error);
+    return { success: false, message: error.message };
+  }
+};
+
 export const getUserById = async (userId: string) => {
-  console.log('USERID', userId);
+  console.log("USERID", userId);
 
   const user = await prisma.user.findUnique({
     where: {
@@ -38,7 +148,7 @@ export const cancelRegistration = async ({
   } catch (error: unknown) {
     if (error instanceof Error) {
       console.error((error as Error).message);
-      return { success: false, message: 'Registration not found' };
+      return { success: false, message: "Registration not found" };
     }
   }
 };
@@ -48,7 +158,7 @@ export const latestGameAndPlayers = async () => {
     // Find the latest game with full details
     const latestGame = await prisma.game.findFirst({
       orderBy: {
-        id: 'desc', // Changed to 'desc' to get the most recent game
+        id: "desc", // Changed to 'desc' to get the most recent game
       },
       include: {
         // Include related game registrations with user details
@@ -70,7 +180,7 @@ export const latestGameAndPlayers = async () => {
           },
           // Optional: Add ordering for registrations if needed
           orderBy: {
-            createdAt: 'asc',
+            createdAt: "asc",
           },
         },
       },
@@ -80,7 +190,7 @@ export const latestGameAndPlayers = async () => {
     if (!latestGame) {
       return {
         success: false,
-        message: 'No games found',
+        message: "No games found",
         latestGame: null,
         participants: [],
       };
@@ -98,21 +208,21 @@ export const latestGameAndPlayers = async () => {
         // Add any other game details you want to include
       },
       participants: latestGame.gameRegistrations.map(
-        (registration) => registration.user
+        (registration) => registration.user,
         // registrationDetails: {
         //   registeredAt: registration.createdAt,
         //   // Include any additional registration-specific details
         // },d
       ),
       isActive: latestGame.gameRegistrations.some(
-        (registration) => registration.user.id === user?.id
+        (registration) => registration.user.id === user?.id,
       ),
     };
   } catch (error) {
-    console.error('Error fetching latest game:', error);
+    console.error("Error fetching latest game:", error);
     return {
       success: false,
-      message: 'Error fetching game details',
+      message: "Error fetching game details",
       latestGame: null,
       participants: [],
     };
@@ -127,92 +237,9 @@ export const getLatestGame = async () => {
       gameRegistrations: true,
     },
     orderBy: {
-      gameDate: 'desc',
+      gameDate: "desc",
     },
   });
-  if (!latestGame || !latestGame.id) return false;
-  return latestGame;
-};
-
-export const getUsers = async () => {
-  const users = await prisma.user.findMany();
-  return users;
-};
-
-export const registerUser = async (user: KindeUser) => {
-  console.log(user);
-
-  const newUser = await prisma.user.create({
-    data: {
-      id: user.id,
-      email: user.email,
-      familyName: user.family_name,
-      givenName: user.given_name,
-      picture: user.picture,
-      // username: user.username,
-      phoneNumber: user.phone_number,
-    },
-  });
-  // console.log(newUser);
-  return newUser;
-};
-
-export const registerUserToGame = async (user: KindeUser, gameId: number) => {
-  const newUser = await prisma.gameRegistration.create({
-    data: {
-      userId: user.id,
-      gameId: gameId,
-      givenName: user.given_name,
-      familyName: user.family_name,
-      email: user.email,
-    },
-  });
-  console.log(newUser);
-  return newUser;
-};
-
-export const registerToGame = async (user: KindeUser, gameId: number) => {
-  try {
-    const url = process.env.NEXT_PUBLIC_SITE_URL;
-<<<<<<< HEAD
-    console.log('server', url);
-
-=======
-      console.log('server', url);
-    
->>>>>>> 7a3ef3b (vercel fix)
-    // Validate inputs before sending
-    if (!user?.id || !gameId) {
-      throw new Error('Missing required fields');
-    }
-
-    const response = await fetch(`${url}/api/registration`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        user: {
-          id: user.id,
-          // Only send necessary user data
-          email: user.email,
-        },
-        gameId: gameId,
-      }),
-      // Ensure fetch doesn't cache the response
-      cache: 'no-store',
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || 'Registration failed');
-    }
-
-    const data = await response.json();
-    console.log('Registration successful:', data);
-    return data;
-  } catch (error) {
-    console.error('Registration action error:', error);
-    throw error; // Re-throw to handle in the component
-  }
+  if (!latestGame || !latestGame.id) return { success: false };
+  return { success: true, latestGame };
 };

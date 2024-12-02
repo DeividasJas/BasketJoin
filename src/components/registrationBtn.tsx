@@ -1,11 +1,12 @@
-'use client';
-import { toast } from 'sonner';
-import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
-import { redirect, usePathname } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { Loader2 } from 'lucide-react';
-import { useState } from 'react';
-import { IsPlaying } from '@/types/user';
+"use client";
+import { toast } from "sonner";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+import { redirect, usePathname } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
+import { useState } from "react";
+import { IsPlaying } from "@/types/user";
+import { registerToGame } from "@/actions/actions";
 
 export default function RegistrationBtn({
   setChange = () => {},
@@ -20,64 +21,41 @@ export default function RegistrationBtn({
 
   // const { user, isLoading: kindeLoading } = useKindeBrowserClient();
 
-  const handleClick = () => {
+  const handleClick = async () => {
     // if (kindeLoading || !user) return;
 
     setIsLoading((prev: boolean) => !prev);
 
-    // const fetchUser = async () => {
-    //     await fetch('/api/user', {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify({ user }),
-    //   });
-    // };
-    // fetchUser();
+    const response = await registerToGame();
 
-    const registrationResults = async () => {
-      try {
-        const response = await fetch('/api/registration', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          // body: JSON.stringify({
-          //   user,
-          // }),
-        });
+    console.log("REGISTRATION", response);
 
-        const registrationData = await response.json();
 
-        if (registrationData.isRegistered) {
-          setIsLoading(false);
-          toast.success('Registered for a game 🏀');
-          if (pathname !== '/status') {
-            setTimeout(() => {
-              redirect('/status');
-            }, 1000);
-          } else {
-            setChange((prev) => !prev);
-          }
-          return registrationData;
-        }
-      } catch (error) {
-        console.log(error);
+    if(!response.success) {
+      setIsLoading(false);
+      toast.error(response.message);
+    } else {
+      setIsLoading(false);
+      if (pathname !== "/status") {
+        setTimeout(() => {
+          redirect("/status");
+        }, 1000);
+        toast.success(response.message);
+      } else {
+        setChange((prev) => !prev);
       }
-    };
-    registrationResults();
+    }
   };
 
   return (
     <Button
-      className='border-zinc-600 px-2 py-1 rounded-md border-2 w-full xs:w-fit hover:scale-105 animate-in'
+      className="w-full rounded-md border-2 border-zinc-600 px-2 py-1 animate-in hover:scale-105 xs:w-fit"
       disabled={isActive}
       onClick={handleClick}
     >
       {isLoading ? (
         <>
-          <Loader2 className='animate-spin' />
+          <Loader2 className="animate-spin" />
           Please wait
         </>
       ) : (

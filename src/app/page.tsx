@@ -1,16 +1,19 @@
-import Image from 'next/image';
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+
+import Image from "next/image";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { addNewUser } from "@/actions/actions";
+import { toast } from "sonner";
 
 export default async function Home() {
   const { getUser, isAuthenticated } = getKindeServerSession();
   const user = await getUser();
   const isauthenticated = await isAuthenticated();
-  // console.log(isauthenticated, 1111);
 
-  // console.log(user);
+  
 
-  // const users = await getUsers();
-  // console.log(users);
+  const newUser = await addNewUser();
+
+  console.log(newUser);
 
   return (
     <>
@@ -26,11 +29,11 @@ export default async function Home() {
         </h1>
       )}
       <Image
-        src={'/sabonis.gif'}
-        width='0'
-        height='0'
-        alt='basketball'
-        className='mx-auto w-full sm:w-2/3 rounded-md'
+        src={"/sabonis.gif"}
+        width="0"
+        height="0"
+        alt="basketball"
+        className="mx-auto w-full rounded-md sm:w-2/3"
       />
     </>
   );
