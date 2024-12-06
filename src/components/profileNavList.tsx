@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 import { useEffect } from 'react';
 import { getUserById } from '@/actions/actions';
-import { useProfileContext } from '@/context/profileContext';
+// import { useProfileContext } from '@/context/profileContext';
 
 export default function ProfileNavList({ profileSections }) {
   const pathname = usePathname();
@@ -13,8 +13,8 @@ export default function ProfileNavList({ profileSections }) {
   const { getUser, isLoading } = useKindeBrowserClient();
   const kindeUser = getUser();
 
-  const { profile, setProfile } = useProfileContext();
-  console.log(profile);
+  // const { profile, setProfile } = useProfileContext();
+  // console.log(profile);
 
   useEffect(() => {
     // Wait until loading is false
@@ -34,7 +34,7 @@ export default function ProfileNavList({ profileSections }) {
         const profile = await getUserById(kindeUser.id);
         console.log('after prisma', profile);
         if (profile.success) {
-          setProfile(profile.user);
+          // setProfile(profile.user);
         }
       } catch (error) {
         console.error('Error fetching profile:', error);

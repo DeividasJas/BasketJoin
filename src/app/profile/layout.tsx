@@ -1,6 +1,7 @@
-import type { Metadata } from 'next';
-import ProfileNavList from '@/components/profileNavList';
-import { ProfileProvider, useProfileContext } from '@/context/profileContext';
+import type { Metadata } from "next";
+import ProfileNavList from "@/components/profileNavList";
+import { ProfileProvider, useProfileContext } from "@/context/profileContext";
+import { ReactNode } from "react";
 
 // type ProfileSections = {
 //   general: string;
@@ -18,20 +19,20 @@ type ProfileSection = {
 
 const profileSections: ProfileSection[] = [
   {
-    title: 'General',
-    href: '/profile',
+    title: "Dashboard",
+    href: "/profile/dashboard",
   },
   {
-    title: 'Attendance',
-    href: '/profile/attendance',
+    title: "General",
+    href: "/profile",
   },
   {
-    title: 'Stats',
-    href: '/profile/stats',
+    title: "Stats",
+    href: "/profile/stats",
   },
   {
-    title: 'Settings',
-    href: '/profile/settings',
+    title: "Settings",
+    href: "/profile/settings",
   },
   // {
   //   title: 'Notifications',
@@ -40,17 +41,18 @@ const profileSections: ProfileSection[] = [
 ];
 export default function LayoutProfile({
   children,
+  stats,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
+  stats: ReactNode;
 }) {
   return (
     <>
-      <ProfileProvider>
-        <div className='bg-zinc-900 px-2 py-6 rounded-md mt-8 flex flex-col  place-items-center'>
-          <ProfileNavList profileSections={profileSections} />
-          {children}
-        </div>
-      </ProfileProvider>
+      <div className="mt-8 flex flex-col place-items-center rounded-md bg-zinc-900 px-2 py-6">
+        <ProfileNavList profileSections={profileSections} />
+        {children}
+        {/* <div className="border-4 border-red-500">{stats}</div> */}
+      </div>
     </>
   );
 }

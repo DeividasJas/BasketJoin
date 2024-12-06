@@ -2,7 +2,9 @@
   "name": "basket-join",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
+    "seed": "node --loader ts-node/esm src/scripts/seed.ts",
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",

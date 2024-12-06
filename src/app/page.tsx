@@ -1,29 +1,25 @@
-
 import Image from "next/image";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { addNewUser } from "@/actions/actions";
-import { toast } from "sonner";
+import { addNewUser, allUsers } from "@/actions/actions";
+import { getNextGamesDates } from "@/utils/gameTimeFunctions";
 
 export default async function Home() {
-  const { getUser, isAuthenticated } = getKindeServerSession();
+  const { getUser, isAuthenticated: isAuth } = getKindeServerSession();
   const user = await getUser();
-  const isauthenticated = await isAuthenticated();
-
-  
+  const isAuthenticated = await isAuth();
 
   const newUser = await addNewUser();
-
   console.log(newUser);
+
+
+  getNextGamesDates()
+
+  const users =await allUsers()
+console.log(users);
 
   return (
     <>
-      {/* <LoginLink className=' m-2 px-2 py-1 rounded-sm border-4 font-semibold max-w-[50px] max-h-[50px] '>
-        Sign in
-      </LoginLink>
-      <RegisterLink className=' m-2 px-2 py-1 rounded-sm border-4 font-semibold max-w-[50px] max-h-[50px] '>
-        Sign up
-      </RegisterLink> */}
-      {isauthenticated && (
+      {isAuthenticated && (
         <h1>
           Welcome back {user.given_name} {user.family_name}
         </h1>

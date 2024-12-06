@@ -6,6 +6,57 @@ import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
 const { getUser } = getKindeServerSession();
 
+const kindeUser = await getUser();
+
+export const allUsers = async () => {
+  try {
+    const users = await prisma.user.findMany();
+    if (!users) return { success: false, message: "No users found" };
+    return { success: true, users };
+  } catch (error) {
+    console.error(error.message);
+    return { success: false, message: error.message };
+  }
+};
+
+export const getLastTenGames = async () => {
+  try {
+    const lastTenGames = await prisma.game.findMany({
+      take: 10,
+      orderBy: {
+        createdAt: "asc",
+      },
+      // include: {
+      //   gameRegistrations: true,
+      // },
+    });
+    if (!lastTenGames) return { success: false, message: "No games found" };
+    return { success: true, lastTenGames };
+  } catch (error) {
+    console.error(error.message);
+    return { success: false, message: error.message };
+  }
+};
+export const getAllUserGames = async () => {
+  try {
+    const userPlayedGames = await prisma.gameRegistration.findMany({
+      where: {
+        userId: kindeUser?.id,
+      },
+      include: {
+        game: true,
+      },
+    });
+
+    if (!userPlayedGames) return { success: false, message: "No games found" };
+
+    return { success: true, userPlayedGames };
+  } catch (error) {
+    console.error(error.message);
+    return { success: false, message: error.message };
+  }
+};
+
 export const registerToGame = async () => {
   try {
     const kindeUser = await getUser();
@@ -52,30 +103,32 @@ export const registerToGame = async () => {
   }
 };
 
-export const postNewGame = async ({ date }: { date: Date }) => {
+export const postNewGame = async (date: Date) => {
   try {
+    const lithuanianDate = new Date(
+      date.toLocaleString("en-US", { timeZone: "Europe/Vilnius" }),
+    );
+
     const latestGame = await prisma.game.findFirst({
-      orderBy: {
-        gameDate: "desc",
-      },
+      orderBy: { gameDate: "desc" },
     });
 
-    if (!latestGame) return { success: false, message: "No games found" };
-
-    if (latestGame?.gameDate < date) {
+    if (!latestGame || latestGame.gameDate < lithuanianDate) {
       const newGame = await prisma.game.create({
-        data: {
-          gameDate: date,
-        },
+        data: { gameDate: lithuanianDate },
       });
 
-      if (newGame)
-        return { success: true, message: "Game successfully created", newGame };
+      return {
+        success: true,
+        message: "Game successfully created",
+        newGame,
+      };
     }
 
     return { success: false, message: "Game already exists" };
   } catch (error) {
     console.error(error.message);
+    return { success: false, message: error.message };
   }
 };
 
