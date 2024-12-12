@@ -8,14 +8,12 @@ export default async function Home() {
   const user = await getUser();
   const isAuthenticated = await isAuth();
 
-  const newUser = await addNewUser();
-  console.log(newUser);
+  // const newUser = await addNewUser();
+  // console.log(newUser);
 
 
   getNextGamesDates()
 
-  const users =await allUsers()
-console.log(users);
 
   return (
     <>

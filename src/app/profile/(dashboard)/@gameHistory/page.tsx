@@ -9,8 +9,8 @@ export default async function ProfileDashboardGameHistoryParallel() {
   const userGames = await getAllUserGames();
   const lastTenGames = await getLastTenGames();
 
-  console.log(userGames);
-  console.log(lastTenGames);
+  // console.log(userGames);
+  // console.log(lastTenGames);
 
   await delay(1000);
 

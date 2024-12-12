@@ -3,21 +3,71 @@ import { prisma } from "@/utils/prisma";
 import { KindeUser } from "../types/user";
 // import { revalidatePath } from 'next/cache';
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { toast } from "sonner";
 
 const { getUser } = getKindeServerSession();
 
 const kindeUser = await getUser();
-
-export const allUsers = async () => {
+export const getCurrentUser = async () => {
   try {
-    const users = await prisma.user.findMany();
-    if (!users) return { success: false, message: "No users found" };
-    return { success: true, users };
-  } catch (error) {
+    const kindeUser = await getUser();
+    if (!kindeUser) return { success: false, message: "Kinde user not found" };
+
+    const currentUser = await prisma.user.findUnique({
+      where: {
+        id: kindeUser.id,
+      },
+    });
+    if (!currentUser) return { success: false, message: "User not found" };
+
+    return { success: true, currentUser };
+  } catch (error: any) {
     console.error(error.message);
     return { success: false, message: error.message };
   }
 };
+
+export const updateUserForm = async (formData: FormData) => {
+  try {
+    const kindeUser = await getUser();
+    const formDataObj = Object.fromEntries(formData);
+    console.log(formDataObj);
+
+    const updatedUser = await prisma.user.update({
+      where: {
+        id: kindeUser.id,
+      },
+      data: {
+        familyName: formDataObj.familyName,
+        givenName: formDataObj.givenName,
+        // email: formDataObj.email,
+        // picture: formDataObj.picture,
+        username: formDataObj.username,
+        phoneNumber: formDataObj.phoneNumber,
+      },
+    });
+
+    if (!updatedUser)
+      return { success: false, message: "Could not update user" };
+
+    if (updatedUser) return toast.success("User updated successfully");
+    return { success: true, updatedUser, message: "User updated successfully" };
+  } catch (error: any) {
+    console.error(error.message);
+    return { success: false, message: error.message };
+  }
+};
+
+// export const allUsers = async () => {
+//   try {
+//     const users = await prisma.user.findMany();
+//     if (!users) return { success: false, message: "No users found" };
+//     return { success: true, users };
+//   } catch (error) {
+//     console.error(error.message);
+//     return { success: false, message: error.message };
+//   }
+// };
 
 export const getLastTenGames = async () => {
   try {
@@ -170,7 +220,7 @@ export const addNewUser = async () => {
 };
 
 export const getUserById = async (userId: string) => {
-  console.log("USERID", userId);
+  // console.log("USERID", userId);
 
   const user = await prisma.user.findUnique({
     where: {
