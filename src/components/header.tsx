@@ -1,42 +1,40 @@
-import { navLinks } from '@/types/navLinks';
-import Link from 'next/link';
-import Image from 'next/image';
-import NavLinkBox from './navLinkBox';
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+"use client";
+import { navLinks } from "@/types/navLinks";
+import Link from "next/link";
+import Image from "next/image";
+import NavLinkBox from "./navLinkBox";
 
-// Create a separate async function to handle authentication
-function getAuthStatus() {
-  const { isAuthenticated: isAuthMethod } = getKindeServerSession();
-  return isAuthMethod();
-}
+export  default function Header({isAuthenticated}: {isAuthenticated: boolean}) {
+  // const { isAuthenticated: isAuthMethod } = getKindeServerSession();
 
-export default function Header() {
-  const isAuthenticated = getAuthStatus()
+  // const isAuthenticated = isAuthenticatedKindeServer();
+
+  // console.log(isAuthenticated);
 
   const getFilteredLinks = () => {
     return navLinks.filter((link) => {
-      if (link.label === 'Login' || link.label === 'Signup') {
+      if (link.label === "Login" || link.label === "Signup") {
         return !isAuthenticated;
       }
-      if (link.label === 'Profile') return isAuthenticated;
-      if (link.label === 'Logout') return isAuthenticated;
+      if (link.label === "Profile") return isAuthenticated;
+      if (link.label === "Logout") return isAuthenticated;
       return true;
     });
   };
 
   return (
-    <header className='order-last sm:order-first'>
-      <Link href='/'>
+    <header className="order-last sm:order-first">
+      <Link href="/">
         <Image
-          src={'/basketball.svg'}
-          width='40'
-          height='40'
-          alt='basketball'
-          className='m-3'
+          src={"/basketball.svg"}
+          width="40"
+          height="40"
+          alt="basketball"
+          className="m-3"
         />
       </Link>
       <nav>
-        <ul className='flex justify-around w-full py-2 border-t-2 border-zinc-900 rounded'>
+        <ul className="flex w-full justify-around rounded border-t-2 border-zinc-900 py-2">
           {getFilteredLinks().map((link) => (
             <NavLinkBox key={link.label} link={link} />
           ))}
