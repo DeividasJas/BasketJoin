@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { addNewUser, allUsers } from "@/actions/actions";
+import { addNewUser } from "@/actions/actions";
 import { getNextGamesDates } from "@/utils/gameTimeFunctions";
 
 export default async function Home() {
@@ -8,17 +8,15 @@ export default async function Home() {
   const user = await getUser();
   const isAuthenticated = await isAuth();
 
-  // const newUser = await addNewUser();
-  // console.log(newUser);
+  const newUser = await addNewUser();
+  console.log(newUser);
 
-
-  getNextGamesDates()
-
+  getNextGamesDates();
 
   return (
     <>
       {isAuthenticated && (
-        <h1>
+        <h1 className="my-2 text-center text-xl">
           Welcome back {user.given_name} {user.family_name}
         </h1>
       )}

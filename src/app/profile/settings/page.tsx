@@ -4,7 +4,7 @@ import { useProfileContext } from "@/context/profileContext";
 import { Settings } from "lucide-react";
 import EditProfileForm from "@/components/editProfileForm";
 
-export default function Page({ children }: { children: React.ReactNode }) {
+export default function Page() {
   const { user } = useProfileContext();
 
   return (
@@ -21,7 +21,6 @@ export default function Page({ children }: { children: React.ReactNode }) {
             <Settings className="" />
           </div>
         </div>
-        {/* {children} */}
         <EditProfileForm />
         <p>111</p>
         <LogoutBtn />

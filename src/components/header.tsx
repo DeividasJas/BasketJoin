@@ -4,12 +4,14 @@ import Image from 'next/image';
 import NavLinkBox from './navLinkBox';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 
-export default async function Header() {
+// Create a separate async function to handle authentication
+function getAuthStatus() {
   const { isAuthenticated: isAuthMethod } = getKindeServerSession();
+  return isAuthMethod();
+}
 
-  const isAuthenticated = await isAuthMethod();
-
-  // console.log(isAuthenticated);
+export default function Header() {
+  const isAuthenticated = getAuthStatus()
 
   const getFilteredLinks = () => {
     return navLinks.filter((link) => {

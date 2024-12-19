@@ -1,7 +1,5 @@
 "use server";
 import { prisma } from "@/utils/prisma";
-import { KindeUser } from "../types/user";
-// import { revalidatePath } from 'next/cache';
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { toast } from "sonner";
 
@@ -27,7 +25,7 @@ export const getCurrentUser = async () => {
   }
 };
 
-export const updateUserForm = async (formData: FormData) => {
+export const updateUserForm: any = async (formData: FormData) => {
   try {
     const kindeUser = await getUser();
     const formDataObj = Object.fromEntries(formData);
@@ -38,12 +36,12 @@ export const updateUserForm = async (formData: FormData) => {
         id: kindeUser.id,
       },
       data: {
-        familyName: formDataObj.familyName,
-        givenName: formDataObj.givenName,
+        familyName: formDataObj.familyName as string,
+        givenName: formDataObj.givenName as string,
         // email: formDataObj.email,
         // picture: formDataObj.picture,
-        username: formDataObj.username,
-        phoneNumber: formDataObj.phoneNumber,
+        username: formDataObj.username as string,
+        phoneNumber: formDataObj.phoneNumber as string,
       },
     });
 
@@ -63,7 +61,7 @@ export const updateUserForm = async (formData: FormData) => {
 //     const users = await prisma.user.findMany();
 //     if (!users) return { success: false, message: "No users found" };
 //     return { success: true, users };
-//   } catch (error) {
+//   } catch (error :any) {
 //     console.error(error.message);
 //     return { success: false, message: error.message };
 //   }
@@ -82,7 +80,7 @@ export const getLastTenGames = async () => {
     });
     if (!lastTenGames) return { success: false, message: "No games found" };
     return { success: true, lastTenGames };
-  } catch (error) {
+  } catch (error: any) {
     console.error(error.message);
     return { success: false, message: error.message };
   }
@@ -101,7 +99,7 @@ export const getAllUserGames = async () => {
     if (!userPlayedGames) return { success: false, message: "No games found" };
 
     return { success: true, userPlayedGames };
-  } catch (error) {
+  } catch (error: any) {
     console.error(error.message);
     return { success: false, message: error.message };
   }
@@ -147,7 +145,7 @@ export const registerToGame = async () => {
       message: "Registration successful",
       registration: newRegistration,
     };
-  } catch (error) {
+  } catch (error: any) {
     console.error(error.message);
     return { success: false, message: error.message };
   }
@@ -176,7 +174,7 @@ export const postNewGame = async (date: Date) => {
     }
 
     return { success: false, message: "Game already exists" };
-  } catch (error) {
+  } catch (error: any) {
     console.error(error.message);
     return { success: false, message: error.message };
   }
@@ -213,7 +211,7 @@ export const addNewUser = async () => {
     });
 
     return { success: true, user, message: "User created successfully" };
-  } catch (error) {
+  } catch (error: any) {
     console.error(error);
     return { success: false, message: error.message };
   }
@@ -321,7 +319,7 @@ export const latestGameAndPlayers = async () => {
         (registration) => registration.user.id === user?.id,
       ),
     };
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error fetching latest game:", error);
     return {
       success: false,

@@ -13,13 +13,15 @@ export default async function Schedule() {
       <h1 className="text-center text-3xl font-bold">Schedule</h1>
       <h3 className="my-4 ml-[20px] text-lg">Next game starts in:</h3>
 
-      <NextGameCountdown gameDate={latestGame.latestGame?.gameDate}/>
+      <NextGameCountdown gameDate={latestGame.latestGame?.gameDate} />
 
       <div className="ml-[20px] mt-4 flex place-items-center gap-2">
         <RegistrationBtn />
         {latestGame.success && (
           <p className="text-sm">
-            {12 - latestGame.latestGame?.gameRegistrations.length} Spots Left
+            {latestGame.latestGame &&
+              12 - latestGame.latestGame?.gameRegistrations.length}{" "}
+            Spots Left
           </p>
         )}
       </div>
