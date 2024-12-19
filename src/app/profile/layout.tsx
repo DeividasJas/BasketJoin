@@ -1,7 +1,5 @@
-import type { Metadata } from "next";
 import ProfileNavList from "@/components/profileNavList";
 import { ReactNode } from "react";
-import { getCurrentUser } from "@/actions/actions";
 import { ProfileProvider } from "@/context/profileContext";
 
 export default async function LayoutProfile({
@@ -9,8 +7,6 @@ export default async function LayoutProfile({
 }: {
   children: ReactNode;
 }) {
-  // const user = await getCurrentUser();
-
   return (
     <>
       <ProfileProvider>

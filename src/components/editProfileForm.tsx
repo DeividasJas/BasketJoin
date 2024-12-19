@@ -1,6 +1,6 @@
 "use client";
 import Form from "next/form";
-import { getCurrentUser, updateUserForm } from "@/actions/actions";
+import { updateUserForm } from "@/actions/actions";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,

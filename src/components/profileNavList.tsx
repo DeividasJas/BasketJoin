@@ -2,16 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
-import { useEffect } from "react";
-import { getUserById } from "@/actions/actions";
-// import { useProfileContext } from '@/context/profileContext';
 
 export default function ProfileNavList() {
   const pathname = usePathname();
-
-  // const { getUser, isLoading } = useKindeBrowserClient();
-  // const kindeUser = getUser();
 
   type ProfileSection = {
     title: string;
@@ -40,31 +33,6 @@ export default function ProfileNavList() {
     //   href: '/profile/notifications',
     // },
   ];
-
-  // useEffect(() => {
-  //   if (isLoading) {
-  //     console.log("Still loading...");
-  //     return;
-  //   }
-
-  //   if (!kindeUser) {
-  //     console.log("kindeUser is not available");
-  //     return;
-  //   }
-
-  //   const fetchProfile = async () => {
-  //     try {
-  //       const profile = await getUserById(kindeUser.id);
-  //       console.log("after prisma", profile);
-  //       if (profile.success) {
-  //         // setProfile(profile.user);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching profile:", error);
-  //     }
-  //   };
-  //   fetchProfile();
-  // }, [isLoading, kindeUser]); // Depend on isLoading and kindeUser
 
   return (
     <>

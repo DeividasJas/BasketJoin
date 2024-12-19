@@ -1,6 +1,5 @@
 "use client";
 import { toast } from "sonner";
-import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import { redirect, usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";

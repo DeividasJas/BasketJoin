@@ -1,10 +1,8 @@
 export default function ProfileDashboardLayout({
-  children,
   stats,
   profile,
   gameHistory,
 }: {
-  children: React.ReactNode;
   stats: React.ReactNode;
   profile: React.ReactNode;
   gameHistory: React.ReactNode;

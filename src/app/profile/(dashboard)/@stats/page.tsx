@@ -1,10 +1,7 @@
-import { Button } from "@/components/ui/button";
-
 import Image from "next/image";
 import Link from "next/link";
-import { HandCoins } from "lucide-react";
 
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+// const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export default async function ProfileDashboardStatsParallel() {
   // await delay(500);

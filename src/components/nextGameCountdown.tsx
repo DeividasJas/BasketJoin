@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import Countdown from "react-countdown";
 import { CountdownRendererProps } from "@/types/gameTimeTypes";
 import CountdownItem from "./countdownItem";
-import { getLatestGame } from "@/actions/actions";
 
 export default function NextGameCountdown({
   gameDate,
