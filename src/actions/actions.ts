@@ -1,7 +1,7 @@
 "use server";
 import { prisma } from "@/utils/prisma";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { toast } from "sonner";
+import { revalidatePath } from "next/cache";
 
 const { getUser } = getKindeServerSession();
 
@@ -47,8 +47,10 @@ export const updateUserForm: any = async (formData: FormData) => {
 
     if (!updatedUser)
       return { success: false, message: "Could not update user" };
+    revalidatePath("/profile");
+    console.log("revalidate");
 
-    if (updatedUser) return toast.success("User updated successfully");
+    // if (updatedUser) return toast.success("User updated successfully");
     return { success: true, updatedUser, message: "User updated successfully" };
   } catch (error: any) {
     console.error(error.message);
@@ -187,6 +189,16 @@ export const addNewUser = async () => {
     if (!kindeUser) return { success: false, message: "User not found" };
 
     //   //   Check or create user with memoization
+    const existingUser = await prisma.user.findUnique({
+      where: {
+        id: kindeUser.id,
+      },
+    });
+
+    if (existingUser) return { success: true, message: "User already exists" };
+
+    console.log("EXISTING USER", existingUser);
+
     const user = await prisma.user.upsert({
       where: {
         id: kindeUser.id,

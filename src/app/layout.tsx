@@ -40,7 +40,9 @@ export default async function RootLayout({
           {/* <Suspense fallback={<div>Loading...</div>}> */}
           <Header isAuthenticated={isAuth} />
           {/* </Suspense> */}
-          <main className="grow px-4 pt-2">{children}</main>
+          <main className="sm:pb- grow px-4 pb-[calc(4rem+env(safe-area-inset-bottom))] pt-2">
+            {children}
+          </main>
           <Footer />
           <Toaster richColors />
         </body>

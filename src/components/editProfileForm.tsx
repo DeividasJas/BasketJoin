@@ -16,16 +16,23 @@ import { Label } from "@/components/ui/label";
 import { useProfileContext } from "@/context/profileContext";
 
 export default function EditProfileForm() {
-  const { user } = useProfileContext();
-  // const user = await getCurrentUser();
+  const { user, updateUser } = useProfileContext();
 
-  // console.log(11111, user);
+  const handleSubmit: any = async (formData: FormData) => {
+    const response = await updateUserForm(formData);
+    if (response.success) {
+      // Update context with the updated user details
+      updateUser(response.updatedUser);
+    } else {
+      console.error(response.message);
+    }
+  };
 
   return (
     <>
       <Dialog>
         <DialogTrigger asChild>
-          <Button variant="outline" className="bg-zinc-500">
+          <Button className="mx-auto w-fit bg-zinc-700 hover:bg-zinc-700/90">
             Edit Profile
           </Button>
         </DialogTrigger>
@@ -37,7 +44,7 @@ export default function EditProfileForm() {
             </DialogDescription>
           </DialogHeader>
 
-          <Form action={updateUserForm}>
+          <Form action={handleSubmit}>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="name" className="text-right">

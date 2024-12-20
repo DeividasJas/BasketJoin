@@ -1,23 +1,33 @@
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { getCurrentUser } from "@/actions/actions";
 import { Settings } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
-// Simulate a delay function
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+// const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export default async function ProfileDashboardProfileParallel() {
-  const { getUser } = getKindeServerSession();
-  // Introduce a 5-second delay
-  await delay(500);
-  const user = await getUser();
-  console.log(user);
+  // await delay(500);
+  const userObj = await getCurrentUser();
+
+  if (!userObj.success) return <div>{userObj.message}</div>;
+
+  const user = userObj.currentUser;
 
   return (
     <div className="relative flex h-full w-full flex-col">
       <div className="flex flex-col items-center justify-center">
-        <p>{user?.given_name}</p>
-        <p>{user?.family_name}</p>
-        <p>username: {user?.username}</p>
+        {user?.picture && (
+          <Image
+            src={user?.picture}
+            width={100}
+            height={100}
+            alt="Player picture"
+            className="rounded-md"
+          />
+        )}
+        <p>{user?.givenName}</p>
+        <p>{user?.familyName}</p>
+        {user?.username && <p>{user?.username}</p>}
       </div>
 
       <Link

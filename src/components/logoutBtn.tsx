@@ -4,7 +4,7 @@ import { Button } from './ui/button';
 export default function LogoutBtn() {
   return (
     <>
-      <Button className='border-red-500 border-2 rounded-md px-2 py-1 w-fit'>
+      <Button variant={'destructive'} className='w-fit mt-20 mx-auto'>
         <LogoutLink>Logout</LogoutLink>
       </Button>
     </>

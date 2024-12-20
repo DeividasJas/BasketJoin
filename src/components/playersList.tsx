@@ -30,7 +30,7 @@ export default function PlayersList({
     gameAndPlayers.latestGame
   );
   const [isActive, setIsPlaying] = useState<IsPlaying>(gameAndPlayers.isActive);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  // const [isLoading, setIsLoading] = useState<boolean>(true);
   const [change, setChange] = useState(false);
 
   useEffect(() => {
@@ -48,13 +48,13 @@ export default function PlayersList({
       } catch (error) {
         console.error(error);
       } finally {
-        setIsLoading(false);
+        // setIsLoading(false);
       }
     };
     fetchData();
   }, [change]);
 
-  if (isLoading) return <p>Loading players...</p>;
+  // if (isLoading) return <p>Loading players...</p>;
   return (
     <>
       <motion.ul

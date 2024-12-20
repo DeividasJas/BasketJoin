@@ -6,8 +6,10 @@ import { getNextGamesDates } from "@/utils/gameTimeFunctions";
 export default async function Schedule() {
   const dates = getNextGamesDates();
   const latestGame = await getLatestGame();
-  console.log(latestGame);
-
+  // console.log(latestGame);
+  // const delay = (ms: number) =>
+  //   new Promise((resolve) => setTimeout(resolve, ms));
+  // await delay(10000);
   return (
     <div className="mt-10 rounded-md bg-zinc-900 px-2 py-6">
       <h1 className="text-center text-3xl font-bold">Schedule</h1>

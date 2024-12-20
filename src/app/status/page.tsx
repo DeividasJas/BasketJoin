@@ -7,7 +7,9 @@ export default async function Status() {
 
   const latestGame = await getLatestGame();
   // console.log("latest game", latestGame );
-
+  // const delay = (ms: number) =>
+  //   new Promise((resolve) => setTimeout(resolve, ms));
+  // await delay(1000);
   return (
     <>
       <div className="mx-auto mt-10 flex max-w-[900px] flex-col place-items-center rounded-md bg-zinc-900 px-2 py-6">

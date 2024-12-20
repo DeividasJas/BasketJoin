@@ -7,6 +7,7 @@ import { toast } from "sonner";
 interface MyContextType {
   user: User | null;
   setUser: (value: User | null) => void;
+  updateUser: (updatedUser: Partial<User>) => void;
 }
 
 const MyContext = createContext<MyContextType | undefined>(undefined);
@@ -18,6 +19,10 @@ export const ProfileProvider = ({
   children: React.ReactNode;
 }) => {
   const [user, setUser] = useState<User | null>(null);
+
+  const updateUser = (updatedUser: any) => {
+    setUser((prev) => ({ ...prev, ...updatedUser }));
+  };
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -37,7 +42,7 @@ export const ProfileProvider = ({
     fetchUser();
   }, []);
   return (
-    <MyContext.Provider value={{ user, setUser }}>
+    <MyContext.Provider value={{ user, setUser, updateUser }}>
       {children}
     </MyContext.Provider>
   );

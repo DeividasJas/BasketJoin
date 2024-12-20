@@ -25,13 +25,13 @@ export default function CountdownItem({
   return (
     <>
       {/* <ProgressBorder progress={progress}> */}
-        <div className='flex flex-col justify-center items-center  min-h-full w-[4.5rem] sm:w-20 bg-zinc-700 basis-1 py-3 max-w-24 aspect-square rounded-md'>
+      <div className="flex aspect-square min-h-full w-[4.5rem] max-w-24 basis-1 flex-col items-center justify-center rounded-md bg-zinc-700 py-3 sm:w-20">
         {/* <div className='flex flex-col justify-center items-center  min-h-full '> */}
-          <p className='text-lg leading-none'>{time}</p>
-          <p className='text-[0.8rem] leading-none my-[2px]'>
-            {time === 1 ? `${period}` : `${period}s`}
-          </p>
-        </div>
+        <p className="text-lg leading-none">{time}</p>
+        <p className="my-[2px] text-[0.8rem] leading-none">
+          {time === 1 ? `${period}` : `${period}s`}
+        </p>
+      </div>
       {/* </ProgressBorder> */}
     </>
   );

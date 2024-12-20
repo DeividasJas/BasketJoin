@@ -14,7 +14,7 @@ export default function ProfileNavList() {
   const profileSections: ProfileSection[] = [
     {
       title: "General",
-      href: "/profile/",
+      href: "/profile",
     },
     {
       title: "Attendance",
@@ -28,32 +28,27 @@ export default function ProfileNavList() {
       title: "Settings",
       href: "/profile/settings",
     },
-    // {
-    //   title: 'Notifications',
-    //   href: '/profile/notifications',
-    // },
   ];
 
   return (
-    <>
-      <nav>
-        <ul className="grid grid-cols-2 place-items-center gap-1 xs:grid-cols-4">
-          {profileSections.map((link) => (
-            <li
-              key={link.href}
-              className={`grid w-full place-items-center overflow-hidden rounded-md py-2 sm:py-2 ${
-                pathname === link.href
-                  ? "border border-orange-600 text-orange-700"
-                  : "bg-zinc-800"
-              }`}
-            >
-              <Link href={link.href} className="truncate">
-                {link.title}
-              </Link>
+    <nav className="w-full px-4">
+      <ul className="grid grid-cols-2 gap-3 xs:grid-cols-4">
+        {profileSections.map((link) => (
+          <Link
+            href={link.href}
+            key={link.href}
+            className={`group relative block w-full rounded-lg transition-all duration-200  ${
+              pathname === link.href
+                ? "border-2 border-orange-400 text-orange-400"
+                : "bg-zinc-800"
+            }`}
+          >
+            <li className="px-1 py-2 text-center text-sm font-medium  sm:text-base overflow-hidden">
+              {link.title}
             </li>
-          ))}
-        </ul>
-      </nav>
-    </>
+          </Link>
+        ))}
+      </ul>
+    </nav>
   );
 }
