@@ -3,10 +3,10 @@ export type Links = {
   href?: string;
 };
 export const navLinks: Links[] = [
-  {
-    label: 'About',
-    href: '/',
-  },
+  // {
+  //   label: 'About',
+  //   href: '/',
+  // },
   {
     label: 'Schedule',
     href: '/schedule',

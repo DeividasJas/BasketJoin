@@ -7,6 +7,7 @@ const { getUser } = getKindeServerSession();
 
 const kindeUser = await getUser();
 export const getCurrentUser = async () => {
+  
   try {
     const kindeUser = await getUser();
     if (!kindeUser) return { success: false, message: "Kinde user not found" };

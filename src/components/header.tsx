@@ -21,7 +21,7 @@ export default function Header({
   };
 
   return (
-    <header className="pb-safe fixed bottom-0 left-0 right-0 order-last bg-zinc-900 sm:relative sm:order-first sm:bg-transparent sm:pb-0">
+    <header className=" fixed bottom-0 left-0 right-0 order-last bg-zinc-900 sm:relative sm:order-first sm:bg-transparent sm:pb-0">
       <nav className="mx-auto max-w-[700px]">
         <ul className="flex items-center justify-around rounded border-zinc-900 py-2">
           <li>
