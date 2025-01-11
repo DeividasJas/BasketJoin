@@ -1,6 +1,8 @@
 import { getLatestGame, latestGameAndPlayers } from "@/actions/actions";
 import NextGameCountdown from "@/components/nextGameCountdown";
 import PlayersList from "@/components/playersList";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { redirect } from "next/navigation";
 
 export default async function Status() {
   const gameAndPlayers = await latestGameAndPlayers();
@@ -10,11 +12,22 @@ export default async function Status() {
   // const delay = (ms: number) =>
   //   new Promise((resolve) => setTimeout(resolve, ms));
   // await delay(1000);
+
+  const { isAuthenticated } = getKindeServerSession();
+
+  const isAuth = await isAuthenticated();
+
+  if (!isAuth) {
+    redirect("/api/auth/login");
+  }
+
   return (
     <>
       <div className="mx-auto mt-10 flex max-w-[900px] flex-col place-items-center rounded-md bg-zinc-900 px-2 py-6">
         <h1 className="mb-2 text-center text-3xl font-bold">Game Status</h1>
-        <NextGameCountdown gameDate={latestGame.latestGame?.gameDate}></NextGameCountdown>
+        <NextGameCountdown
+          gameDate={latestGame.latestGame?.gameDate}
+        ></NextGameCountdown>
         <div className="flex flex-col text-center xs:flex-row xs:gap-2">
           <h3 className="mt-4 text-lg font-bold">
             {gameAndPlayers?.latestGame?.gameDate

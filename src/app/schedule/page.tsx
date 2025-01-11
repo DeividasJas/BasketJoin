@@ -2,6 +2,8 @@ import { getLatestGame } from "@/actions/actions";
 import NextGameCountdown from "@/components/nextGameCountdown";
 import RegistrationBtn from "@/components/registrationBtn";
 import { getNextGamesDates } from "@/utils/gameTimeFunctions";
+// import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+// import { redirect } from "next/navigation";
 
 export default async function Schedule() {
   const dates = getNextGamesDates();
@@ -10,8 +12,17 @@ export default async function Schedule() {
   // const delay = (ms: number) =>
   //   new Promise((resolve) => setTimeout(resolve, ms));
   // await delay(10000);
+
+  // const { isAuthenticated } = getKindeServerSession();
+
+  // const isAuth = await isAuthenticated();
+
+  // if (!isAuth) {
+  //   redirect("/api/auth/login");
+  // }
+
   return (
-    <div className="mt-10 rounded-md bg-zinc-900 px-2 py-6">
+    <div className="mt-10 mx-auto max-w-[900px] rounded-md bg-zinc-900 px-2 py-6">
       <h1 className="text-center text-3xl font-bold">Schedule</h1>
       <h3 className="my-4 ml-[20px] text-lg">Next game starts in:</h3>
 

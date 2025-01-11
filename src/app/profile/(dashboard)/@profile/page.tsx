@@ -15,14 +15,14 @@ export default async function ProfileDashboardProfileParallel() {
 
   return (
     <div className="relative flex h-full w-full flex-col">
-      <div className="flex flex-col items-center justify-center">
+      <div className="flex h-full w-full flex-col items-center justify-center">
         {user?.picture && (
           <Image
             src={user?.picture}
             width={100}
             height={100}
             alt="Player picture"
-            className="rounded-md"
+            className="mb-2 rounded-md"
           />
         )}
         <p>{user?.givenName}</p>

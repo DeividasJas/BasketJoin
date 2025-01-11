@@ -37,13 +37,13 @@ export default function ProfileNavList() {
           <Link
             href={link.href}
             key={link.href}
-            className={`group relative block w-full rounded-lg transition-all duration-200  ${
+            className={`relative block w-full rounded-lg transition-all duration-200 ${
               pathname === link.href
-                ? "border-2 border-orange-400 text-orange-400"
+                ? "text-orange-400 outline outline-2 outline-orange-400"
                 : "bg-zinc-800"
             }`}
           >
-            <li className="px-1 py-2 text-center text-sm font-medium  sm:text-base overflow-hidden">
+            <li className="overflow-hidden px-1 py-2 text-center text-sm font-medium sm:text-base">
               {link.title}
             </li>
           </Link>

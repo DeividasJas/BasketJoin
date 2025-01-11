@@ -1,15 +1,26 @@
 import Image from "next/image";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { addNewUser } from "@/actions/actions";
 import { getNextGamesDates } from "@/utils/gameTimeFunctions";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
 export default async function Home() {
-  const { getUser, isAuthenticated: isAuth } = getKindeServerSession();
+  const {
+    getUser,
+    isAuthenticated: isAuth,
+    getRoles,
+  } = getKindeServerSession();
+  const roles = await getRoles();
+  console.log(roles, 111);
+
+  // const token = await getToken();
   const user = await getUser();
+
+  // console.log("user", user.role);
+
   const isAuthenticated = await isAuth();
 
   const newUser = await addNewUser();
-  console.log(newUser);
+  // console.log(newUser);
 
   getNextGamesDates();
 
@@ -22,10 +33,11 @@ export default async function Home() {
       )}
       <Image
         src={"/sabonis.gif"}
-        width="0"
-        height="0"
+        width="500"
+        height="500"
         alt="basketball"
-        className="mx-auto w-full rounded-md sm:w-2/3"
+        className="mx-auto rounded-md w-full sm:w-2/3 md:w-3/4"
+        sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
       />
     </>
   );
