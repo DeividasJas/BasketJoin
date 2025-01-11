@@ -10,7 +10,7 @@ export default async function Home() {
     getRoles,
   } = getKindeServerSession();
   const roles = await getRoles();
-  console.log(roles, 111);
+  console.log("Roles: ", roles);
 
   // const token = await getToken();
   const user = await getUser();
@@ -19,8 +19,7 @@ export default async function Home() {
 
   const isAuthenticated = await isAuth();
 
-  const newUser = await addNewUser();
-  // console.log(newUser);
+  addNewUser();
 
   getNextGamesDates();
 
@@ -36,7 +35,7 @@ export default async function Home() {
         width="500"
         height="500"
         alt="basketball"
-        className="mx-auto rounded-md w-full sm:w-2/3 md:w-3/4"
+        className="mx-auto w-full rounded-md sm:w-2/3 md:w-3/4"
         sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
       />
     </>
