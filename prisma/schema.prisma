@@ -1,65 +1,73 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  // provider  = env("DB_PROVIDER")
-  provider = "postgresql"
+  provider  = "postgresql"
   url       = env("DATABASE_URL")
-}
-        
-model User {
-  id                String             @id
-  email             String             @default("")
-  familyName        String
-  givenName         String
-  username          String?
-  phoneNumber       String?
-  picture           String?
-  createdAt         DateTime?          @default(now())
-  modifiedAt        DateTime?          @default(now())
-  posts             Post[]
-  gameRegistrations GameRegistration[]
+  directUrl = env("DIRECT_URL")
 }
 
-model Game {
-  id                Int                @id @default(autoincrement())
-  gameDate          DateTime           @unique
-  createdAt         DateTime           @default(now())
-  modifiedAt        DateTime           @updatedAt
-  gameRegistrations GameRegistration[]
+model Users {
+  id                 String               @id
+  email              String               @default("")
+  family_name        String
+  given_name         String
+  username           String?
+  phone_number       String?
+  picture            String?
+  created_at         DateTime             @default(now())
+  modified_at        DateTime?            @default(now())
+  posts              Post[]
+  game_registrations Game_registrations[]
 }
 
-model GameRegistration {
-  id         String   @id @default(cuid())
-  userId     String
-  gameId     Int
-  givenName  String?
-  familyName String?
-  email      String?
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @default(now())
+model Games {
+  id                 Int                  @id @default(autoincrement())
+  game_date          DateTime             @unique
+  created_at         DateTime             @default(now())
+  modified_at        DateTime             @updatedAt
+  location_id        Int
+  game_registrations Game_registrations[]
 
-  user User @relation(fields: [userId], references: [id])
-  game Game @relation(fields: [gameId], references: [id])
+  location Locations @relation(fields: [location_id], references: [id])
+}
 
-  @@unique([userId, gameId])
+model Game_registrations {
+  id          String   @id @default(cuid())
+  user_id     String
+  game_id     Int
+  given_name  String?
+  family_name String?
+  email       String?
+  created_at  DateTime @default(now())
+  modified_at DateTime @default(now())
+
+  user Users @relation(fields: [user_id], references: [id])
+  game Games @relation(fields: [game_id], references: [id])
+
+  @@unique([user_id, game_id])
+}
+
+model Locations {
+  id          Int      @id @default(autoincrement())
+  name        String
+  address     String
+  city        String
+  description String?
+  created_at  DateTime @default(now())
+  modified_at DateTime @default(now())
+  price       Int?
+  Game        Games[]
 }
 
 model Post {
-  id         BigInt   @id @default(autoincrement())
-  userId     String
-  title      String
-  content    String
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @default(now())
+  id          BigInt   @id @default(autoincrement())
+  user_id     String
+  title       String
+  content     String
+  created_at  DateTime @default(now())
+  modified_at DateTime @default(now())
 
-  user User @relation(fields: [userId], references: [id])
+  user Users @relation(fields: [user_id], references: [id])
 }

@@ -25,8 +25,8 @@ export default async function ProfileDashboardProfileParallel() {
             className="mb-2 rounded-md"
           />
         )}
-        <p>{user?.givenName}</p>
-        <p>{user?.familyName}</p>
+        <p>{user?.given_name}</p>
+        <p>{user?.family_name}</p>
         {user?.username && <p>{user?.username}</p>}
       </div>
 

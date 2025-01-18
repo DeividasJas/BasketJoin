@@ -4,7 +4,7 @@ import { redirect, usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
-import { IsPlaying } from "@/types/user";
+
 import { registerToGame } from "@/actions/actions";
 
 export default function RegistrationBtn({
@@ -12,7 +12,7 @@ export default function RegistrationBtn({
   isActive = false,
 }: {
   setChange?: React.Dispatch<React.SetStateAction<boolean>>;
-  isActive?: IsPlaying;
+  isActive?: boolean;
 }) {
   const [isLoading, setIsLoading] = useState(false);
 
@@ -29,8 +29,7 @@ export default function RegistrationBtn({
 
     console.log("REGISTRATION", response);
 
-
-    if(!response.success) {
+    if (!response.success) {
       setIsLoading(false);
       toast.error(response.message);
     } else {
@@ -48,7 +47,9 @@ export default function RegistrationBtn({
 
   return (
     <Button
-      className="w-full rounded-md border-2 border-zinc-600 px-2 py-1 animate-in hover:scale-105 xs:w-fit"
+      // className="w-full rounded-md border-2 border-zinc-600 px-2 py-1 animate-in hover:scale-105 xs:w-fit"
+      className="px-2 py-1 text-zinc-100 outline outline-zinc-600 hover:scale-105"
+      // variant="default"
       disabled={isActive}
       onClick={handleClick}
     >

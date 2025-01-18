@@ -1,6 +1,6 @@
 "use client";
 import { getCurrentUser } from "@/actions/actions";
-import { User } from "@prisma/client";
+import { User } from "@/types/user";
 import { createContext, useState, useContext, useEffect } from "react";
 import { toast } from "sonner";
 
@@ -21,7 +21,7 @@ export const ProfileProvider = ({
   const [user, setUser] = useState<User | null>(null);
 
   const updateUser = (updatedUser: any) => {
-    setUser((prev) => ({ ...prev, ...updatedUser }));
+    setUser((prev: any) => ({ ...prev, ...updatedUser }));
   };
 
   useEffect(() => {

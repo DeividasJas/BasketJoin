@@ -1,27 +1,31 @@
 import Image from "next/image";
 import { addNewUser } from "@/actions/actions";
-import { getNextGamesDates } from "@/utils/gameTimeFunctions";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
 export default async function Home() {
   const {
     getUser,
     isAuthenticated: isAuth,
-    getRoles,
+    // getRoles,
   } = getKindeServerSession();
-  const roles = await getRoles();
-  console.log("Roles: ", roles);
+  // const roles = await getRoles();
+  // console.log("Roles: ", roles);
 
   // const token = await getToken();
   const user = await getUser();
-
-  // console.log("user", user.role);
-
   const isAuthenticated = await isAuth();
+  await addNewUser();
 
-  addNewUser();
+  // const allGames = await getAllGames();
 
-  getNextGamesDates();
+  // const { success, game, message } = await getLatestGameId();
+  // if (success) {
+  //   if (game) {
+  //     console.log(game.id);
+  //   }
+  // } else {
+  //   console.log(message);
+  // }
 
   return (
     <>

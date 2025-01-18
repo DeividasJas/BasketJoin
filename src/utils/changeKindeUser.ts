@@ -1,9 +1,9 @@
-import { KindeUser } from '@/types/user';
-import { User } from '@prisma/client';
+import { KindeUser } from "@/types/user";
+import { User } from "@/types/user";
 
-
-
-export default function changeKindeUser(user: KindeUser): Omit<User, 'posts' | 'gameRegistrations'> {
+export default function changeKindeUser(
+  user: KindeUser,
+): Omit<User, "posts" | "gameRegistrations"> {
   return {
     id: user.id,
     email: user.email,

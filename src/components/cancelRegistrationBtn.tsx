@@ -4,30 +4,29 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { cancelRegistration } from "@/actions/actions";
 import { toast } from "sonner";
-import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
-import { IsPlaying, LatestGame } from "@/types/user";
+import { Game } from "@/types/user";
 
 export function CancelRegistrationBtn({
   setChange,
-  latestGame,
+  game,
   isActive,
+  kindeUserId,
 }: {
-  isActive: IsPlaying;
+  isActive: boolean;
+  game: Game;
+  kindeUserId: string;
   setChange: React.Dispatch<React.SetStateAction<boolean>>;
-  latestGame: LatestGame;
 }) {
   const [isLoading, setIsLoading] = useState(false);
-  const { user } = useKindeBrowserClient();
 
-  if (!user || !latestGame) return null;
   const handleClick = () => {
     setIsLoading(true);
 
     const registration = async () => {
       try {
         const registrationResult = await cancelRegistration({
-          userId: user.id,
-          gameId: latestGame.id,
+          userId: kindeUserId,
+          gameId: game.game_id,
         });
 
         if (registrationResult?.success) {
@@ -57,7 +56,7 @@ export function CancelRegistrationBtn({
         disabled={!isActive}
         variant={isLoading ? "default" : "destructive"}
         onClick={handleClick}
-        className={`w-full rounded-md px-2 py-1 animate-in ${isLoading && "border"}`}
+        className={`w-full rounded-md px-2 py-1 animate-in ${isLoading && "border"} hover:scale-105`}
       >
         {isLoading ? (
           <>

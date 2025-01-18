@@ -53,7 +53,7 @@ export default function EditProfileForm() {
                 <Input
                   id="givenName"
                   name="givenName"
-                  defaultValue={user?.givenName}
+                  defaultValue={user?.given_name}
                   className="col-span-3"
                 />
               </div>
@@ -64,7 +64,7 @@ export default function EditProfileForm() {
                 <Input
                   id="familyName"
                   name="familyName"
-                  defaultValue={user?.familyName}
+                  defaultValue={user?.family_name}
                   className="col-span-3"
                 />
               </div>
@@ -86,7 +86,7 @@ export default function EditProfileForm() {
                 <Input
                   id="phoneNumber"
                   name="phoneNumber"
-                  defaultValue={user?.phoneNumber || ""}
+                  defaultValue={user?.phone_number || ""}
                   className="col-span-3"
                 />
               </div>

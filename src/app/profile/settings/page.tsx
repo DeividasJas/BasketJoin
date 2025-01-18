@@ -24,11 +24,11 @@ export default function Page() {
             />
           )}
           <section className="overflow-hidden">
-            <h4>Name: {user?.givenName}</h4>
-            <h4>Last name: {user?.familyName}</h4>
+            <h4>Name: {user?.given_name}</h4>
+            <h4>Last name: {user?.family_name}</h4>
             <h4>Username: {user?.username || "..."}</h4>
             <h4>Email: {user?.email || "..."}</h4>
-            <h4>Joined: {user?.createdAt?.toLocaleDateString()}</h4>
+            <h4>Joined: {user?.created_at?.toLocaleDateString()}</h4>
           </section>
         </div>
 

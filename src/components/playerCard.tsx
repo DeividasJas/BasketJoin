@@ -1,9 +1,6 @@
-import { SinglePlayer } from "@/types/user";
 import Image from "next/image";
 
-export default function PlayerCard({ player }: { player: SinglePlayer }) {
-  // console.log(player);
-
+export default function PlayerCard({ player }: { player: any }) {
   return (
     <>
       <div className="mx-4 flex flex-col place-items-center">
@@ -24,7 +21,7 @@ export default function PlayerCard({ player }: { player: SinglePlayer }) {
           />
         )}
         <h5 className="mt-2 leading-none">
-          {player.givenName} {player.familyName}
+          {player.given_name} {player.family_name}
         </h5>
       </div>
     </>
