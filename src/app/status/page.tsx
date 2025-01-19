@@ -19,7 +19,7 @@ export default async function Status() {
   // console.log("latest game", latestGame );
 
   const { latestGameWithPLayers } = await getLatestGameByLocation(1);
-  console.log(latestGameWithPLayers);
+  // console.log(latestGameWithPLayers);
 
   return (
     <>

@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@fullcalendar/daygrid": "^6.1.15",
+    "@fullcalendar/list": "^6.1.15",
     "@fullcalendar/react": "^6.1.15",
     "@kinde-oss/kinde-auth-nextjs": "^2.4.6",
     "@prisma/extension-accelerate": "^1.2.1",

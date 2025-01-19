@@ -6,15 +6,19 @@ export default async function Home() {
   const {
     getUser,
     isAuthenticated: isAuth,
-    // getRoles,
+    getPermission,
   } = getKindeServerSession();
-  // const roles = await getRoles();
-  // console.log("Roles: ", roles);
+
+
+  const permissions = await getPermission('delete:game');
+  console.log("Permissions: ", permissions);
 
   // const token = await getToken();
   const user = await getUser();
   const isAuthenticated = await isAuth();
   await addNewUser();
+
+  // const { user:magic } = useKindeAuth();
 
   // const allGames = await getAllGames();
 

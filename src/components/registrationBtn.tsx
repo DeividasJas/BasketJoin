@@ -27,7 +27,7 @@ export default function RegistrationBtn({
 
     const response = await registerToGame();
 
-    console.log("REGISTRATION", response);
+    // console.log("REGISTRATION", response);
 
     if (!response.success) {
       setIsLoading(false);

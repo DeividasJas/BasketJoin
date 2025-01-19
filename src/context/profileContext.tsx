@@ -33,7 +33,7 @@ export const ProfileProvider = ({
           return;
         }
         setUser(user.currentUser);
-        console.log("SETTING user", user);
+        // console.log("SETTING user", user);
       } catch (error: any) {
         console.error(error.message);
         toast.error(error.message);
