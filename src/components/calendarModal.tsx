@@ -29,7 +29,7 @@ export default function CalendarModal({ eventInfo }: any) {
         <DialogTrigger asChild>
           <Button
             // variant="default"
-            className="m-0 flex h-fit w-fit flex-wrap justify-start gap-0 bg-orange-800 px-1 py-1 hover:bg-orange-900"
+            className="m-0 mx-auto flex h-fit w-fit flex-wrap justify-start gap-0 overflow-hidden bg-orange-800 px-1 py-1 hover:bg-orange-900"
           >
             <p>{eventInfo.timeText}</p>
             <p>{eventInfo.event.title}</p>

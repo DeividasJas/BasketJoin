@@ -10,14 +10,14 @@ datasource db {
 
 model Users {
   id                 String               @id
-  email              String               @default("")
-  family_name        String
-  given_name         String
+  email              String?               @default("")
+  family_name        String?
+  given_name         String?
   username           String?
   phone_number       String?
   picture            String?
   created_at         DateTime             @default(now())
-  modified_at        DateTime?            @default(now())
+  modified_at        DateTime            @default(now())
   posts              Post[]
   game_registrations Game_registrations[]
 }

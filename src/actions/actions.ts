@@ -1,7 +1,7 @@
 "use server";
 import { prisma } from "@/utils/prisma";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { revalidatePath } from "next/cache";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
 const { getUser } = getKindeServerSession();
 
@@ -122,65 +122,7 @@ export const getAllUserGames = async () => {
   }
 };
 
-export const registerToGame = async () => {
-  try {
-    const kindeUser = await getUser();
 
-    const latestGame = await prisma.games.findFirst({
-      where: {
-        game_date: {
-          gte: startOfWeek,
-          lte: "2025-01-22T21:59:59.999Z", // change this to endOfWeek
-        },
-      },
-      select: {
-        id: true,
-        // game_date: true,
-        // game_registrations: true,
-      },
-      // orderBy: {
-      //   game_date: "asc",
-      // },
-    });
-
-    // console.log("LATEST GAME", latestGame);
-
-    if (!latestGame) return { success: false, message: "No games found" };
-
-    const existingRegistration = await prisma.game_registrations.findFirst({
-      where: {
-        user_id: kindeUser?.id,
-        game_id: latestGame?.id,
-      },
-    });
-
-    if (existingRegistration)
-      return {
-        success: true,
-        message: "You are already registered for this game",
-      };
-
-    const newRegistration = await prisma.game_registrations.create({
-      data: {
-        user_id: kindeUser?.id,
-        family_name: kindeUser?.family_name,
-        given_name: kindeUser?.given_name,
-        game_id: latestGame?.id,
-      },
-    });
-    if (!newRegistration)
-      return { success: false, message: "Registration failed" };
-
-    return {
-      success: true,
-      message: "Registration successful",
-      registration: newRegistration,
-    };
-  } catch (error: any) {
-    console.error(error.message);
-    return { success: false, message: error.message };
-  }
-};
 
 // export const postNewGame = async (date: Date) => {
 //   try {
@@ -211,57 +153,6 @@ export const registerToGame = async () => {
 //   }
 // };
 
-export const addNewUser = async () => {
-  try {
-    const kindeUser = await getUser();
-
-    if (!kindeUser) return { success: false, message: "User not found" };
-
-    //   //   Check or create user with memoization
-    const existingUser = await prisma.users.findUnique({
-      where: {
-        id: kindeUser.id,
-      },
-    });
-
-    // console.log("kinde user", kindeUser);
-    if (existingUser) return { success: true, message: "User already exists" };
-
-    // console.log("EXISTING USER", existingUser);
-    if (!existingUser) {
-      const user = await prisma.users.upsert({
-        where: {
-          id: kindeUser.id,
-        },
-        update: {
-          email: kindeUser.email || "",
-          family_name: kindeUser.family_name || "",
-          given_name: kindeUser.given_name || "",
-          picture: kindeUser.picture,
-          username: kindeUser.username,
-          phone_number: kindeUser.phone_number,
-        },
-        create: {
-          id: kindeUser.id,
-          email: kindeUser.email || "",
-          family_name: kindeUser.family_name || "",
-          given_name: kindeUser.given_name || "",
-          picture: kindeUser.picture,
-          username: kindeUser.username,
-          phone_number: kindeUser.phone_number,
-        },
-      });
-
-      // console.log(user);
-
-      return { success: true, user, message: "User created successfully" };
-    }
-  } catch (error: any) {
-    console.error(error);
-    return { success: false, message: error.message };
-  }
-};
-
 export const getUserById = async (userId: string) => {
   // console.log("USERID", userId);
   // console.log("end week", endOfWeek);
@@ -273,31 +164,7 @@ export const getUserById = async (userId: string) => {
   return { success: true, user };
 };
 
-export const cancelRegistration = async ({
-  userId,
-  gameId,
-}: {
-  userId: string;
-  gameId: number;
-}) => {
-  try {
-    const registration = await prisma.game_registrations.delete({
-      where: {
-        user_id_game_id: {
-          user_id: userId,
-          game_id: gameId,
-        },
-      },
-    });
-    // revalidatePath('/status')
-    return { success: true, registration };
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      console.error((error as Error).message);
-      return { success: false, message: "Registration not found" };
-    }
-  }
-};
+
 
 // NEW ACTIONS ------------------------------------------------------------------------------------------------------------------------------
 export const getLatestGame = async () => {
@@ -337,7 +204,7 @@ export const getAllGames = async () => {
     });
 
     if (!allGames) return { success: false, message: "No games found" };
-    
+
     return { success: true, allGames };
   } catch (error: any) {
     console.error(error.message);
@@ -346,13 +213,12 @@ export const getAllGames = async () => {
 };
 
 export const getLatestGameId = async () => {
+  "use server";
   try {
     const game = await prisma.games.findFirst({
       where: {
         game_date: {
-          gte: startOfWeek,
-          lte: "2025-01-22T21:59:59.999Z", // change this to endOfWeek
-          // lte: endOfWeek,
+          gte: new Date(),
         },
       },
       select: {
@@ -372,58 +238,21 @@ export const getLatestGameId = async () => {
   }
 };
 
-export const getLatestGameByLocation = async (locationId: number) => {
+
+
+export const getGameById = async (gameId: number) => {
   try {
-    const kindeUser = await getUser();
-
-    const gameObj = await prisma.games.findFirst({
+    const game = await prisma.games.findUnique({
       where: {
-        game_date: {
-          gte: new Date(),
-        },
-        location_id: locationId,
-      },
-      include: {
-        location: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-        game_registrations: {
-          include: {
-            user: true,
-          },
-        },
+        id: gameId,
       },
     });
-
-    // Check if a game was found
-    if (!gameObj) {
-      return { success: false, message: "No games found" };
+    if (!game) {
+      return { success: false, message: "Game not found" };
     }
-
-    const participants = gameObj.game_registrations.map(
-      (registration: any) => registration.user,
-    );
-
-    const isActive = participants.some((participant: any) => {
-      return participant.id === kindeUser?.id;
-    });
-
-    const latestGameWithPLayers = {
-      isActive,
-      participants,
-      game: {
-        game_date: gameObj.game_date,
-        game_id: gameObj.id,
-        location: gameObj.location,
-      },
-    };
-
-    return { success: true, latestGameWithPLayers };
+    return { success: true, game };
   } catch (error: any) {
-    console.error({ success: false, message: error.message });
+    console.error(error.message);
     return { success: false, message: error.message };
   }
 };

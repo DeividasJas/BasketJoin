@@ -8,10 +8,6 @@ export default async function Schedule() {
   const { success: upcomingGamesSuccess, allGames } = await getAllGames();
 
 
-  // console.log(latestGame);
-  // const delay = (ms: number) =>
-  //   new Promise((resolve) => setTimeout(resolve, ms));
-  // await delay(10000);
   return (
     <div className="mx-auto mt-10 max-w-[900px] rounded-md bg-zinc-900 px-2 py-6">
       <h1 className="text-center text-3xl font-bold">Schedule</h1>

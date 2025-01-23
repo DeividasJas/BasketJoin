@@ -4,28 +4,24 @@ import { redirect, usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
-
-import { registerToGame } from "@/actions/actions";
+import { registerToGame } from "@/actions/gameActions";
 
 export default function RegistrationBtn({
   setChange = () => {},
   isActive = false,
+  gameId
 }: {
   setChange?: React.Dispatch<React.SetStateAction<boolean>>;
   isActive?: boolean;
+  gameId: number
 }) {
   const [isLoading, setIsLoading] = useState(false);
-
   const pathname = usePathname();
-
-  // const { user, isLoading: kindeLoading } = useKindeBrowserClient();
 
   const handleClick = async () => {
     // if (kindeLoading || !user) return;
-
     setIsLoading((prev: boolean) => !prev);
-
-    const response = await registerToGame();
+    const response = await registerToGame(Number(gameId));
 
     // console.log("REGISTRATION", response);
 
@@ -34,7 +30,7 @@ export default function RegistrationBtn({
       toast.error(response.message);
     } else {
       setIsLoading(false);
-      if (pathname !== "/status") {
+      if (pathname !== "/game-status") {
         setTimeout(() => {
           redirect("/status");
         }, 1000);

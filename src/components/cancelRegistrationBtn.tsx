@@ -2,19 +2,18 @@
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { cancelRegistration } from "@/actions/actions";
 import { toast } from "sonner";
 import { Game } from "@/types/user";
+import { cancelRegistration } from "@/actions/gameActions";
 
 export function CancelRegistrationBtn({
   setChange,
   game,
   isActive,
-  kindeUserId,
 }: {
   isActive: boolean;
   game: Game;
-  kindeUserId: string;
+
   setChange: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -25,7 +24,6 @@ export function CancelRegistrationBtn({
     const registration = async () => {
       try {
         const registrationResult = await cancelRegistration({
-          userId: kindeUserId,
           gameId: game.game_id,
         });
 

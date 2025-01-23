@@ -1,16 +1,17 @@
-import { getLatestGameByLocation } from "@/actions/actions";
+import { getLatestGameByLocation } from "@/actions/gameActions";
 import NextGameCountdown from "@/components/nextGameCountdown";
 import PlayersList from "@/components/playersList";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { redirect } from "next/navigation";
 
-export default async function Status() {
+export default async function GameStatusPage() {
   const { isAuthenticated, getUser } = getKindeServerSession();
   const kindeUser = await getUser();
   const isAuth = await isAuthenticated();
   if (!isAuth) {
     redirect("/api/auth/login");
   }
+
   // const delay = (ms: number) =>x
   //   new Promise((resolve) => setTimeout(resolve, ms));
   // await delay(1000);

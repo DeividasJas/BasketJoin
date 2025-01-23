@@ -15,25 +15,17 @@ export const navLinks: Links[] = [
   },
   {
     label: "Status",
-    href: "/status",
-    requiredPermissions: ["regular:user"],
+    href: "/game-status",
+    // requiredPermissions: ["regular:user"],
   },
   {
     label: "Profile",
     href: "/profile",
-    requiredPermissions: ["regular:user"],
+    // requiredPermissions: ["regular:user"],
   },
   {
     label: "Admin",
     href: "/admin",
     requiredPermissions: ["add:game"],
   },
-  // {
-  //   label: "Login",
-  //   href: "/api/auth/login",
-  // },
-  // {
-  //   label: "Signup",
-  //   href: "/api/auth/signup",
-  // },
 ];

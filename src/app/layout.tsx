@@ -1,22 +1,18 @@
 import type { Metadata } from "next";
-import {
-  Roboto,
-  // Bokor
-} from "next/font/google";
+import { Roboto } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "sonner";
 import { AuthProvider } from "@/utils/AuthProvide";
-// import ProjectContainer from '@/components/projectContainer';
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
-import { Toaster } from "sonner";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { dynamicNavLinksFunction } from "@/lib/utils";
 
 const roboto = Roboto({
   weight: ["400", "700"],
   subsets: ["latin"],
   display: "swap",
 });
-// const bokor = Bokor({ subsets: ['latin'], weight: ['400'], display: 'swap' });
 
 export const metadata: Metadata = {
   title: "BasketJoin",
@@ -30,6 +26,10 @@ export default async function RootLayout({
 }>) {
   const { isAuthenticated } = getKindeServerSession();
   const isAuth = await isAuthenticated();
+
+  const { dynamicNavLinksArray, navLinksArray, success } =
+    await dynamicNavLinksFunction();
+
   return (
     <AuthProvider>
       <html lang="en">
@@ -38,7 +38,10 @@ export default async function RootLayout({
           className={`${roboto.className} mx-auto flex min-h-screen max-w-[1100px] flex-col bg-zinc-950 bg-gradient-to-t text-zinc-300`}
         >
           {/* <Suspense fallback={<div>Loading...</div>}> */}
-          <Header isAuthenticated={isAuth} />
+          <Header
+            isAuthenticated={isAuth}
+                navLinksArray={success ? dynamicNavLinksArray : navLinksArray}
+          />
           {/* </Suspense> */}
           <main className="sm:pb- grow px-4 pb-[calc(4rem+env(safe-area-inset-bottom))] pt-2">
             {children}
