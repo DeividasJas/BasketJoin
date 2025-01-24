@@ -26,6 +26,12 @@ export default function RegistrationBtn({
   const pathname = usePathname();
 
 
+  console.log("isActive", isActive);
+  console.log("isLoading", isLoading);
+  console.log("isDisabled FLIP", disabled);
+  
+
+
   const handleClick = async () => {
     try {
       setIsLoading((prev) => !prev);
@@ -53,7 +59,7 @@ export default function RegistrationBtn({
   return (
     <Button
       className={`px-2 py-1 text-zinc-100 outline outline-zinc-600 hover:scale-105 ${props}`}
-      disabled={isActive || isLoading || !disabled}
+      disabled={isActive || (isLoading || disabled)}
       onClick={handleClick}
     >
       {isLoading ? (

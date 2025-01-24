@@ -19,6 +19,9 @@ export default async function Schedule() {
 
   const user_id = await getUserId();
 
+  console.log(isActivePlayer);
+  
+
   if (!gameData || !success)
     return <h1 className="text-center text-3xl font-bold">Unavailable</h1>;
   return (
@@ -32,7 +35,7 @@ export default async function Schedule() {
             {isActivePlayer ? (
               <CancelRegistrationBtn gameId={gameData?.game_id} isActive={isActivePlayer}/>
             ) : (
-              <RegistrationBtn isActive={isActivePlayer} gameId={gameData?.game_id} />
+              <RegistrationBtn  gameId={gameData?.game_id} isActive={isActivePlayer}/>
             )}
           </>
         )}

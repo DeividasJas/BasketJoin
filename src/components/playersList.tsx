@@ -124,7 +124,7 @@ export default function PlayersList({
           setChange={setChange}
           isActive={isActive}
           gameId={gameId}
-          disabled={isLoggedIn}
+          disabled={!isLoggedIn}
         />
 
         <CancelRegistrationBtn
