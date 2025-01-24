@@ -1,13 +1,13 @@
 "use client";
-import { getCurrentUser } from "@/actions/actions";
-import { User } from "@/types/user";
+import { findCurrentUser } from "@/actions/userActions";
+import { Users as User } from "@prisma/client";
 import { createContext, useState, useContext, useEffect } from "react";
 import { toast } from "sonner";
 
 interface MyContextType {
   user: User | null;
-  setUser: (value: User | null) => void;
-  updateUser: (updatedUser: Partial<User>) => void;
+  setUser: any;
+  updateUser: any;
 }
 
 const MyContext = createContext<MyContextType | undefined>(undefined);
@@ -27,13 +27,12 @@ export const ProfileProvider = ({
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const user = await getCurrentUser();
-        if (!user.currentUser) {
+        const { user } = await findCurrentUser();
+        if (!user) {
           toast.error("User not found");
           return;
         }
-        setUser(user.currentUser);
-        // console.log("SETTING user", user);
+        setUser(user);
       } catch (error: any) {
         console.error(error.message);
         toast.error(error.message);

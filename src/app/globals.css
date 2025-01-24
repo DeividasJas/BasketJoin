@@ -6,50 +6,7 @@
 ::after,
 ::before {
   box-sizing: border-box;
-  /* background: hsla(0, 63%, 77%, 0.7);  */
-}
-
-
-/* .fc-list-day-cushion{
-  background: black !important;
-} */
-/* .fc-daygrid-day-events{
-  background: red !important;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: start;
-  align-items: center;
-  overflow: hidden;
-} */
-
-/* .fc-event{
-  background: #52525b;
-  display: flex;
-  flex-wrap: wrap;
-  padding-left: 2px;
-  margin: 0 2px 2px 2px;
-}
-
-.fc-event:hover{
-  background: #3f3f46;
-}
-
-.fc-daygrid-event-dot{
-  display: none;
-}
-
-.fc-list-event-graphic{
-  display: none;
-} */
-.fc-list-event {}
-
-.fc-event,
-.fc-event-start,
-.fc-event-end,
-.fc-event-future,
-.fc-list-event {
-  /* Your styling here */
-  /* background: blue !important; */
+  /* outline: 1px solid rgba(255, 0, 0, 0.3); */
 }
 
 /* This will adjust the hover background color of events in the list view */
@@ -57,28 +14,9 @@
   --fc-list-event-hover-bg-color: transparent;
 }
 
-.fc-list-event {
-  /* background: blue !important; */
-
-}
-
 .fc-list-day-cushion {
   background: #27272a !important;
   /* background: #52525b; */
-}
-
-.fc-event {
-  /* background: #52525b !important; */
-  /* padding: 2px 2px; */
-}
-
-.fc-list-event {
-  /* background: blue !important; */
-}
-
-.fc-list-event-dot,
-.fc-list-event-graphic {
-  display: none !important;
 }
 
 body {
@@ -87,7 +25,7 @@ body {
 
 @supports (padding: max(0px)) {
   .pb-safe {
-    padding-bottom: max(env(safe-area-inset-bottom), 1rem);
+    margin-bottom: max(env(safe-area-inset-bottom), 5rem);
   }
 }
 

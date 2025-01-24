@@ -1,8 +1,11 @@
+import { Url } from "next/dist/shared/lib/router/router";
+
 export type Links = {
   label?: string;
-  href?: string;
+  href: Url;
   requiresAuth?: boolean;
   requiredPermissions?: string[];
+  postOperation?: Url;
 };
 export const navLinks: Links[] = [
   {
@@ -27,5 +30,15 @@ export const navLinks: Links[] = [
     label: "Admin",
     href: "/admin",
     requiredPermissions: ["add:game"],
+  },
+  {
+    label: "Login",
+    href: "/api/auth/login",
+    postOperation: "/",
+  },
+  {
+    label: "Signup",
+    href: "/api/auth/register",
+    postOperation: "/schedule",
   },
 ];

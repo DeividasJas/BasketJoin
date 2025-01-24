@@ -1,60 +1,52 @@
 "use client";
-import { Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Game } from "@/types/user";
+import { Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { cancelRegistration } from "@/actions/gameActions";
+import { IsActivePlayer } from "@/types/prismaTypes";
 
 export function CancelRegistrationBtn({
-  setChange,
-  game,
+  gameId,
   isActive,
+  setChange = () => {},
+  props,
+  // onClick = () => {},
 }: {
-  isActive: boolean;
-  game: Game;
-
-  setChange: React.Dispatch<React.SetStateAction<boolean>>;
+  gameId: number;
+  isActive: IsActivePlayer;
+  setChange?: React.Dispatch<React.SetStateAction<boolean>>;
+  props?: string;
+  // onClick?: () => void;
 }) {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const handleClick = () => {
-    setIsLoading(true);
+  const handleClick = async () => {
+    try {
+      setIsLoading(true);
+      const { success, message } = await cancelRegistration(gameId);
 
-    const registration = async () => {
-      try {
-        const registrationResult = await cancelRegistration({
-          gameId: game.game_id,
-        });
-
-        if (registrationResult?.success) {
-          setChange((prev) => !prev);
-          toast("Registration canceled 😭 ❌ 🏀 ", {
-            style: {
-              maxWidth: "content",
-            },
-          });
-        } else {
-          toast.error("Registration not found");
-        }
-      } catch (error) {
-        console.error(error);
-        toast.error("An error occurred");
-      } finally {
-        setIsLoading(false);
+      if (!success) {
+        toast.error(message);
+      } else {
+        setChange((prev) => !prev);
+        toast.error(message);
       }
-    };
-
-    registration();
+    } catch (error) {
+      console.error(error);
+      toast.error("An error occurred");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <>
       <Button
-        disabled={!isActive}
+        disabled={!isActive || isLoading}
         variant={isLoading ? "default" : "destructive"}
         onClick={handleClick}
-        className={`w-full rounded-md px-2 py-1 animate-in ${isLoading && "border"} hover:scale-105`}
+        className={`px-2 py-1 animate-in hover:scale-105 ${isLoading && "border"} ${props}`}
       >
         {isLoading ? (
           <>

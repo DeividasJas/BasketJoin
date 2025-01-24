@@ -1,4 +1,3 @@
-import RegistrationBtn from "@/components/registrationBtn";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function ScheduleSkeleton() {
@@ -14,7 +13,7 @@ export default function ScheduleSkeleton() {
         <Skeleton className="flex aspect-square min-h-full w-[4.5rem] max-w-24 basis-1 flex-col items-center justify-center rounded-md bg-zinc-700 py-3 sm:w-20" />
       </div>
       <div className="ml-[20px] mt-4 flex gap-2">
-        <RegistrationBtn />
+
         <Skeleton className="h-[36px] w-[83px] bg-zinc-700" />
       </div>
       <h4 className="my-4 ml-[20px] text-lg">Following games:</h4>

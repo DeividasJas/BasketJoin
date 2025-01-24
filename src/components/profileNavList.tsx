@@ -1,31 +1,26 @@
 "use client";
-
 import Link from "next/link";
+import { Links } from "@/types/navLinks";
 import { usePathname } from "next/navigation";
 
 export default function ProfileNavList() {
   const pathname = usePathname();
 
-  type ProfileSection = {
-    title: string;
-    href: string;
-  };
-
-  const profileSections: ProfileSection[] = [
+  const profileSections: Links[] = [
     {
-      title: "General",
+      label: "General",
       href: "/profile",
     },
     {
-      title: "Attendance",
+      label: "Attendance",
       href: "/profile/attendance",
     },
     {
-      title: "Stats",
+      label: "Stats",
       href: "/profile/stats",
     },
     {
-      title: "Settings",
+      label: "Settings",
       href: "/profile/settings",
     },
   ];
@@ -36,15 +31,10 @@ export default function ProfileNavList() {
         {profileSections.map((link) => (
           <Link
             href={link.href}
-            key={link.href}
-            className={`relative block w-full rounded-lg transition-all duration-200 ${
-              pathname === link.href
-                ? "text-orange-400 outline outline-2 outline-orange-400"
-                : "bg-zinc-800"
-            }`}
-          >
+            key={link.href as string}
+            className={`rounded-lg transition-all duration-200 ${pathname === link.href ? "text-orange-400 outline outline-2 outline-orange-400": "bg-zinc-800"}`}>
             <li className="overflow-hidden px-1 py-2 text-center text-sm font-medium sm:text-base">
-              {link.title}
+              {link.label}
             </li>
           </Link>
         ))}

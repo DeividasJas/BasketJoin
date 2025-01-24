@@ -6,16 +6,13 @@ export default async function Admin() {
 
   const requiredPermissions = await getPermission("add:game");
   const isLoggedIn = await isAuthenticated();
-  //   console.log(isLoggedIn, requiredPermissions);
 
   if (!isLoggedIn) redirect("/api/auth/login");
   if (!requiredPermissions?.isGranted) redirect("/");
 
   return (
     <>
-      <div className="mx-auto mt-10 max-w-[900px] rounded-md bg-zinc-900 px-2 py-6">
-        <h1>admin page</h1>
-      </div>
+      <h1 className="text-center text-3xl font-bold">Admin Page</h1>
     </>
   );
 }

@@ -3,22 +3,29 @@
 import { cookies } from "next/headers";
 import { prisma } from "@/utils/prisma";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { getUserId } from "@/lib/serverUtils";
-// import changeKindeUser from "@/utils/changeKindeUser";
 
 const { getUser } = getKindeServerSession();
 
-export const getUserIdFromCookies = async () => {
+export const getUserId = async () => {
   try {
     const cookieStore = await cookies();
-    const userId = cookieStore.get("userId")?.value;
+    let userId = cookieStore.get("userId")?.value;
 
-    if (!userId) return { success: false, message: "User not found" };
+    if (!userId) {
+      const { getUser } = getKindeServerSession();
+      const kindeUser = await getUser();
+      userId = kindeUser?.id;
+    }
 
-    return { success: true, userId };
+
+    
+
+    if (!userId) throw new Error("No user ID available");
+
+    return userId
   } catch (error: any) {
-    console.error({ success: false, message: error.message });
-    return { success: false, message: error.message };
+    console.error("Error getting user ID:", error);
+    throw error; // Re-throw the error instead of returning error message
   }
 };
 
@@ -97,6 +104,40 @@ export const findCurrentUser = async () => {
     return { success: true, user };
   } catch (error: any) {
     console.error(error);
+    return { success: false, message: error.message };
+  }
+};
+
+
+export const updateUserForm: any = async (formData: FormData) => {
+  try {
+    const kindeUser = await getUser();
+    const formDataObj = Object.fromEntries(formData);
+    // console.log(formDataObj);
+
+    const updatedUser = await prisma.users.update({
+      where: {
+        id: kindeUser.id,
+      },
+      data: {
+        family_name: formDataObj.familyName as string,
+        given_name: formDataObj.givenName as string,
+        // email: formDataObj.email,
+        // picture: formDataObj.picture,
+        username: formDataObj.username as string,
+        phone_number: formDataObj.phoneNumber as string,
+      },
+    });
+
+    if (!updatedUser)
+      return { success: false, message: "Could not update user" };
+    // revalidatePath("/profile");
+    // console.log("revalidate");
+
+    // if (updatedUser) return toast.success("User updated successfully");
+    return { success: true, updatedUser, message: "User updated successfully" };
+  } catch (error: any) {
+    console.error(error.message);
     return { success: false, message: error.message };
   }
 };

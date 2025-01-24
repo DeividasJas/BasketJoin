@@ -1,7 +1,10 @@
 "use client";
 import Form from "next/form";
-import { updateUserForm } from "@/actions/actions";
 import { Button } from "@/components/ui/button";
+import { updateUserForm } from "@/actions/userActions";
+import { useProfileContext } from "@/context/profileContext";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Dialog,
   DialogContent,
@@ -11,9 +14,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useProfileContext } from "@/context/profileContext";
 
 export default function EditProfileForm() {
   const { user, updateUser } = useProfileContext();
@@ -53,7 +53,7 @@ export default function EditProfileForm() {
                 <Input
                   id="givenName"
                   name="givenName"
-                  defaultValue={user?.given_name}
+                  defaultValue={user?.given_name || ""}
                   className="col-span-3"
                 />
               </div>
@@ -64,7 +64,7 @@ export default function EditProfileForm() {
                 <Input
                   id="familyName"
                   name="familyName"
-                  defaultValue={user?.family_name}
+                  defaultValue={user?.family_name || ""}
                   className="col-span-3"
                 />
               </div>

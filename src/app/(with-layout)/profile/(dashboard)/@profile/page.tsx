@@ -1,17 +1,12 @@
-import { getCurrentUser } from "@/actions/actions";
-import { Settings } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
-
-// const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+import Image from "next/image";
+import { Settings } from "lucide-react";
+import { findCurrentUser } from "@/actions/userActions";
 
 export default async function ProfileDashboardProfileParallel() {
-  // await delay(500);
-  const userObj = await getCurrentUser();
-
-  if (!userObj.success) return <div>{userObj.message}</div>;
-
-  const user = userObj.currentUser;
+  const { success, user, message } = await findCurrentUser();
+  
+  if (!success) return <div>{message}</div>;
 
   return (
     <div className="relative flex h-full w-full flex-col">
@@ -19,9 +14,10 @@ export default async function ProfileDashboardProfileParallel() {
         {user?.picture && (
           <Image
             src={user?.picture}
+            alt="Player picture"
             width={100}
             height={100}
-            alt="Player picture"
+            priority={true}
             className="mb-2 rounded-md"
           />
         )}

@@ -24,28 +24,20 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { isAuthenticated } = getKindeServerSession();
+  const { isAuthenticated, getPermissions } = getKindeServerSession();
   const isAuth = await isAuthenticated();
+  const  permissions  = (await getPermissions())?.permissions;
+  const { navLinks } = await dynamicNavLinksFunction(isAuth);
 
-  const { dynamicNavLinksArray, navLinksArray, success } =
-    await dynamicNavLinksFunction();
+  
 
   return (
     <AuthProvider>
       <html lang="en">
         <body
-          // className={`${roboto.className} bg-gradient-to-t from-orange-200 via-orange-100 to-orange-100 flex flex-col min-h-screen max-w-[1100px] mx-auto`}
-          className={`${roboto.className} mx-auto flex min-h-screen max-w-[1100px] flex-col bg-zinc-950 bg-gradient-to-t text-zinc-300`}
-        >
-          {/* <Suspense fallback={<div>Loading...</div>}> */}
-          <Header
-            isAuthenticated={isAuth}
-                navLinksArray={success ? dynamicNavLinksArray : navLinksArray}
-          />
-          {/* </Suspense> */}
-          <main className="sm:pb- grow px-4 pb-[calc(4rem+env(safe-area-inset-bottom))] pt-2">
-            {children}
-          </main>
+          className={`${roboto.className} mx-auto flex min-h-screen w-full max-w-[1100px] flex-col bg-zinc-950 text-zinc-300`}>
+          <Header isAuthenticated={isAuth} navLinksArray={navLinks} permissions={permissions}/>
+          {children}
           <Footer />
           <Toaster richColors />
         </body>
