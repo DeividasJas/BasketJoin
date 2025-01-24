@@ -3,9 +3,15 @@ import { getUserId } from "@/actions/userActions";
 import GameCalendar from "@/components/gameCalendar";
 import NextGameCountdown from "@/components/nextGameCountdown";
 import RegistrationBtn from "@/components/registrationBtn";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { redirect } from "next/navigation";
 // import { Calendar } from "@/components/ui/calendar";
 
 export default async function Schedule() {
+  const { isAuthenticated } = getKindeServerSession();
+  const isLoggedIn = await isAuthenticated();
+  if (!isLoggedIn) redirect("/api/auth/login");
+
   const { success: upcomingGamesSuccess, allGames } = await getAllGames();
   const { success, gameData, isActivePlayer, participantsData } =
     await getFirstGameByLocationId(1);

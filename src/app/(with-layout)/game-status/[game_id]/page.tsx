@@ -10,29 +10,30 @@ export default async function DynamicGameStatusPage({
   params: Promise<{ game_id: string }>;
 }) {
   const { isAuthenticated } = getKindeServerSession();
-  if (!isAuthenticated) {
-    redirect("/api/auth/login");
-  }
+  const isLoggedIn = await isAuthenticated();
+  if (!isLoggedIn) redirect("/api/auth/login");
+
   const gameId = Number((await params).game_id);
   const response = await getGameByIdAndLocation(Number(gameId), 1);
 
-  if (!response.success) return <p className="mt-28 text-center">No game found</p>;
+  if (!response.success)
+    return <p className="mt-28 text-center">No game found</p>;
 
   return (
     <>
       <h1 className="mb-2 text-center text-3xl font-bold">Game Status</h1>
       <NextGameCountdown gameDate={response.gameData?.game_date} />
-        <h3 className="my-4 text-lg font-bold text-center">
-          {response.gameData?.game_date
-            .toLocaleString("lt-LT", {
-              hour: "2-digit",
-              minute: "2-digit",
-              day: "2-digit",
-              month: "2-digit",
-              year: "numeric",
-            })
-            .toString()}
-        </h3>
+      <h3 className="my-4 text-center text-lg font-bold">
+        {response.gameData?.game_date
+          .toLocaleString("lt-LT", {
+            hour: "2-digit",
+            minute: "2-digit",
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+          })
+          .toString()}
+      </h3>
       <PlayersList
         gameId={gameId}
         // gameData={response.gameData}

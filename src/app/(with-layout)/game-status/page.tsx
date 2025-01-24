@@ -6,11 +6,8 @@ import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
 export default async function GameStatusPage() {
   const { isAuthenticated } = getKindeServerSession();
-
-  const isAuth = await isAuthenticated();
-  if (!isAuth) {
-    redirect("/api/auth/login");
-  }
+  const isLoggedIn = await isAuthenticated();
+  if (!isLoggedIn) redirect("/api/auth/login");
 
   const { success, gameData, isActivePlayer, participantsData } =
     await getFirstGameByLocationId(1);
