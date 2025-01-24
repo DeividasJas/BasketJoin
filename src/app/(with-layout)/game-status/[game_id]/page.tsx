@@ -1,4 +1,3 @@
-import { redirect } from "next/navigation";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { getGameByIdAndLocation } from "@/actions/gameActions";
 import NextGameCountdown from "@/components/nextGameCountdown";
@@ -11,8 +10,7 @@ export default async function DynamicGameStatusPage({
 }) {
   const { isAuthenticated } = getKindeServerSession();
   const isLoggedIn = await isAuthenticated();
-  if (!isLoggedIn) redirect("/api/auth/login");
-
+  
   const gameId = Number((await params).game_id);
   const response = await getGameByIdAndLocation(Number(gameId), 1);
 
@@ -36,6 +34,7 @@ export default async function DynamicGameStatusPage({
       </h3>
       <PlayersList
         gameId={gameId}
+        isLoggedIn={isLoggedIn}
         // gameData={response.gameData}
         isActivePlayer={response.isActivePlayer}
         participantsData={response.participantsData}

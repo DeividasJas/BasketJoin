@@ -97,6 +97,18 @@ export const getFirstGameByLocationId = async (locationId: number) => {
       (registration) => registration.user,
     );
 
+    if (!user_id) {
+      return {
+        success: true,
+        participantsData,
+        gameData: {
+          game_date: gameObject.game_date,
+          game_id: gameObject.id,
+          location: gameObject.location,
+        },
+      };
+    }
+
     const isActivePlayer = participantsData.some((participant) => {
       return participant.id === user_id;
     });
@@ -177,10 +189,10 @@ export const cancelRegistration = async (
   gameId: number,
 ): Promise<CancelRegistration> => {
   try {
-    let userId = await getUserId();
+    const userId = await getUserId();
 
     if (!userId) {
-      userId = userId;
+        return {success: false, message: "User not found"};
     }
 
     const registration = await prisma.game_registrations.delete({

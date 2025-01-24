@@ -1,4 +1,3 @@
-import { redirect } from "next/navigation";
 import PlayersList from "@/components/playersList";
 import { getFirstGameByLocationId } from "@/actions/gameActions";
 import NextGameCountdown from "@/components/nextGameCountdown";
@@ -7,7 +6,7 @@ import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 export default async function GameStatusPage() {
   const { isAuthenticated } = getKindeServerSession();
   const isLoggedIn = await isAuthenticated();
-  if (!isLoggedIn) redirect("/api/auth/login");
+
 
   const { success, gameData, isActivePlayer, participantsData } =
     await getFirstGameByLocationId(1);
@@ -32,6 +31,7 @@ export default async function GameStatusPage() {
       </h3>
       <PlayersList
         gameId={gameData.game_id}
+        isLoggedIn={isLoggedIn}
         isActivePlayer={isActivePlayer}
         participantsData={participantsData}
       />

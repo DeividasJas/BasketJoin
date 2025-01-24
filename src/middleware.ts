@@ -5,7 +5,6 @@ export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
   const user_id = request.cookies.get("user_id");
   if (!user_id) {
-    // console.log("running cookie");
     const { getUser } = getKindeServerSession();
     const kindeUser = await getUser();
     response.cookies.set("user_id", kindeUser?.id);
@@ -14,5 +13,10 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: "/game-status/:path*",
+  matcher: [
+    "/game-status/:path*",
+    "/admin/:path*",
+    "/schedule/:path*",
+    "/profile/:path*",
+  ],
 };

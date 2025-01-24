@@ -17,12 +17,9 @@ export const getUserId = async () => {
       userId = kindeUser?.id;
     }
 
+    if (!userId) return;
 
-    
-
-    if (!userId) throw new Error("No user ID available");
-
-    return userId
+    return userId;
   } catch (error: any) {
     console.error("Error getting user ID:", error);
     throw error; // Re-throw the error instead of returning error message
@@ -107,7 +104,6 @@ export const findCurrentUser = async () => {
     return { success: false, message: error.message };
   }
 };
-
 
 export const updateUserForm: any = async (formData: FormData) => {
   try {

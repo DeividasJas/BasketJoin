@@ -25,11 +25,13 @@ const itemVariants = {
 
 export default function PlayersList({
   gameId,
+  isLoggedIn,
   // gameData,
   isActivePlayer,
   participantsData,
 }: {
   gameId: number ;
+  isLoggedIn?: boolean;
   // gameData: Game;
   isActivePlayer: IsActivePlayer;
   participantsData: Players;
@@ -68,7 +70,7 @@ export default function PlayersList({
   return (
     <>
       {isLoading ? (
-        <p>Loading players...</p>
+        <p className="text-center">Loading players...</p>
       ) : (
         <motion.ul
           initial="hidden"
@@ -122,6 +124,7 @@ export default function PlayersList({
           setChange={setChange}
           isActive={isActive}
           gameId={gameId}
+          disabled={isLoggedIn}
         />
 
         <CancelRegistrationBtn

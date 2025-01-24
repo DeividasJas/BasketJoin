@@ -12,12 +12,14 @@ export default function RegistrationBtn({
   isActive,
   setChange = () => {},
   props,
+  disabled,
   // onClick = () => {},
 }: {
   gameId: number;
   isActive: IsActivePlayer;
   setChange?: React.Dispatch<React.SetStateAction<boolean>>;
   props?: string;
+  disabled?: boolean;
   // onClick?: () => void;
 }) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -51,7 +53,7 @@ export default function RegistrationBtn({
   return (
     <Button
       className={`px-2 py-1 text-zinc-100 outline outline-zinc-600 hover:scale-105 ${props}`}
-      disabled={isActive}
+      disabled={isActive || isLoading || !disabled}
       onClick={handleClick}
     >
       {isLoading ? (

@@ -5,8 +5,13 @@ import { useProfileContext } from "@/context/profileContext";
 import EditProfileForm from "@/components/editProfileForm";
 import Image from "next/image";
 import React from "react";
+// import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+// import { redirect } from "next/navigation";
 
 export default function Page() {
+  // const { isAuthenticated } = useKindeBrowserClient();
+  // const isLoggedIn = isAuthenticated;
+  // if (!isLoggedIn) redirect("/api/auth/login");
   const { user } = useProfileContext();
 
   return (
@@ -31,9 +36,7 @@ export default function Page() {
             <h4>Joined: {user?.created_at?.toLocaleDateString()}</h4>
           </section>
         </div>
-
         <EditProfileForm />
-
         <LogoutBtn />
       </section>
     </>
