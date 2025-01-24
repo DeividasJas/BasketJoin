@@ -53,7 +53,7 @@ export default function RegistrationBtn({
   return (
     <Button
       className={`px-2 py-1 text-zinc-100 outline outline-zinc-600 hover:scale-105 ${props}`}
-      disabled={isActive || isLoading}
+      disabled={isActive || isLoading || !disabled}
       onClick={handleClick}
     >
       {isLoading ? (
