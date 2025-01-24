@@ -11,7 +11,7 @@ import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 export default async function Schedule() {
   const { isAuthenticated } = getKindeServerSession();
   const isLoggedIn = await isAuthenticated();
-  // if (!isLoggedIn) redirect("/api/auth/login");
+
 
   const { success: upcomingGamesSuccess, allGames } = await getAllGames();
   const { success, gameData, isActivePlayer, participantsData } =
