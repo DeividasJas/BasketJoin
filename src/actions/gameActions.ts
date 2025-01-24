@@ -2,6 +2,7 @@
 import { prisma } from "@/utils/prisma";
 import { findCurrentUser, getUserId } from "./userActions";
 import { CancelRegistration, RegisterToGameResult } from "@/types/prismaTypes";
+import { revalidatePath } from "next/cache";
 
 export const getGameByIdAndLocation = async (
   gameId: number,
@@ -192,7 +193,7 @@ export const cancelRegistration = async (
     const userId = await getUserId();
 
     if (!userId) {
-        return {success: false, message: "User not found"};
+      return { success: false, message: "User not found" };
     }
 
     const registration = await prisma.game_registrations.delete({
@@ -206,6 +207,7 @@ export const cancelRegistration = async (
 
     if (!registration)
       return { success: false, message: "Registration not found" };
+    revalidatePath("/schedule");
 
     return {
       success: true,

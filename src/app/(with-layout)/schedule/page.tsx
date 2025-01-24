@@ -1,5 +1,6 @@
 import { getAllGames, getFirstGameByLocationId } from "@/actions/gameActions";
 import { getUserId } from "@/actions/userActions";
+import { CancelRegistrationBtn } from "@/components/cancelRegistrationBtn";
 import GameCalendar from "@/components/gameCalendar";
 import NextGameCountdown from "@/components/nextGameCountdown";
 import RegistrationBtn from "@/components/registrationBtn";
@@ -25,12 +26,15 @@ export default async function Schedule() {
       <h1 className="text-center text-3xl font-bold">Schedule</h1>
       <h3 className="my-4 text-center text-lg">Next game starts in:</h3>
       <NextGameCountdown gameDate={gameData?.game_date} />
-      <div className="mt-4 flex items-center justify-center gap-2">
+      <div className="mt-4 flex items-center justify-center gap-2 m-2">
         {isLoggedIn && (
-          <RegistrationBtn
-            isActive={isActivePlayer}
-            gameId={gameData?.game_id}
-          />
+          <>
+            {isActivePlayer ? (
+              <CancelRegistrationBtn gameId={gameData?.game_id} isActive={isActivePlayer}/>
+            ) : (
+              <RegistrationBtn isActive={isActivePlayer} gameId={gameData?.game_id} />
+            )}
+          </>
         )}
         {gameData && (
           <p className="text-sm">
