@@ -19,7 +19,7 @@ export default async function Schedule() {
 
   const user_id = await getUserId();
 
-  console.log(isActivePlayer);
+  // console.log(isActivePlayer);
   
 
   if (!gameData || !success)

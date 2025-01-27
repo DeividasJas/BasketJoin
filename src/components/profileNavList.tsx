@@ -32,7 +32,8 @@ export default function ProfileNavList() {
           <Link
             href={link.href}
             key={link.href as string}
-            className={`rounded-lg transition-all duration-200 ${pathname === link.href ? "text-orange-400 outline outline-2 outline-orange-400": "bg-zinc-800"}`}>
+            className={`rounded-lg bg-zinc-200 transition-all duration-500 dark:bg-zinc-800 ${pathname === link.href && "outline outline-2 outline-orange-400 text-orange-600 dark:outline-orange-400 dark:text-orange-400"}`}
+          >
             <li className="overflow-hidden px-1 py-2 text-center text-sm font-medium sm:text-base">
               {link.label}
             </li>

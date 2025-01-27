@@ -25,19 +25,15 @@ export default function RegistrationBtn({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const pathname = usePathname();
 
-
-  console.log("isActive", isActive);
-  console.log("isLoading", isLoading);
-  console.log("isDisabled FLIP", disabled);
-  
-
-
   const handleClick = async () => {
     try {
       setIsLoading((prev) => !prev);
       const { success, message } = await registerToGame(gameId);
 
-      if (!success) {toast.error(message);return;}
+      if (!success) {
+        toast.error(message);
+        return;
+      }
 
       toast.success(message);
 
@@ -58,9 +54,10 @@ export default function RegistrationBtn({
 
   return (
     <Button
-      className={`px-2 py-1 text-zinc-100 outline outline-zinc-600 hover:scale-105 ${props}`}
-      disabled={isActive || (isLoading || disabled)}
+      className={`px-2 py-1 text-zinc-100 outline hover:scale-105 bg-zinc-400 dark:outline-zinc-600 ${props} dark:bg-transparent`}
+      disabled={isActive || isLoading || disabled}
       onClick={handleClick}
+      variant="default"
     >
       {isLoading ? (
         <>

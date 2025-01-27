@@ -39,10 +39,10 @@ export const addNewUser = async () => {
       },
     });
 
-    // console.log("kinde user", kindeUser);
+
     if (existingUser) return { success: true, message: "User already exists" };
 
-    // console.log("EXISTING USER", existingUser);
+
     if (!existingUser) {
       const user = await prisma.users.upsert({
         where: {

@@ -12,7 +12,7 @@ export default function PlayerCard({ player }: { player: Users }) {
             height={100}
             priority={true}
             alt="Player picture"
-            className="rounded-md"
+            className="rounded-md shadow-md dark:shadow-none"
           />
         ) : (
           <Image
@@ -20,7 +20,7 @@ export default function PlayerCard({ player }: { player: Users }) {
             width={100}
             height={100}
             priority={true}
-            alt="Player avatar"
+            alt="Player avatar shadow-md dark:shadow-none"
           />
         )}
         <h5 className="mt-2 leading-none">

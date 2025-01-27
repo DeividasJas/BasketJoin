@@ -4,7 +4,6 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Links } from "@/types/navLinks";
 
-
 export default function Header({
   isAuthenticated,
   navLinksArray,
@@ -40,16 +39,16 @@ export default function Header({
       return (
         <li
           key={href as string}
-          className={`rounded-md px-3 py-2 bg-zinc-800 outline outline-2 outline-zinc-700 transition-all duration-500 sm:px-4 sm:py-3 ${pathname == href && "outline-stone-500 scale-105"}`}>
+          className={`rounded-md bg-zinc-300 px-3 py-2 outline outline-1  outline-zinc-400 dark:outline-zinc-700 transition-all duration-500 dark:bg-zinc-800 sm:px-4 sm:py-3 ${pathname == href && "scale-105 outline-zinc-500 outline-[2px] dark:outline-zinc-600"}`}
+        >
           <Link href={href}>{label}</Link>
         </li>
       );
     }
   });
 
-
   return (
-    <header className="fixed bottom-0 left-0 right-0 z-50 order-last rounded-t-sm bg-zinc-800 sm:relative sm:order-first sm:border-none sm:bg-transparent">
+    <header className="fixed bottom-0 left-0 right-0 z-50 order-last rounded-t-sm bg-zinc-200 dark:bg-zinc-800 sm:relative sm:order-first sm:border-none sm:bg-transparent sm:dark:bg-transparent">
       <nav className="mx-auto max-w-[700px]">
         <ul className="flex items-center justify-around rounded border-zinc-900 py-3">
           {navLinks}

@@ -1,12 +1,14 @@
+import "./globals.css";
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
-import "./globals.css";
 import { Toaster } from "sonner";
-import { AuthProvider } from "@/utils/AuthProvide";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
+import { ThemeProvider } from "next-themes";
+import ThemeChanger from "@/components/themeChangeBtn";
 import { dynamicNavLinksFunction } from "@/lib/utils";
+import { AuthProvider } from "@/utils/AuthProvide";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
 const roboto = Roboto({
   weight: ["400", "700"],
@@ -26,20 +28,26 @@ export default async function RootLayout({
 }>) {
   const { isAuthenticated, getPermissions } = getKindeServerSession();
   const isAuth = await isAuthenticated();
-  const  permissions  = (await getPermissions())?.permissions;
+  const permissions = (await getPermissions())?.permissions;
   const { navLinks } = await dynamicNavLinksFunction(isAuth);
-
-  
 
   return (
     <AuthProvider>
-      <html lang="en">
-        <body
-          className={`${roboto.className} mx-auto flex min-h-screen w-full max-w-[1100px] flex-col bg-zinc-950 text-zinc-300`}>
-          <Header isAuthenticated={isAuth} navLinksArray={navLinks} permissions={permissions}/>
-          {children}
-          <Footer />
-          <Toaster richColors />
+      <html lang="en" suppressHydrationWarning>
+        <body className={`${roboto.className} relative mx-auto flex min-h-screen w-full max-w-[1100px] flex-col bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-300`}>
+          {/* <div className={`${roboto.className} mx-auto flex min-h-screen w-full max-w-[1100px] flex-col bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-300`}> */}
+            <ThemeProvider attribute="class">
+              <Header
+                isAuthenticated={isAuth}
+                navLinksArray={navLinks}
+                permissions={permissions}
+              />
+              <ThemeChanger />
+              {children}
+              <Footer />
+              <Toaster richColors />
+            </ThemeProvider>
+          {/* </div> */}
         </body>
       </html>
     </AuthProvider>

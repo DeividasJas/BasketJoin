@@ -8,7 +8,7 @@ export default async function ProfileDashboardStatsParallel() {
   return (
     <>
       <h4 className="my-2 text-center text-xl">Season Statistics</h4>
-      <div className="mx-auto flex max-w-[150px] flex-col gap-2 text-zinc-300 xs:grid xs:max-w-[350px] xs:place-items-center">
+      <div className="mx-auto flex max-w-[150px] flex-col gap-2 dark:text-zinc-300 xs:grid xs:max-w-[350px] xs:place-items-center">
         <div className="flex h-fit w-full flex-col items-center justify-center gap-[0.3rem] rounded-md bg-[rgb(159,89,46)] px-2 py-2 hover:bg-[rgb(150,91,54)] xs:w-full xs:min-w-[120px] xs:max-w-[150px]">
           <Image
             src={"/stats-basketball.svg"}

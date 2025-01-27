@@ -16,7 +16,7 @@ export default async function LayoutProfile({
     return (
       <>
         <ProfileProvider>
-          <div className="flex flex-col place-items-center rounded-md">
+          <div className="mx-auto max-w-[900px] rounded-md bg-zinc-300 px-2 dark:bg-zinc-900">
             <ProfileNavList />
             {children}
           </div>

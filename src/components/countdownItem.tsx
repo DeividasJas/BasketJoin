@@ -25,7 +25,7 @@ export default function CountdownItem({
   return (
     <>
       {/* <ProgressBorder progress={progress}> */}
-      <div className="flex aspect-square min-h-full w-[4.5rem] max-w-24 basis-1 flex-col items-center justify-center rounded-md bg-zinc-700 py-3 sm:w-20">
+      <div className="flex aspect-square min-h-full w-[4.5rem] max-w-24 basis-1 flex-col items-center justify-center rounded-md bg-zinc-400 dark:bg-zinc-700 py-3 sm:w-20">
         {/* <div className='flex flex-col justify-center items-center  min-h-full '> */}
         <p className="text-lg leading-none">{time}</p>
         <p className="my-[2px] text-[0.8rem] leading-none">

@@ -6,7 +6,7 @@ export default function StatsGridSkeleton() {
       {[1, 2, 3, 4].map((item) => (
         <div
           key={item}
-          className="flex h-fit flex-col items-center justify-center gap-[0.3rem] rounded-md bg-zinc-800 px-2 py-2"
+          className="flex h-fit flex-col items-center justify-center gap-[0.3rem] rounded-md bg-zinc-300 dark:bg-zinc-800 px-2 py-2"
         >
           <Skeleton className="h-[25px] w-[25px] rounded-full" />
           <Skeleton className="mt-1 h-3 w-1/2" />
