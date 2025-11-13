@@ -3,17 +3,14 @@ import Image from "next/image";
 import { redirect } from "next/navigation";
 import { Settings } from "lucide-react";
 import { findCurrentUser } from "@/actions/userActions";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { auth } from "@/auth";
 
 export default async function ProfileDashboardProfileParallel() {
-  const { isAuthenticated } = getKindeServerSession();
-  
-  // Check authentication first
-  const isLoggedIn = await isAuthenticated();
-  
+  const session = await auth();
+
   // If not logged in, redirect to login page
-  if (!isLoggedIn) {
-    redirect("/api/auth/login");
+  if (!session?.user) {
+    redirect("/login");
   }
 
   // Only attempt to find user if logged in

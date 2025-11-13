@@ -1,12 +1,15 @@
 import Image from "next/image";
-import { addNewUser } from "@/actions/userActions";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { auth } from "@/auth";
+import { getCurrentUser } from "@/actions/userActions";
 
 export default async function Home() {
-  const { getUser, isAuthenticated: isAuth } = getKindeServerSession();
-  const user = await getUser();
-  const isAuthenticated = await isAuth();
-  await addNewUser();
+  const session = await auth();
+  const isAuthenticated = !!session?.user;
+
+  let user = null;
+  if (session?.user?.id) {
+    user = await getCurrentUser();
+  }
 
   return (
     <>

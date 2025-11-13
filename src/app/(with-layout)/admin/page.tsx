@@ -1,13 +1,21 @@
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 
 export default async function Admin() {
-  const { getPermission, isAuthenticated } = getKindeServerSession();
+  const session = await auth();
 
-  const isLoggedIn = await isAuthenticated();
-  if (!isLoggedIn) redirect("/api/auth/login");
-  const requiredPermissions = await getPermission("add:game");
-  if (!requiredPermissions?.isGranted) redirect("/");
+  if (!session?.user) {
+    redirect("/login");
+  }
+
+  // TODO: Implement custom permissions system
+  // For now, checking if user exists in session
+  // Future: Check for "add:game" permission from database or JWT claims
+  const hasAdminPermission = !!session?.user?.id;
+
+  if (!hasAdminPermission) {
+    redirect("/");
+  }
 
   return (
     <>

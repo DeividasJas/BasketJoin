@@ -1,11 +1,11 @@
 import PlayersList from "@/components/playersList";
 import { getFirstGameByLocationId } from "@/actions/gameActions";
 import NextGameCountdown from "@/components/nextGameCountdown";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { auth } from "@/auth";
 
 export default async function GameStatusPage() {
-  const { isAuthenticated } = getKindeServerSession();
-  const isLoggedIn = await isAuthenticated();
+  const session = await auth();
+  const isLoggedIn = !!session?.user;
 
 
   const { success, gameData, isActivePlayer, participantsData } =

@@ -4,13 +4,11 @@ import { CancelRegistrationBtn } from "@/components/cancelRegistrationBtn";
 import GameCalendar from "@/components/gameCalendar";
 import NextGameCountdown from "@/components/nextGameCountdown";
 import RegistrationBtn from "@/components/registrationBtn";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-// import { redirect } from "next/navigation";
-// import { Calendar } from "@/components/ui/calendar";
+import { auth } from "@/auth";
 
 export default async function Schedule() {
-  const { isAuthenticated } = getKindeServerSession();
-  const isLoggedIn = await isAuthenticated();
+  const session = await auth();
+  const isLoggedIn = !!session?.user;
 
 
   const { success: upcomingGamesSuccess, allGames } = await getAllGames();
