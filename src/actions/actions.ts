@@ -1,25 +1,18 @@
 "use server";
 import { prisma } from "@/utils/prisma";
-// import { revalidatePath } from "next/cache";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-
-const { getUser } = getKindeServerSession();
-
-const kindeUser = await getUser();
-
-const startOfWeek = new Date();
-startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay() + 1);
-startOfWeek.setHours(0, 0, 0, 0);
-
-const endOfWeek = new Date(startOfWeek);
-endOfWeek.setDate(startOfWeek.getDate() + 6);
-endOfWeek.setHours(23, 59, 59, 999);
+import { auth } from "@/auth";
 
 export const getAllUserGames = async () => {
   try {
+    const session = await auth();
+
+    if (!session?.user?.id) {
+      return { success: false, message: "Not authenticated" };
+    }
+
     const userPlayedGames = await prisma.game_registrations.findMany({
       where: {
-        user_id: kindeUser?.id,
+        user_id: session.user.id,
       },
       include: {
         game: true,
