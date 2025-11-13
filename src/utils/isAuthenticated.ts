@@ -1,8 +1,15 @@
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { auth } from "@/auth";
 
-export async function isAuthenticatedKindeServer() {
-  const { isAuthenticated } = getKindeServerSession();
-  const isAuthMethod = await isAuthenticated();
+export async function isAuthenticated() {
+  const session = await auth();
+  return !!session?.user;
+}
 
-  return isAuthMethod;
+export async function getServerSession() {
+  return await auth();
+}
+
+export async function getCurrentUser() {
+  const session = await auth();
+  return session?.user || null;
 }

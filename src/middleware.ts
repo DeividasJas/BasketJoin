@@ -1,16 +1,28 @@
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { NextResponse, NextRequest } from "next/server";
+import { auth } from "@/auth";
+import { NextResponse } from "next/server";
 
-export async function middleware(request: NextRequest) {
-  const response = NextResponse.next();
-  const user_id = request.cookies.get("user_id");
-  if (!user_id) {
-    const { getUser } = getKindeServerSession();
-    const kindeUser = await getUser();
-    response.cookies.set("user_id", kindeUser?.id);
+export default auth((req) => {
+  const isLoggedIn = !!req.auth;
+  const { pathname } = req.nextUrl;
+
+  // Protected routes
+  const protectedRoutes = ["/profile", "/admin", "/game-status", "/schedule"];
+  const isProtectedRoute = protectedRoutes.some((route) =>
+    pathname.startsWith(route)
+  );
+
+  // Redirect to login if trying to access protected route while not logged in
+  if (isProtectedRoute && !isLoggedIn) {
+    return NextResponse.redirect(new URL("/login", req.url));
   }
-  return response;
-}
+
+  // Redirect to home if trying to access login/signup while logged in
+  if (isLoggedIn && (pathname === "/login" || pathname === "/signup")) {
+    return NextResponse.redirect(new URL("/", req.url));
+  }
+
+  return NextResponse.next();
+});
 
 export const config = {
   matcher: [
@@ -18,5 +30,7 @@ export const config = {
     "/admin/:path*",
     "/schedule/:path*",
     "/profile/:path*",
+    "/login",
+    "/signup",
   ],
 };
