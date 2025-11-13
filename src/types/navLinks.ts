@@ -33,12 +33,12 @@ export const navLinks: Links[] = [
   },
   {
     label: "Login",
-    href: "/api/auth/login",
+    href: "/login",
     postOperation: "/",
   },
   {
     label: "Signup",
-    href: "/api/auth/register",
+    href: "/signup",
     postOperation: "/",
   },
 ];
