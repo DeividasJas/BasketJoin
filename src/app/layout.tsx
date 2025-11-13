@@ -8,7 +8,7 @@ import { ThemeProvider } from "next-themes";
 import ThemeChanger from "@/components/themeChangeBtn";
 import { dynamicNavLinksFunction } from "@/lib/utils";
 import { AuthProvider } from "@/utils/AuthProvide";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { auth } from "@/auth";
 
 const roboto = Roboto({
   weight: ["400", "700"],
@@ -26,9 +26,9 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { isAuthenticated, getPermissions } = getKindeServerSession();
-  const isAuth = await isAuthenticated();
-  const permissions = (await getPermissions())?.permissions;
+  const session = await auth();
+  const isAuth = !!session?.user;
+  const permissions: string[] = []; // TODO: Implement custom permissions system
   const { navLinks } = await dynamicNavLinksFunction(isAuth);
 
   return (
