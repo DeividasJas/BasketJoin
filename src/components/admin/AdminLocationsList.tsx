@@ -195,14 +195,14 @@ export default function AdminLocationsList({
               <div className="flex gap-2 flex-wrap mt-4">
                 <Link
                   href={`/admin/locations/${location.id}/edit`}
-                  className="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700 transition-colors"
+                  className="px-3 py-1 bg-blue-600 dark:bg-blue-700 text-white rounded text-sm hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
                 >
                   ✏️ Edit
                 </Link>
 
                 <Link
                   href={`/admin/locations/${location.id}/games`}
-                  className="px-3 py-1 bg-purple-600 text-white rounded text-sm hover:bg-purple-700 transition-colors"
+                  className="px-3 py-1 bg-zinc-300 dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 rounded text-sm hover:bg-zinc-400 dark:hover:bg-zinc-600 transition-colors outline outline-1 outline-zinc-400 dark:outline-zinc-600"
                 >
                   🎮 View Games ({location._count.games})
                 </Link>
@@ -210,11 +210,7 @@ export default function AdminLocationsList({
                 <button
                   onClick={() => handleToggleActive(location.id)}
                   disabled={loading === location.id}
-                  className={`px-3 py-1 rounded text-sm transition-colors disabled:opacity-50 ${
-                    location.is_active
-                      ? "bg-orange-600 text-white hover:bg-orange-700"
-                      : "bg-green-600 text-white hover:bg-green-700"
-                  }`}
+                  className="px-3 py-1 bg-zinc-300 dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 rounded text-sm hover:bg-zinc-400 dark:hover:bg-zinc-600 transition-colors outline outline-1 outline-zinc-400 dark:outline-zinc-600 disabled:opacity-50"
                 >
                   {location.is_active ? "🔄 Deactivate" : "✅ Activate"}
                 </button>
@@ -222,7 +218,7 @@ export default function AdminLocationsList({
                 <button
                   onClick={() => handleDelete(location.id)}
                   disabled={loading === location.id}
-                  className="px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700 transition-colors disabled:opacity-50 ml-auto"
+                  className="px-3 py-1 bg-red-600 dark:bg-red-700 text-white rounded text-sm hover:bg-red-700 dark:hover:bg-red-600 transition-colors disabled:opacity-50 ml-auto"
                 >
                   🗑️ Delete
                 </button>

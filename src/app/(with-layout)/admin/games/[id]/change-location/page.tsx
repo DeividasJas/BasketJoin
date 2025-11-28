@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/utils/prisma";
 import { getAllLocations } from "@/actions/adminGameActions";
 import ChangeLocationForm from "@/components/admin/ChangeLocationForm";
+import Link from "next/link";
 
 export default async function ChangeLocationPage({
   params,
@@ -44,6 +45,12 @@ export default async function ChangeLocationPage({
 
   return (
     <div className="w-full max-w-2xl mx-auto px-4 py-6">
+      <Link
+        href="/admin/games"
+        className="inline-flex items-center gap-1 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 mb-4 transition-colors"
+      >
+        ← Back to Games
+      </Link>
       <h1 className="text-3xl font-bold mb-6">Change Game Location</h1>
 
       <div className="bg-zinc-100 dark:bg-zinc-800 rounded-lg p-4 mb-6">

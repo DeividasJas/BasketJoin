@@ -30,7 +30,7 @@ export default async function Admin() {
       <div className="flex gap-4 mb-6">
         <Link
           href="/admin/games"
-          className="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-center"
+          className="px-6 py-3 bg-zinc-300 dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 rounded-md hover:bg-zinc-400 dark:hover:bg-zinc-600 transition-colors text-center outline outline-1 outline-zinc-400 dark:outline-zinc-600"
         >
           <div className="text-2xl mb-1">🎮</div>
           <div className="font-bold">Games</div>
@@ -39,7 +39,7 @@ export default async function Admin() {
 
         <Link
           href="/admin/locations"
-          className="px-6 py-3 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors text-center"
+          className="px-6 py-3 bg-zinc-300 dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 rounded-md hover:bg-zinc-400 dark:hover:bg-zinc-600 transition-colors text-center outline outline-1 outline-zinc-400 dark:outline-zinc-600"
         >
           <div className="text-2xl mb-1">📍</div>
           <div className="font-bold">Locations</div>
@@ -53,25 +53,25 @@ export default async function Admin() {
         <div className="space-y-2">
           <Link
             href="/admin/games"
-            className="block text-blue-600 dark:text-blue-400 hover:underline"
+            className="block text-zinc-700 dark:text-zinc-300 hover:underline"
           >
             → View all games
           </Link>
           <Link
             href="/admin/locations"
-            className="block text-purple-600 dark:text-purple-400 hover:underline"
+            className="block text-zinc-700 dark:text-zinc-300 hover:underline"
           >
             → View all locations
           </Link>
           <Link
             href="/admin/games/new"
-            className="block text-green-600 dark:text-green-400 hover:underline"
+            className="block text-zinc-700 dark:text-zinc-300 hover:underline"
           >
             → Create new game
           </Link>
           <Link
             href="/admin/locations/new"
-            className="block text-green-600 dark:text-green-400 hover:underline"
+            className="block text-zinc-700 dark:text-zinc-300 hover:underline"
           >
             → Add new location
           </Link>

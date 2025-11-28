@@ -30,13 +30,14 @@ export default async function LocationGamesPage({
 
   return (
     <div className="w-full max-w-4xl mx-auto px-4 py-6">
+      <Link
+        href="/admin/locations"
+        className="inline-flex items-center gap-1 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 mb-4 transition-colors"
+      >
+        ← Back to Locations
+      </Link>
+
       <div className="mb-6">
-        <Link
-          href="/admin/locations"
-          className="text-blue-600 dark:text-blue-400 hover:underline mb-2 inline-block"
-        >
-          ← Back to Locations
-        </Link>
         <h1 className="text-3xl font-bold">{location.name}</h1>
         <p className="text-gray-600 dark:text-gray-400">
           📍 {location.address}, {location.city}
@@ -55,7 +56,9 @@ export default async function LocationGamesPage({
             Status:{" "}
             <span
               className={
-                location.is_active ? "text-green-600" : "text-red-600"
+                location.is_active
+                  ? "text-zinc-700 dark:text-zinc-300 font-semibold"
+                  : "text-red-600 dark:text-red-400 font-semibold"
               }
             >
               {location.is_active ? "Active" : "Inactive"}
@@ -113,7 +116,7 @@ export default async function LocationGamesPage({
                   </div>
                   <Link
                     href={`/game-status/${game.id}`}
-                    className="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700 transition-colors"
+                    className="px-3 py-1 bg-zinc-300 dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 rounded text-sm hover:bg-zinc-400 dark:hover:bg-zinc-600 transition-colors outline outline-1 outline-zinc-400 dark:outline-zinc-600"
                   >
                     View Details
                   </Link>

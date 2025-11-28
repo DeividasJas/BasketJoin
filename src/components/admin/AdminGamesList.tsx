@@ -180,7 +180,7 @@ export default function AdminGamesList({ games }: { games: Game[] }) {
               <div className="flex gap-2 flex-wrap mt-4">
                 <a
                   href={`/admin/games/${game.id}/edit`}
-                  className="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700 transition-colors disabled:opacity-50"
+                  className="px-3 py-1 bg-blue-600 dark:bg-blue-700 text-white rounded text-sm hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors disabled:opacity-50"
                 >
                   ✏️ Edit
                 </a>
@@ -189,27 +189,27 @@ export default function AdminGamesList({ games }: { games: Game[] }) {
                   <>
                     <a
                       href={`/admin/games/${game.id}/reschedule`}
-                      className="px-3 py-1 bg-purple-600 text-white rounded text-sm hover:bg-purple-700 transition-colors"
+                      className="px-3 py-1 bg-zinc-300 dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 rounded text-sm hover:bg-zinc-400 dark:hover:bg-zinc-600 transition-colors outline outline-1 outline-zinc-400 dark:outline-zinc-600"
                     >
                       🔄 Reschedule
                     </a>
                     <a
                       href={`/admin/games/${game.id}/change-location`}
-                      className="px-3 py-1 bg-indigo-600 text-white rounded text-sm hover:bg-indigo-700 transition-colors"
+                      className="px-3 py-1 bg-zinc-300 dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 rounded text-sm hover:bg-zinc-400 dark:hover:bg-zinc-600 transition-colors outline outline-1 outline-zinc-400 dark:outline-zinc-600"
                     >
                       📍 Change Location
                     </a>
                     <button
                       onClick={() => handleCancelGame(game.id)}
                       disabled={loading === game.id}
-                      className="px-3 py-1 bg-orange-600 text-white rounded text-sm hover:bg-orange-700 transition-colors disabled:opacity-50"
+                      className="px-3 py-1 bg-zinc-300 dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 rounded text-sm hover:bg-zinc-400 dark:hover:bg-zinc-600 transition-colors outline outline-1 outline-zinc-400 dark:outline-zinc-600 disabled:opacity-50"
                     >
                       ❌ Cancel Game
                     </button>
                     <button
                       onClick={() => handleMarkCompleted(game.id)}
                       disabled={loading === game.id}
-                      className="px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700 transition-colors disabled:opacity-50"
+                      className="px-3 py-1 bg-zinc-300 dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 rounded text-sm hover:bg-zinc-400 dark:hover:bg-zinc-600 transition-colors outline outline-1 outline-zinc-400 dark:outline-zinc-600 disabled:opacity-50"
                     >
                       ✅ Mark Completed
                     </button>
@@ -219,7 +219,7 @@ export default function AdminGamesList({ games }: { games: Game[] }) {
                 <button
                   onClick={() => handleDeleteGame(game.id)}
                   disabled={loading === game.id}
-                  className="px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700 transition-colors disabled:opacity-50 ml-auto"
+                  className="px-3 py-1 bg-red-600 dark:bg-red-700 text-white rounded text-sm hover:bg-red-700 dark:hover:bg-red-600 transition-colors disabled:opacity-50 ml-auto"
                 >
                   🗑️ Delete
                 </button>
