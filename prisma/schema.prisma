@@ -6,9 +6,29 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
+}
+
+// Enums
+enum UserRole {
+  PLAYER
+  ADMIN
+  ORGANIZER
+}
+
+enum GameStatus {
+  SCHEDULED
+  CANCELLED
+  COMPLETED
+  IN_PROGRESS
+}
+
+enum RegistrationStatus {
+  CONFIRMED
+  CANCELLED
+  WAITLIST
 }
 
 // NextAuth.js models
@@ -50,7 +70,7 @@ model VerificationToken {
 // Application models
 model Users {
   id                 String               @id @default(cuid())
-  email              String?              @unique @default("")
+  email              String?              @unique
   emailVerified      DateTime?
   password           String?
   family_name        String?
@@ -58,34 +78,45 @@ model Users {
   username           String?
   phone_number       String?
   picture            String?
+  role               UserRole             @default(PLAYER)
+  is_active          Boolean              @default(true)
   created_at         DateTime             @default(now())
-  modified_at        DateTime             @default(now())
-  posts              Post[]
+  modified_at        DateTime             @updatedAt
   game_registrations Game_registrations[]
   accounts           Account[]
   sessions           Session[]
+  organized_games    Games[]              @relation("GameOrganizer")
+  notifications      Notification[]
 }
 
 model Games {
   id                 Int                  @id @default(autoincrement())
-  game_date          DateTime             @unique
+  game_date          DateTime
+  location_id        Int
+  max_players        Int?
+  min_players        Int                  @default(10)
+  status             GameStatus           @default(SCHEDULED)
+  description        String?
+  organizer_id       String?
+  game_type          String?
   created_at         DateTime             @default(now())
   modified_at        DateTime             @updatedAt
-  location_id        Int
   game_registrations Game_registrations[]
+  notifications      Notification[]
 
-  location Locations @relation(fields: [location_id], references: [id])
+  location  Locations @relation(fields: [location_id], references: [id])
+  organizer Users?    @relation("GameOrganizer", fields: [organizer_id], references: [id])
+
+  @@unique([game_date, location_id])
 }
 
 model Game_registrations {
-  id          String   @id @default(cuid())
+  id          String             @id @default(cuid())
   user_id     String
   game_id     Int
-  given_name  String?
-  family_name String?
-  email       String?
-  created_at  DateTime @default(now())
-  modified_at DateTime @default(now())
+  status      RegistrationStatus @default(CONFIRMED)
+  created_at  DateTime           @default(now())
+  modified_at DateTime           @updatedAt
 
   user Users @relation(fields: [user_id], references: [id])
   game Games @relation(fields: [game_id], references: [id])
@@ -94,24 +125,30 @@ model Game_registrations {
 }
 
 model Locations {
-  id          Int      @id @default(autoincrement())
-  name        String
-  address     String
-  city        String
-  description String?
-  created_at  DateTime @default(now())
-  modified_at DateTime @default(now())
-  price       Int?
-  Game        Games[]
+  id             Int      @id @default(autoincrement())
+  name           String
+  address        String
+  city           String
+  description    String?
+  capacity       Int?
+  court_count    Int      @default(1)
+  image_url      String?
+  price_per_game Int?
+  is_active      Boolean  @default(true)
+  created_at     DateTime @default(now())
+  modified_at    DateTime @updatedAt
+  games          Games[]
 }
 
-model Post {
-  id          BigInt   @id @default(autoincrement())
-  user_id     String
-  title       String
-  content     String
-  created_at  DateTime @default(now())
-  modified_at DateTime @default(now())
+model Notification {
+  id         String   @id @default(cuid())
+  user_id    String
+  game_id    Int?
+  type       String
+  message    String
+  read       Boolean  @default(false)
+  created_at DateTime @default(now())
 
-  user Users @relation(fields: [user_id], references: [id])
+  user Users  @relation(fields: [user_id], references: [id])
+  game Games? @relation(fields: [game_id], references: [id])
 }

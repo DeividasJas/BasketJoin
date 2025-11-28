@@ -118,6 +118,16 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.email = user.email;
         token.picture = user.image;
       }
+
+      // Fetch user role from database if not already in token
+      if (token.id && !token.role) {
+        const dbUser = await prisma.users.findUnique({
+          where: { id: token.id as string },
+          select: { role: true },
+        });
+        token.role = dbUser?.role || "PLAYER";
+      }
+
       return token;
     },
     async session({ session, token }) {
@@ -125,6 +135,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         session.user.id = token.id as string;
         session.user.email = token.email as string;
         session.user.image = token.picture as string;
+        session.user.role = token.role as string;
       }
       return session;
     },

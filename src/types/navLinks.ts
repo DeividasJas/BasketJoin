@@ -4,7 +4,7 @@ export type Links = {
   label?: string;
   href: Url;
   requiresAuth?: boolean;
-  requiredPermissions?: string[];
+  requiredRoles?: string[];
   postOperation?: Url;
 };
 export const navLinks: Links[] = [
@@ -19,17 +19,15 @@ export const navLinks: Links[] = [
   {
     label: "Status",
     href: "/game-status",
-    // requiredPermissions: ["regular:user"],
   },
   {
     label: "Profile",
     href: "/profile",
-    // requiredPermissions: ["regular:user"],
   },
   {
     label: "Admin",
     href: "/admin",
-    requiredPermissions: ["add:game"],
+    requiredRoles: ["ADMIN", "ORGANIZER"],
   },
   {
     label: "Login",

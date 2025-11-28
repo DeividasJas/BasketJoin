@@ -7,15 +7,15 @@ import { Links } from "@/types/navLinks";
 export default function Header({
   isAuthenticated,
   navLinksArray,
-  permissions,
+  userRole,
 }: {
   isAuthenticated: boolean;
   navLinksArray: Links[];
-  permissions: string[] | undefined;
+  userRole: string;
 }) {
   const pathname = usePathname();
 
-  const navLinks = navLinksArray.map(({ href, label, requiredPermissions }) => {
+  const navLinks = navLinksArray.map(({ href, label, requiredRoles }) => {
     if (href == "/") {
       return (
         <li key={href} className="flex items-center">
@@ -31,20 +31,23 @@ export default function Header({
         </li>
       );
     }
-    if (
-      !requiredPermissions ||
-      requiredPermissions.every((perm) => permissions?.includes(perm)) ||
-      isAuthenticated
-    ) {
-      return (
-        <li
-          key={href as string}
-          className={`rounded-md bg-zinc-300 px-3 py-2 outline outline-1  outline-zinc-400 dark:outline-zinc-700 transition-all duration-500 dark:bg-zinc-800 sm:px-4 sm:py-3 ${pathname == href && "scale-105 outline-zinc-500 outline-[2px] dark:outline-zinc-600"}`}
-        >
-          <Link href={href}>{label}</Link>
-        </li>
-      );
+
+    // Check if link requires specific roles
+    if (requiredRoles && requiredRoles.length > 0) {
+      // Only show if user has one of the required roles
+      if (!requiredRoles.includes(userRole)) {
+        return null;
+      }
     }
+
+    return (
+      <li
+        key={href as string}
+        className={`rounded-md bg-zinc-300 px-3 py-2 outline outline-1  outline-zinc-400 dark:outline-zinc-700 transition-all duration-500 dark:bg-zinc-800 sm:px-4 sm:py-3 ${pathname == href && "scale-105 outline-zinc-500 outline-[2px] dark:outline-zinc-600"}`}
+      >
+        <Link href={href}>{label}</Link>
+      </li>
+    );
   });
 
   return (

@@ -16,6 +16,16 @@ export default auth((req) => {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
+  // Check admin role for /admin routes
+  if (pathname.startsWith("/admin") && isLoggedIn) {
+    const userRole = req.auth?.user?.role;
+    const hasAdminAccess = userRole === "ADMIN" || userRole === "ORGANIZER";
+
+    if (!hasAdminAccess) {
+      return NextResponse.redirect(new URL("/", req.url));
+    }
+  }
+
   // Redirect to home if trying to access login/signup while logged in
   if (isLoggedIn && (pathname === "/login" || pathname === "/signup")) {
     return NextResponse.redirect(new URL("/", req.url));

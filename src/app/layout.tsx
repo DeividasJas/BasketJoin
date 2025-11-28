@@ -28,7 +28,7 @@ export default async function RootLayout({
 }>) {
   const session = await auth();
   const isAuth = !!session?.user;
-  const permissions: string[] = []; // TODO: Implement custom permissions system
+  const userRole = session?.user?.role || "PLAYER";
   const { navLinks } = await dynamicNavLinksFunction(isAuth);
 
   return (
@@ -40,7 +40,7 @@ export default async function RootLayout({
               <Header
                 isAuthenticated={isAuth}
                 navLinksArray={navLinks}
-                permissions={permissions}
+                userRole={userRole}
               />
               <ThemeChanger />
               {children}

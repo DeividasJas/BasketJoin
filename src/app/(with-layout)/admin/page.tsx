@@ -8,18 +8,18 @@ export default async function Admin() {
     redirect("/login");
   }
 
-  // TODO: Implement custom permissions system
-  // For now, checking if user exists in session
-  // Future: Check for "add:game" permission from database or JWT claims
-  const hasAdminPermission = !!session?.user?.id;
+  // Check if user has ADMIN or ORGANIZER role
+  const userRole = session.user.role;
+  const hasAdminAccess = userRole === "ADMIN" || userRole === "ORGANIZER";
 
-  if (!hasAdminPermission) {
+  if (!hasAdminAccess) {
     redirect("/");
   }
 
   return (
     <>
       <h1 className="text-center text-3xl font-bold">Admin Page</h1>
+      <p className="text-center mt-4">Welcome, {userRole}!</p>
     </>
   );
 }
