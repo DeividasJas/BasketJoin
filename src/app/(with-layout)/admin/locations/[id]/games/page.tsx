@@ -1,0 +1,128 @@
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
+import { getLocationWithGames } from "@/actions/adminLocationActions";
+import Link from "next/link";
+
+export default async function LocationGamesPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const session = await auth();
+  const { id } = await params;
+
+  if (!session?.user) {
+    redirect("/login");
+  }
+
+  const userRole = session.user.role;
+  if (userRole !== "ADMIN" && userRole !== "ORGANIZER") {
+    redirect("/");
+  }
+
+  const result = await getLocationWithGames(parseInt(id));
+
+  if (!result.success || !result.location) {
+    redirect("/admin/locations");
+  }
+
+  const { location } = result;
+
+  return (
+    <div className="w-full max-w-4xl mx-auto px-4 py-6">
+      <div className="mb-6">
+        <Link
+          href="/admin/locations"
+          className="text-blue-600 dark:text-blue-400 hover:underline mb-2 inline-block"
+        >
+          ← Back to Locations
+        </Link>
+        <h1 className="text-3xl font-bold">{location.name}</h1>
+        <p className="text-gray-600 dark:text-gray-400">
+          📍 {location.address}, {location.city}
+        </p>
+      </div>
+
+      <div className="bg-zinc-100 dark:bg-zinc-800 rounded-lg p-4 mb-6">
+        <h2 className="font-bold mb-2">Location Details:</h2>
+        <div className="grid grid-cols-2 gap-4 text-sm">
+          {location.capacity && <p>👥 Capacity: {location.capacity}</p>}
+          <p>🏀 Courts: {location.court_count}</p>
+          {location.price_per_game && (
+            <p>💵 Price: ${location.price_per_game}/game</p>
+          )}
+          <p>
+            Status:{" "}
+            <span
+              className={
+                location.is_active ? "text-green-600" : "text-red-600"
+              }
+            >
+              {location.is_active ? "Active" : "Inactive"}
+            </span>
+          </p>
+        </div>
+        {location.description && (
+          <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+            {location.description}
+          </p>
+        )}
+      </div>
+
+      <div>
+        <h2 className="text-2xl font-bold mb-4">
+          Games at this Location ({location.games.length} recent)
+        </h2>
+
+        {location.games.length === 0 ? (
+          <p className="text-center text-gray-500 py-8">
+            No games scheduled at this location yet.
+          </p>
+        ) : (
+          <div className="space-y-4">
+            {location.games.map((game) => (
+              <div
+                key={game.id}
+                className="bg-white dark:bg-zinc-900 rounded-lg p-4 shadow-md border border-zinc-200 dark:border-zinc-800"
+              >
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h3 className="font-bold">
+                      {new Date(game.game_date).toLocaleDateString("en-US", {
+                        weekday: "short",
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      })}
+                      {" at "}
+                      {new Date(game.game_date).toLocaleTimeString("en-US", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </h3>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      Status: {game.status}
+                    </p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      Players: {game._count.game_registrations}
+                      {game.max_players && `/${game.max_players}`}
+                    </p>
+                    {game.description && (
+                      <p className="text-sm mt-2">{game.description}</p>
+                    )}
+                  </div>
+                  <Link
+                    href={`/game-status/${game.id}`}
+                    className="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700 transition-colors"
+                  >
+                    View Details
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
