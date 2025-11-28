@@ -1,11 +1,11 @@
-import {  NextResponse } from 'next/server';
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+import { NextResponse } from 'next/server';
+import { auth } from '@/auth';
 
 
 export async function GET() {
   try {
-    const { isAuthenticated } = getKindeServerSession();
-    const isAuth = await isAuthenticated();
+    const session = await auth();
+    const isAuth = !!session;
     return NextResponse.json(isAuth);
   } catch (error) {
     console.error('Error occurred:', error);

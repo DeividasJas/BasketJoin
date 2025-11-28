@@ -13,7 +13,7 @@ export default async function Home() {
 
   return (
     <>
-      {isAuthenticated && (
+      {isAuthenticated && user && (
         <h1 className="my-2 text-center text-xl">
           Welcome back {user.given_name} {user.family_name}
         </h1>

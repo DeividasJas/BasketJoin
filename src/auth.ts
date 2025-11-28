@@ -1,11 +1,11 @@
 import NextAuth from "next-auth";
-import { PrismaAdapter } from "@auth/prisma-adapter";
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
+import FacebookProvider from "next-auth/providers/facebook";
 import { prisma } from "@/utils/prisma";
 import bcrypt from "bcryptjs";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  adapter: PrismaAdapter(prisma),
   session: {
     strategy: "jwt",
   },
@@ -15,6 +15,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     error: "/login",
   },
   providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+    }),
+    FacebookProvider({
+      clientId: process.env.FACEBOOK_CLIENT_ID as string,
+      clientSecret: process.env.FACEBOOK_CLIENT_SECRET as string,
+    }),
     CredentialsProvider({
       name: "credentials",
       credentials: {
@@ -38,7 +46,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         const passwordMatch = await bcrypt.compare(
           credentials.password as string,
-          user.password
+          user.password,
         );
 
         if (!passwordMatch) {
@@ -55,15 +63,68 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
   callbacks: {
+    async signIn({ user, account }) {
+      // For OAuth providers (Google, Facebook), create or update user in database
+      if (account?.provider === "google" || account?.provider === "facebook") {
+        try {
+          const email = user.email;
+          if (!email) {
+            return false;
+          }
+
+          // Check if user exists
+          let existingUser = await prisma.users.findUnique({
+            where: { email },
+          });
+
+          if (!existingUser) {
+            // Create new user from OAuth profile
+            const names = (user.name || "").split(" ");
+            const given_name = names[0] || "";
+            const family_name = names.slice(1).join(" ") || "";
+
+            existingUser = await prisma.users.create({
+              data: {
+                email,
+                given_name,
+                family_name,
+                picture: user.image || "",
+                password: null, // OAuth users don't have passwords
+              },
+            });
+          } else if (user.image && !existingUser.picture) {
+            // Update user's profile picture if they don't have one
+            await prisma.users.update({
+              where: { id: existingUser.id },
+              data: { picture: user.image },
+            });
+          }
+
+          // Store the database user ID for use in JWT
+          user.id = existingUser.id;
+          return true;
+        } catch (error) {
+          console.error("Error in signIn callback:", error);
+          return false;
+        }
+      }
+
+      // For credentials provider, user is already validated
+      return true;
+    },
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
+        token.email = user.email;
+        token.picture = user.image;
       }
       return token;
     },
     async session({ session, token }) {
       if (token && session.user) {
         session.user.id = token.id as string;
+        session.user.email = token.email as string;
+        session.user.image = token.picture as string;
       }
       return session;
     },

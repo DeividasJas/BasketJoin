@@ -3,11 +3,21 @@ import { useTheme } from "next-themes";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Moon, Sun } from "lucide-react";
+import { useEffect, useState } from "react";
 
 function ThemeChanger() {
   const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const toggleTheme = () => setTheme(theme === "dark" ? "light" : "dark");
+
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <>

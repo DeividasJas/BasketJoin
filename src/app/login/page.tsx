@@ -4,6 +4,7 @@ import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import SocialLoginButtons from "@/components/SocialLoginButtons";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -30,7 +31,7 @@ export default function LoginPage() {
         router.push("/game-status");
         router.refresh();
       }
-    } catch (error) {
+    } catch {
       setError("Something went wrong");
     } finally {
       setIsLoading(false);
@@ -41,6 +42,8 @@ export default function LoginPage() {
     <div className="flex min-h-[80vh] items-center justify-center">
       <div className="w-full max-w-md rounded-lg border border-zinc-300 bg-white p-8 shadow-lg dark:border-zinc-700 dark:bg-zinc-900">
         <h1 className="mb-6 text-center text-2xl font-bold">Login to BasketJoin</h1>
+
+        <SocialLoginButtons callbackUrl="/game-status" />
 
         {error && (
           <div className="mb-4 rounded-md bg-red-50 p-3 text-sm text-red-600 dark:bg-red-900/20 dark:text-red-400">
@@ -89,7 +92,7 @@ export default function LoginPage() {
         </form>
 
         <p className="mt-6 text-center text-sm text-zinc-600 dark:text-zinc-400">
-          Don't have an account?{" "}
+          Don&apos;t have an account?{" "}
           <Link href="/signup" className="text-orange-600 hover:text-orange-700 font-medium">
             Sign up
           </Link>

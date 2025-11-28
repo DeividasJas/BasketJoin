@@ -1,29 +1,42 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
 }
 
-// NextAuth.js models
+model Users {
+  id                 String               @id @default(cuid()) @db.VarChar(255)
+  email              String               @unique @db.VarChar(255)
+  emailVerified      DateTime?
+  password           String?              @db.VarChar(255)
+  family_name        String?              @db.VarChar(255)
+  given_name         String?              @db.VarChar(255)
+  username           String?              @db.VarChar(255)
+  phone_number       String?              @db.VarChar(50)
+  picture            String?              @db.Text
+  created_at         DateTime             @default(now())
+  modified_at        DateTime             @default(now())
+  posts              Post[]
+  game_registrations Game_registrations[]
+  accounts           Account[]
+  sessions           Session[]
+}
+
 model Account {
   id                String  @id @default(cuid())
-  userId            String
+  userId            String  @db.VarChar(255)
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String?
-  access_token      String?
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String?
+  id_token          String? @db.Text
   session_state     String?
 
   user Users @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -34,7 +47,7 @@ model Account {
 model Session {
   id           String   @id @default(cuid())
   sessionToken String   @unique
-  userId       String
+  userId       String   @db.VarChar(255)
   expires      DateTime
   user         Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
@@ -45,25 +58,6 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
-}
-
-// Application models
-model Users {
-  id                 String               @id @default(cuid())
-  email              String?              @unique @default("")
-  emailVerified      DateTime?
-  password           String?
-  family_name        String?
-  given_name         String?
-  username           String?
-  phone_number       String?
-  picture            String?
-  created_at         DateTime             @default(now())
-  modified_at        DateTime             @default(now())
-  posts              Post[]
-  game_registrations Game_registrations[]
-  accounts           Account[]
-  sessions           Session[]
 }
 
 model Games {
@@ -78,12 +72,12 @@ model Games {
 }
 
 model Game_registrations {
-  id          String   @id @default(cuid())
-  user_id     String
+  id          String   @id @default(cuid()) @db.VarChar(255)
+  user_id     String   @db.VarChar(255)
   game_id     Int
-  given_name  String?
-  family_name String?
-  email       String?
+  given_name  String?  @db.VarChar(255)
+  family_name String?  @db.VarChar(255)
+  email       String?  @db.VarChar(255)
   created_at  DateTime @default(now())
   modified_at DateTime @default(now())
 
@@ -95,10 +89,10 @@ model Game_registrations {
 
 model Locations {
   id          Int      @id @default(autoincrement())
-  name        String
-  address     String
-  city        String
-  description String?
+  name        String   @db.VarChar(255)
+  address     String   @db.VarChar(500)
+  city        String   @db.VarChar(255)
+  description String?  @db.Text
   created_at  DateTime @default(now())
   modified_at DateTime @default(now())
   price       Int?
@@ -107,9 +101,9 @@ model Locations {
 
 model Post {
   id          BigInt   @id @default(autoincrement())
-  user_id     String
-  title       String
-  content     String
+  user_id     String   @db.VarChar(255)
+  title       String   @db.VarChar(500)
+  content     String   @db.Text
   created_at  DateTime @default(now())
   modified_at DateTime @default(now())
 
