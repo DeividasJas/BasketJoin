@@ -5,6 +5,7 @@ import { AllGames } from "@/types/user";
 import listPlugin from "@fullcalendar/list";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { ThumbsUp, CircleOff } from "lucide-react";
 
 export default function GameCalendar({
   allGames,
@@ -132,6 +133,51 @@ export default function GameCalendar({
           background-color: var(--fc-button-active-bg-color);
           border-color: var(--fc-button-active-border-color);
         }
+
+        /* List view colored indicators */
+        .fc-list-event-dot {
+          border-width: 6px !important;
+          border-radius: 50%;
+        }
+
+        /* Ensure event backgrounds are visible and span wider */
+        .fc-daygrid-event {
+          border-radius: 4px;
+          padding: 1px;
+          margin-left: 2px !important;
+          margin-right: 2px !important;
+          margin-top: 2px !important;
+          margin-bottom: 2px !important;
+          min-height: 32px;
+        }
+
+        .fc-daygrid-event-harness {
+          margin-left: 0 !important;
+          margin-right: 0 !important;
+          margin-top: 1px !important;
+          margin-bottom: 1px !important;
+        }
+
+        .fc-event-main {
+          padding: 0 !important;
+          min-height: inherit;
+        }
+
+        /* List view event styling */
+        .dark .fc .fc-list-event-dot {
+          opacity: 0.9;
+        }
+
+        /* Mobile list view - larger touch targets */
+        @media (max-width: 640px) {
+          .fc-list-event {
+            padding: 0.5rem 0;
+          }
+
+          .fc-list-event-dot {
+            border-width: 8px !important;
+          }
+        }
       `}</style>
       <FullCalendar
         plugins={[listPlugin, dayGridPlugin]}
@@ -141,72 +187,98 @@ export default function GameCalendar({
         height="auto"
         contentHeight="auto"
         firstDay={1}
-      events={allGames.map((game: any) => {
-        const isUserRegistered = game.game_registrations.some(
-          (registration: any) =>
-            registration.user_id === user_id &&
-            registration.status === "CONFIRMED",
-        );
-        const registrationCount = game.game_registrations.filter(
-          (r: any) => r.status === "CONFIRMED",
-        ).length;
+        events={allGames.map((game: any) => {
+          const isUserRegistered = game.game_registrations.some(
+            (registration: any) =>
+              registration.user_id === user_id &&
+              registration.status === "CONFIRMED",
+          );
+          const registrationCount = game.game_registrations.filter(
+            (r: any) => r.status === "CONFIRMED",
+          ).length;
 
-        return {
-          id: game.id.toString(),
-          title: `${game.location.name} (${registrationCount}/${game.max_players || "∞"})`,
-          date: game.game_date,
-          extendedProps: {
-            game_id: game.id,
-            isUserRegistered,
-            location: game.location.name,
-            registrationCount,
-            maxPlayers: game.max_players,
-            status: game.status,
-          },
-          backgroundColor: isUserRegistered
-            ? "#16a34a" // green for registered
-            : game.status === "CANCELLED"
-              ? "#dc2626" // red for cancelled
-              : "#3b82f6", // blue for available
-          borderColor: isUserRegistered
-            ? "#15803d"
-            : game.status === "CANCELLED"
-              ? "#b91c1c"
-              : "#2563eb",
-        };
-      })}
-      headerToolbar={{
-        start: "dayGridMonth,listMonth",
-        center: "title",
-        end: "prev,today,next",
-      }}
-      displayEventTime={true}
-      eventTimeFormat={{
-        hour: "numeric",
-        minute: "2-digit",
-        omitZeroMinute: true,
-        meridiem: "short",
-      }}
-      eventClick={(info) => {
-        const gameId = info.event.extendedProps.game_id;
-        router.push(`/game-status/${gameId}`);
-      }}
-      eventContent={(eventInfo) => {
-        const { isUserRegistered, status } = eventInfo.event.extendedProps;
-        return (
-          <div className="cursor-pointer overflow-hidden px-1 py-0.5 text-xs">
-            <div className="flex items-center gap-1 truncate font-semibold">
-              {isUserRegistered && <span>✓</span>}
-              {status === "CANCELLED" && <span>✗</span>}
-              <span className="truncate">{eventInfo.event.title}</span>
+          return {
+            id: game.id.toString(),
+            title: `${game.location.name} (${registrationCount}/${game.max_players || "∞"})`,
+            date: game.game_date,
+            extendedProps: {
+              game_id: game.id,
+              isUserRegistered,
+              location: game.location.name,
+              registrationCount,
+              maxPlayers: game.max_players,
+              status: game.status,
+            },
+            backgroundColor: isUserRegistered
+              ? "#16a34a" // green for registered
+              : game.status === "CANCELLED"
+                ? "#dc2626" // red for cancelled
+                : "#3b82f6", // blue for available
+            borderColor: isUserRegistered
+              ? "#15803d"
+              : game.status === "CANCELLED"
+                ? "#b91c1c"
+                : "#2563eb",
+          };
+        })}
+        headerToolbar={{
+          start: "dayGridMonth,listMonth",
+          center: "title",
+          end: "prev,today,next",
+        }}
+        displayEventTime={true}
+        eventTimeFormat={{
+          hour: "numeric",
+          minute: "2-digit",
+          omitZeroMinute: true,
+          meridiem: "short",
+        }}
+        eventClick={(info) => {
+          const gameId = info.event.extendedProps.game_id;
+          router.push(`/game-status/${gameId}`);
+        }}
+        eventContent={(eventInfo) => {
+          const { isUserRegistered, status } = eventInfo.event.extendedProps;
+
+          // Determine colors and icon based on priority: cancelled > registered > available
+          let borderColor, bgColor, Icon;
+
+          if (status === "CANCELLED") {
+            // Cancelled games (red)
+            borderColor = "#dc2626";
+            bgColor = "rgba(220, 38, 38, 0.15)";
+            Icon = CircleOff;
+          } else if (isUserRegistered) {
+            // User registered games (green)
+            borderColor = "#16a34a";
+            bgColor = "rgba(22, 163, 74, 0.15)";
+            Icon = ThumbsUp;
+          } else {
+            // Available games (blue)
+            borderColor = "#3b82f6";
+            bgColor = "rgba(59, 130, 246, 0.15)";
+            Icon = null;
+          }
+
+          return (
+            <div
+              className="h-full w-full cursor-pointer overflow-hidden px-2 py-1.5 text-xs"
+              style={{
+                borderLeft: `4px solid ${borderColor}`,
+                backgroundColor: bgColor,
+              }}
+            >
+              <div className="flex items-center gap-1.5 truncate font-semibold">
+                {Icon && <Icon className="h-3 w-3 flex-shrink-0" />}
+                <span className="truncate">{eventInfo.event.title}</span>
+              </div>
+              <div className="truncate text-[10px] opacity-90">
+                {eventInfo.timeText}
+              </div>
             </div>
-            <div className="truncate text-[10px] opacity-90">
-              {eventInfo.timeText}
-            </div>
-          </div>
-        );
-      }}
-    />
+          );
+        }}
+      />
     </div>
   );
 }

@@ -5,7 +5,7 @@ import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { registerToGame } from "@/actions/gameActions";
 import { IsActivePlayer } from "@/types/prismaTypes";
-import { redirect, usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function RegistrationBtn({
   gameId,
@@ -24,6 +24,7 @@ export default function RegistrationBtn({
 }) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const pathname = usePathname();
+  const router = useRouter();
 
   const handleClick = async () => {
     try {
@@ -39,11 +40,13 @@ export default function RegistrationBtn({
 
       if (pathname !== `/game-status/${gameId}`) {
         setTimeout(() => {
-          redirect(`/game-status/${gameId}`);
+          router.push(`/game-status/${gameId}`);
         }, 500);
       } else {
         setChange((prev) => !prev);
       }
+
+      router.refresh();
     } catch (error) {
       console.error(error);
       toast.error("Unknown error");

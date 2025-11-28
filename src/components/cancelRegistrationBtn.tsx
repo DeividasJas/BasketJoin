@@ -5,6 +5,7 @@ import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cancelRegistration } from "@/actions/gameActions";
 import { IsActivePlayer } from "@/types/prismaTypes";
+import { useRouter } from "next/navigation";
 
 export function CancelRegistrationBtn({
   gameId,
@@ -20,6 +21,7 @@ export function CancelRegistrationBtn({
   // onClick?: () => void;
 }) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const router = useRouter();
 
   const handleClick = async () => {
     try {
@@ -30,7 +32,8 @@ export function CancelRegistrationBtn({
         toast.error(message);
       } else {
         setChange((prev) => !prev);
-        toast.error(message);
+        toast.success(message);
+        router.refresh();
       }
     } catch (error) {
       console.error(error);

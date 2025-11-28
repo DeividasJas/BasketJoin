@@ -167,13 +167,14 @@ export const registerToGame = async (
     const newRegistration = await prisma.game_registrations.create({
       data: {
         user_id: user?.id,
-        family_name: user?.family_name,
-        given_name: user?.given_name,
         game_id: gameId,
       },
     });
     if (!newRegistration)
       return { success: false, message: "Registration failed" };
+
+    revalidatePath("/schedule");
+    revalidatePath(`/game-status/${gameId}`);
 
     return {
       success: true,
@@ -207,7 +208,9 @@ export const cancelRegistration = async (
 
     if (!registration)
       return { success: false, message: "Registration not found" };
+
     revalidatePath("/schedule");
+    revalidatePath(`/game-status/${gameId}`);
 
     return {
       success: true,
