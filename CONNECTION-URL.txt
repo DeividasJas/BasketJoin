@@ -1,0 +1,64 @@
+# PostgreSQL Connection URL for BasketJoin
+
+## Full Connection URL (Copy & Paste This)
+
+postgresql://basketjoin:basketjoin_dev_password@localhost:5432/basketjoin_dev
+
+## URL Components Breakdown
+
+Protocol:  postgresql://
+Username:  basketjoin
+Password:  basketjoin_dev_password
+Host:      localhost
+Port:      5432
+Database:  basketjoin_dev
+
+## Alternative Connection URLs
+
+# If your DB viewer requires different formats:
+
+# Standard PostgreSQL URL:
+postgresql://basketjoin:basketjoin_dev_password@localhost:5432/basketjoin_dev
+
+# With SSL disabled (if needed):
+postgresql://basketjoin:basketjoin_dev_password@localhost:5432/basketjoin_dev?sslmode=disable
+
+# JDBC format (for Java tools):
+jdbc:postgresql://localhost:5432/basketjoin_dev
+
+# 127.0.0.1 instead of localhost (if localhost doesn't work):
+postgresql://basketjoin:basketjoin_dev_password@127.0.0.1:5432/basketjoin_dev
+
+## For Different Database Tools
+
+### TablePlus
+- Use: postgresql://basketjoin:basketjoin_dev_password@localhost:5432/basketjoin_dev
+- Or paste connection string when creating new connection
+
+### DBeaver
+- Can paste the URL directly when creating a connection
+- Or use individual fields from breakdown above
+
+### DataGrip
+- Paste URL in "URL field" when setting up data source
+- Or use individual fields
+
+### Postico
+- Use individual fields (doesn't support URL format)
+
+## Current Status
+
+✅ This URL is WORKING and VERIFIED
+✅ Database is accessible at localhost:5432
+✅ Prisma Studio is connected with this same URL
+✅ Application is using this connection successfully
+
+## Test the URL
+
+To test if this URL works from your terminal:
+
+psql "postgresql://basketjoin:basketjoin_dev_password@localhost:5432/basketjoin_dev"
+
+Or using environment variable format:
+export DATABASE_URL="postgresql://basketjoin:basketjoin_dev_password@localhost:5432/basketjoin_dev"
+psql $DATABASE_URL
