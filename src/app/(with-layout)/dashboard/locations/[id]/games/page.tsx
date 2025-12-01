@@ -25,18 +25,18 @@ export default async function LocationGamesPage({
   const result = await getLocationWithGames(parseInt(id));
 
   if (!result.success || !result.location) {
-    redirect("/admin/locations");
+    redirect("/dashboard/locations");
   }
 
   const { location } = result;
 
   return (
-    <div className="w-full max-w-4xl mx-auto px-4 py-6">
+    <div className="mx-auto w-full max-w-4xl px-4 py-6">
       <Link
-        href="/admin/locations"
-        className="inline-flex items-center gap-1 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 mb-4 transition-colors"
+        href="/dashboard/locations"
+        className="mb-4 inline-flex items-center gap-1 text-zinc-600 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
       >
-        <ArrowLeft className="w-4 h-4" />
+        <ArrowLeft className="h-4 w-4" />
         Back to Locations
       </Link>
 
@@ -47,8 +47,8 @@ export default async function LocationGamesPage({
         </p>
       </div>
 
-      <div className="bg-zinc-100 dark:bg-zinc-800 rounded-lg p-4 mb-6">
-        <h2 className="font-bold mb-2">Location Details:</h2>
+      <div className="mb-6 rounded-lg bg-zinc-100 p-4 dark:bg-zinc-800">
+        <h2 className="mb-2 font-bold">Location Details:</h2>
         <div className="grid grid-cols-2 gap-4 text-sm">
           {location.capacity && <p>👥 Capacity: {location.capacity}</p>}
           <p>🏀 Courts: {location.court_count}</p>
@@ -60,8 +60,8 @@ export default async function LocationGamesPage({
             <span
               className={
                 location.is_active
-                  ? "text-zinc-700 dark:text-zinc-300 font-semibold"
-                  : "text-red-600 dark:text-red-400 font-semibold"
+                  ? "font-semibold text-zinc-700 dark:text-zinc-300"
+                  : "font-semibold text-red-600 dark:text-red-400"
               }
             >
               {location.is_active ? "Active" : "Inactive"}
@@ -76,12 +76,12 @@ export default async function LocationGamesPage({
       </div>
 
       <div>
-        <h2 className="text-2xl font-bold mb-4">
+        <h2 className="mb-4 text-2xl font-bold">
           Games at this Location ({location.games.length} recent)
         </h2>
 
         {location.games.length === 0 ? (
-          <p className="text-center text-gray-500 py-8">
+          <p className="py-8 text-center text-gray-500">
             No games scheduled at this location yet.
           </p>
         ) : (
@@ -89,9 +89,9 @@ export default async function LocationGamesPage({
             {location.games.map((game) => (
               <div
                 key={game.id}
-                className="bg-white dark:bg-zinc-900 rounded-lg p-4 shadow-md border border-zinc-200 dark:border-zinc-800"
+                className="rounded-lg border border-zinc-200 bg-white p-4 shadow-md dark:border-zinc-800 dark:bg-zinc-900"
               >
-                <div className="flex justify-between items-start">
+                <div className="flex items-start justify-between">
                   <div>
                     <h3 className="font-bold">
                       {new Date(game.game_date).toLocaleDateString("en-US", {
@@ -114,7 +114,7 @@ export default async function LocationGamesPage({
                       {game.max_players && `/${game.max_players}`}
                     </p>
                     {game.description && (
-                      <p className="text-sm mt-2">{game.description}</p>
+                      <p className="mt-2 text-sm">{game.description}</p>
                     )}
                   </div>
                   <Button variant="outline" size="sm" asChild>

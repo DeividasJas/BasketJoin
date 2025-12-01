@@ -68,7 +68,7 @@ export default async function Schedule() {
           {session?.user?.role === "ADMIN" ||
           session?.user?.role === "ORGANIZER" ? (
             <Button variant="outline" asChild className="mt-4">
-              <Link href="/admin/games/new">Create First Game</Link>
+              <Link href="/dashboard/locations/new">Create First Game</Link>
             </Button>
           ) : null}
         </div>
@@ -103,7 +103,7 @@ export default async function Schedule() {
           {session?.user?.role === "ADMIN" ||
           session?.user?.role === "ORGANIZER" ? (
             <Button variant="outline" asChild>
-              <Link href="/admin/games">Manage Games</Link>
+              <Link href="/dashboard/locations">Manage Games</Link>
             </Button>
           ) : null}
         </div>

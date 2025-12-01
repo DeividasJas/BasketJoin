@@ -60,7 +60,7 @@ export default function LocationForm({ mode, location }: LocationFormProps) {
 
       if (result.success) {
         toast.success(result.message);
-        router.push("/admin/locations");
+        router.push("/dashboard/locations");
       } else {
         toast.error(result.message);
       }
@@ -74,11 +74,11 @@ export default function LocationForm({ mode, location }: LocationFormProps) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white dark:bg-zinc-900 rounded-lg p-6 shadow-md space-y-4"
+      className="space-y-4 rounded-lg bg-white p-6 shadow-md dark:bg-zinc-900"
     >
       {/* Name */}
       <div>
-        <label className="block text-sm font-medium mb-2">
+        <label className="mb-2 block text-sm font-medium">
           Location Name <span className="text-red-500">*</span>
         </label>
         <input
@@ -87,13 +87,13 @@ export default function LocationForm({ mode, location }: LocationFormProps) {
           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           required
           placeholder="e.g., Downtown Basketball Court"
-          className="w-full px-4 py-2 rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full rounded-md border border-zinc-300 bg-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-800"
         />
       </div>
 
       {/* Address */}
       <div>
-        <label className="block text-sm font-medium mb-2">
+        <label className="mb-2 block text-sm font-medium">
           Address <span className="text-red-500">*</span>
         </label>
         <input
@@ -104,13 +104,13 @@ export default function LocationForm({ mode, location }: LocationFormProps) {
           }
           required
           placeholder="e.g., 123 Main Street"
-          className="w-full px-4 py-2 rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full rounded-md border border-zinc-300 bg-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-800"
         />
       </div>
 
       {/* City */}
       <div>
-        <label className="block text-sm font-medium mb-2">
+        <label className="mb-2 block text-sm font-medium">
           City <span className="text-red-500">*</span>
         </label>
         <input
@@ -119,13 +119,13 @@ export default function LocationForm({ mode, location }: LocationFormProps) {
           onChange={(e) => setFormData({ ...formData, city: e.target.value })}
           required
           placeholder="e.g., New York"
-          className="w-full px-4 py-2 rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full rounded-md border border-zinc-300 bg-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-800"
         />
       </div>
 
       {/* Court Count */}
       <div>
-        <label className="block text-sm font-medium mb-2">
+        <label className="mb-2 block text-sm font-medium">
           Number of Courts <span className="text-red-500">*</span>
         </label>
         <input
@@ -136,13 +136,13 @@ export default function LocationForm({ mode, location }: LocationFormProps) {
           }
           required
           min="1"
-          className="w-full px-4 py-2 rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full rounded-md border border-zinc-300 bg-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-800"
         />
       </div>
 
       {/* Capacity */}
       <div>
-        <label className="block text-sm font-medium mb-2">
+        <label className="mb-2 block text-sm font-medium">
           Venue Capacity (optional)
         </label>
         <input
@@ -153,13 +153,13 @@ export default function LocationForm({ mode, location }: LocationFormProps) {
           }
           min="10"
           placeholder="Maximum number of players"
-          className="w-full px-4 py-2 rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full rounded-md border border-zinc-300 bg-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-800"
         />
       </div>
 
       {/* Price per game */}
       <div>
-        <label className="block text-sm font-medium mb-2">
+        <label className="mb-2 block text-sm font-medium">
           Price per Game (optional)
         </label>
         <input
@@ -170,13 +170,13 @@ export default function LocationForm({ mode, location }: LocationFormProps) {
           }
           min="0"
           placeholder="Cost in dollars"
-          className="w-full px-4 py-2 rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full rounded-md border border-zinc-300 bg-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-800"
         />
       </div>
 
       {/* Description */}
       <div>
-        <label className="block text-sm font-medium mb-2">
+        <label className="mb-2 block text-sm font-medium">
           Description (optional)
         </label>
         <textarea
@@ -186,24 +186,16 @@ export default function LocationForm({ mode, location }: LocationFormProps) {
           }
           rows={4}
           placeholder="Add details about parking, facilities, access instructions..."
-          className="w-full px-4 py-2 rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full rounded-md border border-zinc-300 bg-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-800"
         />
       </div>
 
       {/* Buttons */}
       <div className="flex gap-4">
-        <Button
-          type="submit"
-          isLoading={loading}
-          className="flex-1"
-        >
+        <Button type="submit" isLoading={loading} className="flex-1">
           {mode === "create" ? "Create Location" : "Update Location"}
         </Button>
-        <Button
-          type="button"
-          onClick={() => router.back()}
-          variant="secondary"
-        >
+        <Button type="button" onClick={() => router.back()} variant="secondary">
           Cancel
         </Button>
       </div>

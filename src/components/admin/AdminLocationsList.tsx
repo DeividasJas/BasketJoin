@@ -2,7 +2,11 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
-import { toggleLocationActive, deleteLocation, forceDeleteLocation } from "@/actions/adminLocationActions";
+import {
+  toggleLocationActive,
+  deleteLocation,
+  forceDeleteLocation,
+} from "@/actions/adminLocationActions";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
@@ -33,7 +37,9 @@ export default function AdminLocationsList({
   const [loading, setLoading] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCity, setFilterCity] = useState("");
-  const [filterActive, setFilterActive] = useState<"all" | "active" | "inactive">("all");
+  const [filterActive, setFilterActive] = useState<
+    "all" | "active" | "inactive"
+  >("all");
 
   const handleToggleActive = async (locationId: number) => {
     setLoading(locationId);
@@ -45,8 +51,10 @@ export default function AdminLocationsList({
       // Update local state
       setLocations((prev) =>
         prev.map((loc) =>
-          loc.id === locationId ? { ...loc, is_active: result.location.is_active } : loc
-        )
+          loc.id === locationId
+            ? { ...loc, is_active: result.location.is_active }
+            : loc,
+        ),
       );
     } else {
       toast.error(result.message);
@@ -67,7 +75,11 @@ export default function AdminLocationsList({
       setLocations((prev) => prev.filter((loc) => loc.id !== locationId));
     } else if (result.requiresConfirmation) {
       // Ask for force delete confirmation
-      if (confirm(result.message + "\n\nAre you sure you want to permanently delete?")) {
+      if (
+        confirm(
+          result.message + "\n\nAre you sure you want to permanently delete?",
+        )
+      ) {
         setLoading(locationId);
         const forceResult = await forceDeleteLocation(locationId);
         setLoading(null);
@@ -112,16 +124,16 @@ export default function AdminLocationsList({
           placeholder="Search locations by name, address, or city..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full px-4 py-2 rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full rounded-md border border-zinc-300 bg-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-800"
         />
 
         {/* Filters */}
-        <div className="flex gap-2 flex-wrap">
+        <div className="flex flex-wrap gap-2">
           {/* Active/Inactive filter */}
           <select
             value={filterActive}
             onChange={(e) => setFilterActive(e.target.value as any)}
-            className="px-4 py-2 rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800"
+            className="rounded-md border border-zinc-300 bg-white px-4 py-2 dark:border-zinc-700 dark:bg-zinc-800"
           >
             <option value="all">All Locations</option>
             <option value="active">Active Only</option>
@@ -132,7 +144,7 @@ export default function AdminLocationsList({
           <select
             value={filterCity}
             onChange={(e) => setFilterCity(e.target.value)}
-            className="px-4 py-2 rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800"
+            className="rounded-md border border-zinc-300 bg-white px-4 py-2 dark:border-zinc-700 dark:bg-zinc-800"
           >
             <option value="">All Cities</option>
             {cities.map((city) => (
@@ -152,23 +164,23 @@ export default function AdminLocationsList({
       {/* Locations list */}
       <div className="space-y-4">
         {filteredLocations.length === 0 ? (
-          <p className="text-center text-gray-500 py-8">No locations found</p>
+          <p className="py-8 text-center text-gray-500">No locations found</p>
         ) : (
           filteredLocations.map((location) => (
             <div
               key={location.id}
-              className={`bg-white dark:bg-zinc-900 rounded-lg p-4 shadow-md border-2 ${
+              className={`rounded-lg border-2 bg-white p-4 shadow-md dark:bg-zinc-900 ${
                 location.is_active
                   ? "border-zinc-200 dark:border-zinc-800"
-                  : "border-red-300 dark:border-red-900 opacity-60"
+                  : "border-red-300 opacity-60 dark:border-red-900"
               }`}
             >
-              <div className="flex justify-between items-start mb-3">
+              <div className="mb-3 flex items-start justify-between">
                 <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-2">
+                  <div className="mb-2 flex items-center gap-2">
                     <h3 className="text-lg font-bold">{location.name}</h3>
                     {!location.is_active && (
-                      <span className="px-2 py-1 rounded text-xs bg-red-500 text-white">
+                      <span className="rounded bg-red-500 px-2 py-1 text-xs text-white">
                         INACTIVE
                       </span>
                     )}
@@ -177,12 +189,14 @@ export default function AdminLocationsList({
                     📍 {location.address}, {location.city}
                   </p>
                   {location.description && (
-                    <p className="text-sm mt-1 text-gray-700 dark:text-gray-300">
+                    <p className="mt-1 text-sm text-gray-700 dark:text-gray-300">
                       {location.description}
                     </p>
                   )}
-                  <div className="flex gap-4 mt-2 text-sm text-gray-600 dark:text-gray-400">
-                    {location.capacity && <span>👥 Capacity: {location.capacity}</span>}
+                  <div className="mt-2 flex gap-4 text-sm text-gray-600 dark:text-gray-400">
+                    {location.capacity && (
+                      <span>👥 Capacity: {location.capacity}</span>
+                    )}
                     <span>🏀 Courts: {location.court_count}</span>
                     {location.price_per_game && (
                       <span>💵 ${location.price_per_game}/game</span>
@@ -193,15 +207,15 @@ export default function AdminLocationsList({
               </div>
 
               {/* Action buttons */}
-              <div className="flex gap-2 flex-wrap mt-4">
+              <div className="mt-4 flex flex-wrap gap-2">
                 <Button asChild size="sm">
-                  <Link href={`/admin/locations/${location.id}/edit`}>
+                  <Link href={`/dashboard/locations/${location.id}/edit`}>
                     ✏️ Edit
                   </Link>
                 </Button>
 
                 <Button asChild variant="outline" size="sm">
-                  <Link href={`/admin/locations/${location.id}/games`}>
+                  <Link href={`/dashboard/locations/${location.id}/games`}>
                     🎮 View Games ({location._count.games})
                   </Link>
                 </Button>

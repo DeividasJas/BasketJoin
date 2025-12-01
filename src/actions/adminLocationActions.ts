@@ -45,7 +45,7 @@ export async function createLocation(data: {
       },
     });
 
-    revalidatePath("/admin/locations");
+    revalidatePath("/dashboard/locations");
 
     return {
       success: true,
@@ -72,7 +72,7 @@ export async function updateLocation(
     court_count?: number;
     price_per_game?: number;
     image_url?: string;
-  }
+  },
 ) {
   try {
     await checkAdminAccess();
@@ -82,7 +82,7 @@ export async function updateLocation(
       data,
     });
 
-    revalidatePath("/admin/locations");
+    revalidatePath("/dashboard/locations");
 
     return {
       success: true,
@@ -118,7 +118,7 @@ export async function toggleLocationActive(locationId: number) {
       data: { is_active: !location.is_active },
     });
 
-    revalidatePath("/admin/locations");
+    revalidatePath("/dashboard/locations");
 
     return {
       success: true,
@@ -174,7 +174,7 @@ export async function deleteLocation(locationId: number) {
       where: { id: locationId },
     });
 
-    revalidatePath("/admin/locations");
+    revalidatePath("/dashboard/locations");
 
     return {
       success: true,
@@ -214,7 +214,7 @@ export async function forceDeleteLocation(locationId: number) {
       where: { id: locationId },
     });
 
-    revalidatePath("/admin/locations");
+    revalidatePath("/dashboard/locations");
 
     return {
       success: true,

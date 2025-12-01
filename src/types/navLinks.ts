@@ -25,9 +25,14 @@ export const navLinks: Links[] = [
     href: "/profile",
   },
   {
+    label: "Dashboard",
+    href: "/dashboard",
+    requiredRoles: ["ADMIN", "ORGANIZER"],
+  },
+  {
     label: "Admin",
     href: "/admin",
-    requiredRoles: ["ADMIN", "ORGANIZER"],
+    requiredRoles: ["ADMIN"],
   },
   {
     label: "Login",

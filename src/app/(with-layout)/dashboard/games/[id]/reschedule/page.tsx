@@ -41,24 +41,28 @@ export default async function ReschedulePage({
   }
 
   return (
-    <div className="w-full max-w-2xl mx-auto px-4 py-6">
+    <div className="mx-auto w-full max-w-2xl px-4 py-6">
       <Link
-        href="/admin/games"
-        className="inline-flex items-center gap-1 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 mb-4 transition-colors"
+        href="/dashboard/locations"
+        className="mb-4 inline-flex items-center gap-1 text-zinc-600 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
       >
-        <ArrowLeft className="w-4 h-4" />
+        <ArrowLeft className="h-4 w-4" />
         Back to Games
       </Link>
-      <h1 className="text-3xl font-bold mb-6">Reschedule Game</h1>
+      <h1 className="mb-6 text-3xl font-bold">Reschedule Game</h1>
 
-      <div className="bg-zinc-100 dark:bg-zinc-800 rounded-lg p-4 mb-6">
-        <h2 className="font-bold mb-2">Current Game Details:</h2>
+      <div className="mb-6 rounded-lg bg-zinc-100 p-4 dark:bg-zinc-800">
+        <h2 className="mb-2 font-bold">Current Game Details:</h2>
         <p>Date: {new Date(game.game_date).toLocaleString()}</p>
         <p>Location: {game.location.name}</p>
         <p>Registered Players: {game._count.game_registrations}</p>
       </div>
 
-      <RescheduleForm gameId={game.id} currentDate={game.game_date} playerCount={game._count.game_registrations} />
+      <RescheduleForm
+        gameId={game.id}
+        currentDate={game.game_date}
+        playerCount={game._count.game_registrations}
+      />
     </div>
   );
 }

@@ -17,15 +17,15 @@ export default async function NewLocationPage() {
   }
 
   return (
-    <div className="w-full max-w-2xl mx-auto px-4 py-6">
+    <div className="mx-auto w-full max-w-2xl px-4 py-6">
       <Link
-        href="/admin/locations"
-        className="inline-flex items-center gap-1 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 mb-4 transition-colors"
+        href="/dashboard/locations"
+        className="mb-4 inline-flex items-center gap-1 text-zinc-600 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
       >
-        <ArrowLeft className="w-4 h-4" />
+        <ArrowLeft className="h-4 w-4" />
         Back to Locations
       </Link>
-      <h1 className="text-3xl font-bold mb-6">Add New Location</h1>
+      <h1 className="mb-6 text-3xl font-bold">Add New Location</h1>
       <LocationForm mode="create" />
     </div>
   );
