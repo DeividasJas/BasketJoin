@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { registerToGame } from "@/actions/gameActions";
 import { IsActivePlayer } from "@/types/prismaTypes";
@@ -57,19 +56,13 @@ export default function RegistrationBtn({
 
   return (
     <Button
-      className={`bg-zinc-400 px-2 py-1 text-zinc-100 outline hover:scale-105 dark:outline-zinc-600 ${props} dark:bg-transparent`}
+      className={`px-2 py-1 hover:scale-105 ${props}`}
       disabled={isActive || isLoading || disabled}
       onClick={handleClick}
+      isLoading={isLoading}
       variant="default"
     >
-      {isLoading ? (
-        <>
-          <Loader2 className="animate-spin" />
-          Please wait
-        </>
-      ) : (
-        <>Join Game</>
-      )}
+      Join Game
     </Button>
   );
 }

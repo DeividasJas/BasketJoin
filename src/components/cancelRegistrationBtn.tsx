@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cancelRegistration } from "@/actions/gameActions";
 import { IsActivePlayer } from "@/types/prismaTypes";
@@ -47,18 +46,12 @@ export function CancelRegistrationBtn({
     <>
       <Button
         disabled={!isActive || isLoading}
-        variant={isLoading ? "default" : "destructive"}
+        variant="destructive"
+        isLoading={isLoading}
         onClick={handleClick}
-        className={`px-2 py-1 animate-in hover:scale-105 ${isLoading && "border"} ${props}`}
+        className={`px-2 py-1 animate-in hover:scale-105 ${props}`}
       >
-        {isLoading ? (
-          <>
-            <Loader2 className="animate-spin" />
-            Please wait
-          </>
-        ) : (
-          <>Cancel Reservation</>
-        )}
+        Cancel Reservation
       </Button>
     </>
   );

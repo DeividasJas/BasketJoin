@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { createGame, updateGame } from "@/actions/adminGameActions";
+import { Button } from "../ui/button";
 
 type Location = {
   id: number;
@@ -189,20 +190,20 @@ export default function GameForm({ locations, mode, game }: GameFormProps) {
 
       {/* Buttons */}
       <div className="flex gap-4">
-        <button
+        <Button
           type="submit"
-          disabled={loading}
-          className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          isLoading={loading}
+          className="flex-1"
         >
-          {loading ? "Saving..." : mode === "create" ? "Create Game" : "Update Game"}
-        </button>
-        <button
+          {mode === "create" ? "Create Game" : "Update Game"}
+        </Button>
+        <Button
           type="button"
+          variant="secondary"
           onClick={() => router.back()}
-          className="px-4 py-2 bg-zinc-300 dark:bg-zinc-700 rounded-md hover:bg-zinc-400 dark:hover:bg-zinc-600 transition-colors"
         >
           Cancel
-        </button>
+        </Button>
       </div>
     </form>
   );

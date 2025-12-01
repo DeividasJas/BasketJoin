@@ -7,6 +7,8 @@ import {
   deleteGame,
   markGameAsCompleted,
 } from "@/actions/adminGameActions";
+import Link from "next/link";
+import { Button } from "../ui/button";
 
 type Game = {
   id: number;
@@ -108,17 +110,13 @@ export default function AdminGamesList({ games }: { games: Game[] }) {
       {/* Filter tabs */}
       <div className="mb-6 flex gap-2 flex-wrap">
         {["all", "scheduled", "completed", "cancelled"].map((f) => (
-          <button
+          <Button
             key={f}
             onClick={() => setFilter(f)}
-            className={`px-4 py-2 rounded-md capitalize transition-all ${
-              filter === f
-                ? "bg-blue-600 text-white"
-                : "bg-zinc-200 dark:bg-zinc-800 hover:bg-zinc-300 dark:hover:bg-zinc-700"
-            }`}
+            variant={filter === f ? "default" : "secondary"}
           >
             {f}
-          </button>
+          </Button>
         ))}
       </div>
 
@@ -151,7 +149,9 @@ export default function AdminGamesList({ games }: { games: Game[] }) {
                       })}
                     </h3>
                     <span
-                      className={`px-2 py-1 rounded text-xs text-white ${getStatusColor(game.status)}`}
+                      className={`px-2 py-1 rounded text-xs text-white ${getStatusColor(
+                        game.status
+                      )}`}
                     >
                       {game.status}
                     </span>
@@ -178,56 +178,53 @@ export default function AdminGamesList({ games }: { games: Game[] }) {
 
               {/* Action buttons */}
               <div className="flex gap-2 flex-wrap mt-4">
-                <a
-                  href={`/admin/games/${game.id}/edit`}
-                  className="px-3 py-1 bg-blue-600 dark:bg-blue-700 text-white rounded text-sm hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors disabled:opacity-50"
-                >
-                  ✏️ Edit
-                </a>
+                <Button asChild size="sm">
+                  <Link href={`/admin/games/${game.id}/edit`}>
+                    ✏️ Edit
+                  </Link>
+                </Button>
 
                 {game.status === "SCHEDULED" && (
                   <>
-                    <a
-                      href={`/admin/games/${game.id}/reschedule`}
-                      className="px-3 py-1 bg-zinc-300 dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 rounded text-sm hover:bg-zinc-400 dark:hover:bg-zinc-600 transition-colors outline outline-1 outline-zinc-400 dark:outline-zinc-600"
-                    >
-                      🔄 Reschedule
-                    </a>
-                    <a
-                      href={`/admin/games/${game.id}/change-location`}
-                      className="px-3 py-1 bg-zinc-300 dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 rounded text-sm hover:bg-zinc-400 dark:hover:bg-zinc-600 transition-colors outline outline-1 outline-zinc-400 dark:outline-zinc-600"
-                    >
-                      📍 Change Location
-                    </a>
-                    <button
+                    <Button asChild variant="outline" size="sm">
+                      <Link href={`/admin/games/${game.id}/reschedule`}>
+                        🔄 Reschedule
+                      </Link>
+                    </Button>
+                    <Button asChild variant="outline" size="sm">
+                      <Link href={`/admin/games/${game.id}/change-location`}>
+                        📍 Change Location
+                      </Link>
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
                       onClick={() => handleCancelGame(game.id)}
-                      disabled={loading === game.id}
-                      className="px-3 py-1 bg-zinc-300 dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 rounded text-sm hover:bg-zinc-400 dark:hover:bg-zinc-600 transition-colors outline outline-1 outline-zinc-400 dark:outline-zinc-600 disabled:opacity-50"
+                      isLoading={loading === game.id}
                     >
                       ❌ Cancel Game
-                    </button>
-                    <button
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
                       onClick={() => handleMarkCompleted(game.id)}
-                      disabled={loading === game.id}
-                      className="px-3 py-1 bg-zinc-300 dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 rounded text-sm hover:bg-zinc-400 dark:hover:bg-zinc-600 transition-colors outline outline-1 outline-zinc-400 dark:outline-zinc-600 disabled:opacity-50"
+                      isLoading={loading === game.id}
                     >
                       ✅ Mark Completed
-                    </button>
+                    </Button>
                   </>
                 )}
 
-                <button
+                <Button
+                  variant="destructive"
+                  size="sm"
                   onClick={() => handleDeleteGame(game.id)}
-                  disabled={loading === game.id}
-                  className="px-3 py-1 bg-red-600 dark:bg-red-700 text-white rounded text-sm hover:bg-red-700 dark:hover:bg-red-600 transition-colors disabled:opacity-50 ml-auto"
+                  isLoading={loading === game.id}
+                  className="ml-auto"
                 >
                   🗑️ Delete
-                </button>
+                </Button>
               </div>
-
-              {loading === game.id && (
-                <p className="text-sm text-gray-500 mt-2">Processing...</p>
-              )}
             </div>
           ))
         )}
