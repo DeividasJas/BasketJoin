@@ -3,6 +3,8 @@ import { redirect } from "next/navigation";
 import { getAllGamesForAdmin } from "@/actions/adminGameActions";
 import AdminGamesList from "@/components/admin/AdminGamesList";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
 
 export default async function AdminGamesPage() {
   const session = await auth();
@@ -25,7 +27,8 @@ export default async function AdminGamesPage() {
         href="/admin"
         className="inline-flex items-center gap-1 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 mb-4 transition-colors"
       >
-        ← Back to Admin Dashboard
+        <ArrowLeft className="w-4 h-4" />
+        Back to Admin Dashboard
       </Link>
 
       <div className="flex justify-between items-center mb-6">
@@ -35,12 +38,9 @@ export default async function AdminGamesPage() {
             {games.length} game{games.length !== 1 ? "s" : ""} total
           </p>
         </div>
-        <Link
-          href="/admin/games/new"
-          className="px-4 py-2 bg-zinc-300 dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 rounded-md hover:bg-zinc-400 dark:hover:bg-zinc-600 transition-colors outline outline-1 outline-zinc-400 dark:outline-zinc-600"
-        >
-          ➕ Create New Game
-        </Link>
+        <Button variant="outline" asChild>
+          <Link href="/admin/games/new">➕ Create New Game</Link>
+        </Button>
       </div>
 
       <AdminGamesList games={games} />

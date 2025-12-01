@@ -2,6 +2,8 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { getLocationWithGames } from "@/actions/adminLocationActions";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
 
 export default async function LocationGamesPage({
   params,
@@ -34,7 +36,8 @@ export default async function LocationGamesPage({
         href="/admin/locations"
         className="inline-flex items-center gap-1 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 mb-4 transition-colors"
       >
-        ← Back to Locations
+        <ArrowLeft className="w-4 h-4" />
+        Back to Locations
       </Link>
 
       <div className="mb-6">
@@ -114,12 +117,9 @@ export default async function LocationGamesPage({
                       <p className="text-sm mt-2">{game.description}</p>
                     )}
                   </div>
-                  <Link
-                    href={`/game-status/${game.id}`}
-                    className="px-3 py-1 bg-zinc-300 dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 rounded text-sm hover:bg-zinc-400 dark:hover:bg-zinc-600 transition-colors outline outline-1 outline-zinc-400 dark:outline-zinc-600"
-                  >
-                    View Details
-                  </Link>
+                  <Button variant="outline" size="sm" asChild>
+                    <Link href={`/game-status/${game.id}`}>View Details</Link>
+                  </Button>
                 </div>
               </div>
             ))}

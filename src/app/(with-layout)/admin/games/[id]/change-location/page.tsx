@@ -4,6 +4,7 @@ import { prisma } from "@/utils/prisma";
 import { getAllLocations } from "@/actions/adminGameActions";
 import ChangeLocationForm from "@/components/admin/ChangeLocationForm";
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 
 export default async function ChangeLocationPage({
   params,
@@ -49,7 +50,8 @@ export default async function ChangeLocationPage({
         href="/admin/games"
         className="inline-flex items-center gap-1 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 mb-4 transition-colors"
       >
-        ← Back to Games
+        <ArrowLeft className="w-4 h-4" />
+        Back to Games
       </Link>
       <h1 className="text-3xl font-bold mb-6">Change Game Location</h1>
 

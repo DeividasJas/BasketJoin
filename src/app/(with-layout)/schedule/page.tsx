@@ -6,6 +6,7 @@ import NextGameCountdown from "@/components/nextGameCountdown";
 import RegistrationBtn from "@/components/registrationBtn";
 import { auth } from "@/auth";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export default async function Schedule() {
   const session = await auth();
@@ -66,12 +67,9 @@ export default async function Schedule() {
           </p>
           {session?.user?.role === "ADMIN" ||
           session?.user?.role === "ORGANIZER" ? (
-            <Link
-              href="/admin/games/new"
-              className="mt-4 inline-block rounded-md bg-zinc-300 px-4 py-2 text-zinc-900 transition-colors hover:bg-zinc-400 dark:bg-zinc-700 dark:text-zinc-100 dark:hover:bg-zinc-600"
-            >
-              Create First Game
-            </Link>
+            <Button variant="outline" asChild className="mt-4">
+              <Link href="/admin/games/new">Create First Game</Link>
+            </Button>
           ) : null}
         </div>
       )}
@@ -104,12 +102,9 @@ export default async function Schedule() {
           </p>
           {session?.user?.role === "ADMIN" ||
           session?.user?.role === "ORGANIZER" ? (
-            <Link
-              href="/admin/games"
-              className="inline-block rounded-md bg-zinc-300 px-4 py-2 text-zinc-900 transition-colors hover:bg-zinc-400 dark:bg-zinc-700 dark:text-zinc-100 dark:hover:bg-zinc-600"
-            >
-              Manage Games
-            </Link>
+            <Button variant="outline" asChild>
+              <Link href="/admin/games">Manage Games</Link>
+            </Button>
           ) : null}
         </div>
       )}

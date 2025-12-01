@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/utils/prisma";
 import RescheduleForm from "@/components/admin/RescheduleForm";
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 
 export default async function ReschedulePage({
   params,
@@ -45,7 +46,8 @@ export default async function ReschedulePage({
         href="/admin/games"
         className="inline-flex items-center gap-1 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 mb-4 transition-colors"
       >
-        ← Back to Games
+        <ArrowLeft className="w-4 h-4" />
+        Back to Games
       </Link>
       <h1 className="text-3xl font-bold mb-6">Reschedule Game</h1>
 
