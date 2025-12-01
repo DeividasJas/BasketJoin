@@ -4,6 +4,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { toggleLocationActive, deleteLocation, forceDeleteLocation } from "@/actions/adminLocationActions";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 type Location = {
   id: number;
@@ -193,40 +194,37 @@ export default function AdminLocationsList({
 
               {/* Action buttons */}
               <div className="flex gap-2 flex-wrap mt-4">
-                <Link
-                  href={`/admin/locations/${location.id}/edit`}
-                  className="px-3 py-1 bg-blue-600 dark:bg-blue-700 text-white rounded text-sm hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
-                >
-                  ✏️ Edit
-                </Link>
+                <Button asChild size="sm">
+                  <Link href={`/admin/locations/${location.id}/edit`}>
+                    ✏️ Edit
+                  </Link>
+                </Button>
 
-                <Link
-                  href={`/admin/locations/${location.id}/games`}
-                  className="px-3 py-1 bg-zinc-300 dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 rounded text-sm hover:bg-zinc-400 dark:hover:bg-zinc-600 transition-colors outline outline-1 outline-zinc-400 dark:outline-zinc-600"
-                >
-                  🎮 View Games ({location._count.games})
-                </Link>
+                <Button asChild variant="outline" size="sm">
+                  <Link href={`/admin/locations/${location.id}/games`}>
+                    🎮 View Games ({location._count.games})
+                  </Link>
+                </Button>
 
-                <button
+                <Button
+                  variant="outline"
+                  size="sm"
                   onClick={() => handleToggleActive(location.id)}
-                  disabled={loading === location.id}
-                  className="px-3 py-1 bg-zinc-300 dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 rounded text-sm hover:bg-zinc-400 dark:hover:bg-zinc-600 transition-colors outline outline-1 outline-zinc-400 dark:outline-zinc-600 disabled:opacity-50"
+                  isLoading={loading === location.id}
                 >
                   {location.is_active ? "🔄 Deactivate" : "✅ Activate"}
-                </button>
+                </Button>
 
-                <button
+                <Button
+                  variant="destructive"
+                  size="sm"
                   onClick={() => handleDelete(location.id)}
-                  disabled={loading === location.id}
-                  className="px-3 py-1 bg-red-600 dark:bg-red-700 text-white rounded text-sm hover:bg-red-700 dark:hover:bg-red-600 transition-colors disabled:opacity-50 ml-auto"
+                  isLoading={loading === location.id}
+                  className="ml-auto"
                 >
                   🗑️ Delete
-                </button>
+                </Button>
               </div>
-
-              {loading === location.id && (
-                <p className="text-sm text-gray-500 mt-2">Processing...</p>
-              )}
             </div>
           ))
         )}

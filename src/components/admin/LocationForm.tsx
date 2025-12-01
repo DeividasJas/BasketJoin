@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { createLocation, updateLocation } from "@/actions/adminLocationActions";
+import { Button } from "@/components/ui/button";
 
 type Location = {
   id: number;
@@ -191,24 +192,20 @@ export default function LocationForm({ mode, location }: LocationFormProps) {
 
       {/* Buttons */}
       <div className="flex gap-4">
-        <button
+        <Button
           type="submit"
-          disabled={loading}
-          className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          isLoading={loading}
+          className="flex-1"
         >
-          {loading
-            ? "Saving..."
-            : mode === "create"
-              ? "Create Location"
-              : "Update Location"}
-        </button>
-        <button
+          {mode === "create" ? "Create Location" : "Update Location"}
+        </Button>
+        <Button
           type="button"
           onClick={() => router.back()}
-          className="px-4 py-2 bg-zinc-300 dark:bg-zinc-700 rounded-md hover:bg-zinc-400 dark:hover:bg-zinc-600 transition-colors"
+          variant="secondary"
         >
           Cancel
-        </button>
+        </Button>
       </div>
     </form>
   );

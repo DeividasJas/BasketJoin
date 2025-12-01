@@ -9,6 +9,7 @@ This project has been migrated from **Kinde Authentication** to **NextAuth.js v5
 ## What Was Changed
 
 ### 1. Authentication Provider Migration
+
 - **From**: Kinde OAuth authentication with webhooks
 - **To**: NextAuth.js v5 (beta) with Credentials Provider
 - **Reason**: Full control over authentication flow, custom user management, no third-party dependencies
@@ -16,12 +17,14 @@ This project has been migrated from **Kinde Authentication** to **NextAuth.js v5
 ### 2. Core Infrastructure Changes
 
 #### New Packages Installed
+
 ```bash
 pnpm add next-auth@beta @auth/prisma-adapter bcryptjs
 pnpm add -D @types/bcryptjs
 ```
 
 #### Packages to Remove (pending)
+
 ```bash
 pnpm remove @kinde-oss/kinde-auth-nextjs jwks-rsa jsonwebtoken @types/jsonwebtoken
 ```
@@ -31,9 +34,11 @@ pnpm remove @kinde-oss/kinde-auth-nextjs jwks-rsa jsonwebtoken @types/jsonwebtok
 ## Database Schema Changes
 
 ### Updated Prisma Schema
+
 The following changes were made to `prisma/schema.prisma`:
 
 #### Modified Users Model
+
 ```prisma
 model Users {
   id            String    @id @default(cuid()) @db.VarChar(255)
@@ -47,6 +52,7 @@ model Users {
 ```
 
 #### New NextAuth Required Models
+
 ```prisma
 model Account {
   id                String  @id @default(cuid())
@@ -84,6 +90,7 @@ model VerificationToken {
 ```
 
 #### Migration Applied
+
 ```bash
 npx prisma db push --accept-data-loss
 ```
@@ -95,6 +102,7 @@ npx prisma db push --accept-data-loss
 ### Created Files
 
 #### 1. `/src/auth.ts` - Core NextAuth Configuration
+
 ```typescript
 import NextAuth from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
@@ -128,7 +136,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         const passwordMatch = await bcrypt.compare(
           credentials.password as string,
-          user.password
+          user.password,
         );
 
         if (!passwordMatch) return null;
@@ -159,12 +167,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 ```
 
 #### 2. `/src/app/api/auth/[...nextauth]/route.ts` - API Route Handler
+
 ```typescript
 import { handlers } from "@/auth";
 export const { GET, POST } = handlers;
 ```
 
 #### 3. `/src/app/api/auth/register/route.ts` - Registration Endpoint
+
 ```typescript
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
@@ -178,7 +188,7 @@ export async function POST(request: NextRequest) {
     if (!email || !password) {
       return NextResponse.json(
         { error: "Email and password are required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -190,7 +200,7 @@ export async function POST(request: NextRequest) {
     if (existingUser) {
       return NextResponse.json(
         { error: "User already exists" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -210,20 +220,22 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(
       { success: true, user: { id: user.id, email: user.email } },
-      { status: 201 }
+      { status: 201 },
     );
   } catch (error) {
     console.error("Registration error:", error);
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
 ```
 
 #### 4. `/src/app/login/page.tsx` - Login Page
+
 Full client-side login form with:
+
 - Email/password input fields
 - NextAuth signIn() integration
 - Error handling
@@ -232,7 +244,9 @@ Full client-side login form with:
 - Link to signup page
 
 #### 5. `/src/app/signup/page.tsx` - Signup Page
+
 Full client-side registration form with:
+
 - Email, password, confirm password, first name, last name fields
 - Client-side validation (password match, minimum length)
 - API call to `/api/auth/register`
@@ -243,6 +257,7 @@ Full client-side registration form with:
 ### Modified Files
 
 #### 1. `/src/middleware.ts` - Completely Rewritten
+
 **Before**: Used Kinde's `withAuth`
 **After**: Uses NextAuth's `auth()` wrapper
 
@@ -256,7 +271,7 @@ export default auth((req) => {
 
   const protectedRoutes = ["/profile", "/admin", "/game-status", "/schedule"];
   const isProtectedRoute = protectedRoutes.some((route) =>
-    pathname.startsWith(route)
+    pathname.startsWith(route),
   );
 
   if (isProtectedRoute && !isLoggedIn) {
@@ -279,6 +294,7 @@ export const config = {
 ```
 
 #### 2. `/src/utils/isAuthenticated.ts` - Rewritten
+
 **Before**: Used Kinde's `getKindeServerSession()`
 **After**: Uses NextAuth's `auth()`
 
@@ -297,11 +313,15 @@ export async function getCurrentUser() {
 ```
 
 #### 3. `/src/utils/AuthProvide.tsx` - Updated Provider
+
 **Before**:
+
 ```typescript
 import { KindeProvider } from "@kinde-oss/kinde-auth-nextjs";
 ```
+
 **After**:
+
 ```typescript
 import { SessionProvider } from 'next-auth/react';
 
@@ -311,9 +331,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 ```
 
 #### 4. `/src/actions/userActions.ts` - Complete Rewrite
+
 **Critical Fix**: Removed module-level `await getUser()` which is incompatible with NextAuth
 
 **Before**:
+
 ```typescript
 const { getUser } = getKindeServerSession();
 const kindeUser = await getUser(); // Module-level await - BROKEN
@@ -324,6 +346,7 @@ export const getUserId = async () => {
 ```
 
 **After**:
+
 ```typescript
 import { auth } from "@/auth";
 
@@ -362,12 +385,15 @@ export const getUserName = async () => {
 ```
 
 #### 5. `/src/actions/actions.ts` - Fixed Module-Level Await
+
 **Before**:
+
 ```typescript
 const kindeUser = await getUser(); // Module-level await
 ```
 
 **After**:
+
 ```typescript
 import { auth } from "@/auth";
 
@@ -388,6 +414,7 @@ export const getAllUserGames = async () => {
 ```
 
 #### 6. `/src/app/layout.tsx` - Updated Root Layout
+
 ```typescript
 import { auth } from "@/auth";
 
@@ -402,6 +429,7 @@ export default async function RootLayout({ children }) {
 ```
 
 #### 7. `/src/app/(with-layout)/profile/layout.tsx` - Auth Check
+
 ```typescript
 import { auth } from "@/auth";
 
@@ -417,6 +445,7 @@ export default async function LayoutProfile({ children }) {
 ```
 
 #### 8. `/src/app/(with-layout)/profile/(dashboard)/layout.tsx` - Simplified
+
 - Removed async setTimeout (was causing 10-second delay)
 - Simplified auth check
 
@@ -439,6 +468,7 @@ export default async function ProfileDashboardLayout({ stats, profile, gameHisto
 ```
 
 #### 9. `/src/components/logoutBtn.tsx` - Updated Logout
+
 **Before**: Used Kinde's `<LogoutLink>`
 **After**: Uses NextAuth's `signOut()`
 
@@ -470,6 +500,7 @@ export default function LogoutBtn() {
 ## Environment Variables
 
 ### Removed from `.env`
+
 ```env
 # Removed all Kinde variables:
 # KINDE_CLIENT_ID
@@ -481,6 +512,7 @@ export default function LogoutBtn() {
 ```
 
 ### Added to `.env`
+
 ```env
 # NextAuth Configuration
 NEXTAUTH_SECRET="your-super-secret-key-change-this-in-production"
@@ -488,6 +520,7 @@ NEXTAUTH_URL="http://localhost:3000"
 ```
 
 ### Fixed Database URL
+
 ```env
 # Before (PostgreSQL syntax - WRONG):
 # DATABASE_URL="mysql://user:SuperPass@localhost:3306/basketjoin?schema=public"
@@ -501,30 +534,36 @@ DATABASE_URL="mysql://user:SuperPass@localhost:3306/basketjoin"
 ## What Works Now
 
 ✅ **User Registration**
+
 - Email/password signup at `/signup`
 - Password hashing with bcryptjs (10 rounds)
 - Duplicate email prevention
 - Auto-login after registration
 
 ✅ **User Login**
+
 - Email/password login at `/login`
 - Secure credential verification
 - Session management with JWT
 
 ✅ **User Logout**
+
 - Sign out functionality
 - Redirect to `/schedule` after logout
 
 ✅ **Protected Routes**
+
 - Middleware protection for `/profile`, `/admin`, `/game-status`, `/schedule`
 - Automatic redirect to `/login` for unauthenticated users
 
 ✅ **Session Management**
+
 - JWT-based sessions
 - Prisma adapter for database session storage
 - Session persistence across requests
 
 ✅ **Database Integration**
+
 - MySQL connection via Docker
 - Prisma ORM with updated schema
 - User data synced to database
@@ -534,6 +573,7 @@ DATABASE_URL="mysql://user:SuperPass@localhost:3306/basketjoin"
 ## Pending Work
 
 ### 1. Update Remaining Page Components
+
 The following pages still need to be updated to use NextAuth instead of Kinde:
 
 - [ ] `/src/app/page.tsx` - Home page
@@ -544,9 +584,11 @@ The following pages still need to be updated to use NextAuth instead of Kinde:
 - [ ] Profile dashboard slot pages (`@stats`, `@profile`, `@gameHistory`)
 
 ### 2. Implement Custom Permissions System
+
 Currently stubbed with `const permissions: string[] = []`
 
 **Options**:
+
 - Database column on Users table (`permissions: Json`)
 - Role-based access control (RBAC) with separate Roles table
 - JWT claims-based permissions
@@ -554,15 +596,18 @@ Currently stubbed with `const permissions: string[] = []`
 **Required Permission**: `add:game` for admin functionality
 
 ### 3. Update Navigation Links
+
 - Update `/src/types/navLinks.ts` to remove Kinde auth links
 - Point to `/login` and `/signup` instead
 
 ### 4. Remove Kinde Dependencies
+
 ```bash
 pnpm remove @kinde-oss/kinde-auth-nextjs jwks-rsa jsonwebtoken @types/jsonwebtoken
 ```
 
 ### 5. Testing Checklist
+
 - [ ] Register new user
 - [ ] Login with credentials
 - [ ] Test invalid credentials
@@ -577,37 +622,44 @@ pnpm remove @kinde-oss/kinde-auth-nextjs jwks-rsa jsonwebtoken @types/jsonwebtok
 ## How to Test
 
 ### 1. Start the Database
+
 ```bash
 docker-compose up -d
 ```
 
 ### 2. Sync Database Schema
+
 ```bash
 npx prisma db push
 ```
 
 ### 3. Start Development Server
+
 ```bash
 pnpm dev
 ```
 
 ### 4. Test User Registration
+
 1. Navigate to http://localhost:3000/signup
 2. Fill in email, password, first name, last name
 3. Submit form
 4. Should auto-login and redirect to `/game-status`
 
 ### 5. Test User Login
+
 1. Navigate to http://localhost:3000/login
 2. Enter email and password
 3. Submit form
 4. Should redirect to `/game-status`
 
 ### 6. Test Logout
+
 1. Click logout button (should be in profile page)
 2. Should redirect to `/schedule`
 
 ### 7. Test Protected Routes
+
 1. While logged out, try accessing `/profile`
 2. Should redirect to `/login`
 
@@ -616,17 +668,20 @@ pnpm dev
 ## Technical Details
 
 ### Password Security
+
 - **Algorithm**: bcrypt
 - **Rounds**: 10 (2^10 iterations)
 - **Salt**: Auto-generated per password
 
 ### Session Strategy
+
 - **Type**: JWT (JSON Web Tokens)
 - **Storage**: HTTP-only cookies
 - **Adapter**: Prisma (database session fallback available)
 
 ### Authentication Flow
-1. User submits credentials → `/api/auth/register` or login form
+
+1. User submits credentials `/api/auth/register` or login form
 2. Password hashed/verified with bcrypt
 3. NextAuth creates JWT token
 4. Token stored in HTTP-only cookie
@@ -634,6 +689,7 @@ pnpm dev
 6. Protected routes check `req.auth` for user session
 
 ### Database Schema Pattern
+
 - **Primary Keys**: CUID (Collision-resistant Unique Identifiers)
 - **Email**: Unique constraint
 - **Password**: Nullable (supports OAuth providers in future)
@@ -644,18 +700,22 @@ pnpm dev
 ## Migration Errors Encountered & Fixed
 
 ### Error 1: Prisma Provider Mismatch
+
 **Error**: `P3019 - datasource provider 'mysql' does not match migration_lock.toml 'postgresql'`
 **Fix**: Updated `/prisma/migrations/migration_lock.toml` to `provider = "mysql"`
 
 ### Error 2: Shadow Database Permission Error
+
 **Error**: `P3014 - Could not create shadow database`
 **Fix**: Used `npx prisma db push --accept-data-loss` instead of `prisma migrate dev`
 
 ### Error 3: Module-Level Await in Server Actions
+
 **Error**: Top-level `await` in actions files causing issues
 **Fix**: Moved all auth calls inside async functions
 
 ### Error 4: Kinde Auth Route 404
+
 **Error**: 404 on `/api/auth/kinde_callback`
 **Fix**: Updated route to properly extract and pass dynamic params
 
@@ -664,12 +724,14 @@ pnpm dev
 ## Development Setup
 
 ### Prerequisites
+
 - Node.js 18+
 - Docker & Docker Compose
 - MySQL 8.0+ (via Docker)
 - pnpm package manager
 
 ### Installation
+
 ```bash
 # Install dependencies
 pnpm install
@@ -688,6 +750,7 @@ pnpm dev
 ```
 
 ### Environment Variables Required
+
 ```env
 DATABASE_URL="mysql://user:SuperPass@localhost:3306/basketjoin"
 NEXTAUTH_SECRET="your-super-secret-key-change-this-in-production"
@@ -701,6 +764,7 @@ NEXTAUTH_URL="http://localhost:3000"
 **Overall Progress**: ~85% Complete
 
 **Completed**:
+
 - ✅ Core NextAuth configuration
 - ✅ Database schema updates
 - ✅ Prisma migration
@@ -714,9 +778,11 @@ NEXTAUTH_URL="http://localhost:3000"
 - ✅ Logout functionality
 
 **In Progress**:
+
 - 🔄 Updating remaining page components
 
 **Pending**:
+
 - ⏳ Permissions system implementation
 - ⏳ Navigation links update
 - ⏳ Kinde package removal
@@ -727,6 +793,7 @@ NEXTAUTH_URL="http://localhost:3000"
 ## Support
 
 For issues or questions, refer to:
+
 - [NextAuth.js Documentation](https://next-auth.js.org/)
 - [Prisma Documentation](https://www.prisma.io/docs)
 - [Next.js 15 Documentation](https://nextjs.org/docs)

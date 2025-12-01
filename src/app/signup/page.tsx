@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 import SocialLoginButtons from "@/components/SocialLoginButtons";
+import { Button } from "@/components/ui/button";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -194,23 +195,16 @@ export default function SignupPage() {
             />
           </div>
 
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full rounded-md bg-orange-600 px-4 py-2 font-medium text-white hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {isLoading ? "Creating account..." : "Sign up"}
-          </button>
+          <Button type="submit" isLoading={isLoading} className="w-full">
+            Sign up
+          </Button>
         </form>
 
         <p className="mt-6 text-center text-sm text-zinc-600 dark:text-zinc-400">
           Already have an account?{" "}
-          <Link
-            href="/login"
-            className="font-medium text-orange-600 hover:text-orange-700"
-          >
-            Login
-          </Link>
+          <Button variant="link" asChild>
+            <Link href="/login">Login</Link>
+          </Button>
         </p>
       </div>
     </div>

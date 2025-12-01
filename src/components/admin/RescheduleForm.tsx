@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { rescheduleGame } from "@/actions/adminGameActions";
+import { Button } from "@/components/ui/button";
 
 export default function RescheduleForm({
   gameId,
@@ -66,20 +67,20 @@ export default function RescheduleForm({
       </div>
 
       <div className="flex gap-4">
-        <button
+        <Button
           type="submit"
-          disabled={loading}
-          className="flex-1 px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          isLoading={loading}
+          className="flex-1"
         >
-          {loading ? "Rescheduling..." : "Reschedule Game"}
-        </button>
-        <button
+          Reschedule Game
+        </Button>
+        <Button
           type="button"
           onClick={() => router.back()}
-          className="px-4 py-2 bg-zinc-300 dark:bg-zinc-700 rounded-md hover:bg-zinc-400 dark:hover:bg-zinc-600 transition-colors"
+          variant="secondary"
         >
           Cancel
-        </button>
+        </Button>
       </div>
     </form>
   );

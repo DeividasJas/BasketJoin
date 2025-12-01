@@ -55,7 +55,7 @@ export default async function Schedule() {
               href={`/game-status/${gameData.game_id}`}
               className="text-sm text-zinc-700 hover:underline dark:text-zinc-300"
             >
-              View Details →
+              View Details
             </Link>
           </div>
         </div>

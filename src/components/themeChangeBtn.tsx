@@ -4,6 +4,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Moon, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 
 function ThemeChanger() {
   const { theme, setTheme } = useTheme();
@@ -23,9 +24,11 @@ function ThemeChanger() {
     <>
       {/* Mobile Theme Button (shows below 640px) */}
       <div className="fixed bottom-20 right-4 sm:hidden">
-        <button
+        <Button
+          variant="ghost"
+          size="icon"
           onClick={toggleTheme}
-          className="rounded-full p-3 backdrop-blur-md bg-white/30 dark:bg-black/30 shadow-lg hover:bg-white/40 dark:hover:bg-black/40 transition-all"
+          className="backdrop-blur-md bg-white/30 dark:bg-black/30 shadow-lg hover:bg-white/40 dark:hover:bg-black/40 transition-all"
           aria-label="Toggle theme"
         >
           {theme === "dark" ? (
@@ -33,7 +36,7 @@ function ThemeChanger() {
           ) : (
             <Moon className="h-5 w-5 text-slate-700" />
           )}
-        </button>
+        </Button>
       </div>
 
       {/* Desktop Theme Switch (shows above 640px) */}
