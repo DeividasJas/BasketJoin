@@ -64,14 +64,14 @@ export default function AdminLocationsList({
       }
       return params.toString();
     },
-    [searchParams]
+    [searchParams],
   );
 
   const handleFilterChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     router.push(
-      `/dashboard/locations?${createQueryString(e.target.name, e.target.value)}`
+      `/dashboard/locations?${createQueryString(e.target.name, e.target.value)}`,
     );
   };
 
@@ -103,7 +103,7 @@ export default function AdminLocationsList({
     } else if (result.requiresConfirmation) {
       if (
         confirm(
-          result.message + "\n\nAre you sure you want to permanently delete?"
+          result.message + "\n\nAre you sure you want to permanently delete?",
         )
       ) {
         setLoading(locationId);
@@ -177,9 +177,10 @@ export default function AdminLocationsList({
           locations.map((location) => (
             <div
               key={location.id}
-              className={`rounded-lg border-2 bg-white p-4 shadow-md dark:bg-zinc-900 ${location.is_active
-                ? "border-zinc-200 dark:border-zinc-800"
-                : "border-red-300 opacity-60 dark:border-red-900"
+              className={`rounded-lg border-2 bg-white p-4 shadow-md dark:bg-zinc-900 ${
+                location.is_active
+                  ? "border-zinc-200 dark:border-zinc-800"
+                  : "border-red-300 opacity-60 dark:border-red-900"
               }`}
             >
               <div className="mb-3 flex items-start justify-between">
@@ -214,8 +215,8 @@ export default function AdminLocationsList({
                     </span>
                     {location.price_per_game && (
                       <span className="flex items-center gap-1.5">
-                        <DollarSign className="h-4 w-4" />
-                        ${location.price_per_game}/game
+                        <DollarSign className="h-4 w-4" />€
+                        {location.price_per_game}/game
                       </span>
                     )}
                     <span className="flex items-center gap-1.5">
@@ -244,7 +245,9 @@ export default function AdminLocationsList({
                     className="flex items-center gap-1.5"
                   >
                     <Gamepad2 className="h-4 w-4" />
-                    <span className="hidden md:inline">View Games ({location._count.games})</span>
+                    <span className="hidden md:inline">
+                      View Games ({location._count.games})
+                    </span>
                     <span className="md:hidden">({location._count.games})</span>
                   </Link>
                 </Button>

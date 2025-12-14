@@ -168,41 +168,36 @@ export default function AdminGamesList({
 
   return (
     <div className="w-full">
-      {/* Filter tabs and Page Size Dropdown */}
-
-      <div className="mb-6 flex flex-col gap-4">
-        {/* Status Filter */}
+      {/* Filters */}
+      <div className="mb-6 space-y-4">
+        {/* Status Filter Buttons */}
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-sm font-medium">Status:</span>
-          <div className="flex flex-wrap gap-2">
+          <Button
+            onClick={() => updateFilter("status", null)}
+            variant={!currentStatus ? "default" : "secondary"}
+            size="sm"
+          >
+            All
+          </Button>
+          {["scheduled", "completed", "cancelled"].map((status) => (
             <Button
-              onClick={() => updateFilter("status", null)}
-              variant={!currentStatus ? "default" : "secondary"}
+              key={status}
+              onClick={() => updateFilter("status", status)}
+              variant={currentStatus === status ? "default" : "secondary"}
               size="sm"
             >
-              All
+              {status.charAt(0).toUpperCase() + status.slice(1)}
             </Button>
-            {["scheduled", "completed", "cancelled"].map((status) => (
-              <Button
-                key={status}
-                onClick={() => updateFilter("status", status)}
-                variant={currentStatus === status ? "default" : "secondary"}
-                size="sm"
-              >
-                {status.charAt(0).toUpperCase() + status.slice(1)}
-              </Button>
-            ))}
-          </div>
+          ))}
         </div>
 
         {/* Series Filter and Page Size */}
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-medium">Series:</span>
+          <div className="flex flex-wrap gap-2">
             <select
               value={currentSeriesId || ""}
               onChange={(e) => updateFilter("seriesId", e.target.value || null)}
-              className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800"
+              className="rounded-md border border-zinc-300 bg-white px-4 py-2 dark:border-zinc-700 dark:bg-zinc-800"
             >
               <option value="">All Series</option>
               {allSeries.map((series) => (
