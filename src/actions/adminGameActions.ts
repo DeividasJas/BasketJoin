@@ -73,33 +73,79 @@ export async function updateGame(
     min_players?: number;
     description?: string;
     game_type?: string;
-  }
+  },
+  applyToSeries?: boolean,
 ) {
   try {
     await checkAdminAccess();
 
-    const game = await prisma.games.update({
+    const game = await prisma.games.findUnique({
       where: { id: gameId },
-      data,
-      include: {
-        location: true,
-        game_registrations: {
-          include: {
-            user: true,
-          },
-        },
-      },
     });
 
-    revalidatePath("/admin");
-    revalidatePath("/schedule");
-    revalidatePath(`/game-status/${gameId}`);
+    if (!game) {
+      throw new Error("Game not found");
+    }
 
-    return {
-      success: true,
-      message: "Game updated successfully",
-      game,
-    };
+    if (applyToSeries && game.series_id) {
+      // Update all subsequent games in the series
+      const subsequentGames = await prisma.games.findMany({
+        where: {
+          series_id: game.series_id,
+          game_date: {
+            gt: game.game_date,
+          },
+        },
+      });
+
+      await prisma.$transaction([
+        prisma.games.update({
+          where: { id: gameId },
+          data,
+        }),
+        ...subsequentGames.map((g) =>
+          prisma.games.update({
+            where: { id: g.id },
+            data,
+          }),
+        ),
+      ]);
+
+      revalidatePath("/admin");
+      revalidatePath("/schedule");
+      revalidatePath(`/game-status/${gameId}`);
+      subsequentGames.forEach((g) => revalidatePath(`/game-status/${g.id}`));
+
+      return {
+        success: true,
+        message: `Game and ${subsequentGames.length} subsequent games in the series updated successfully`,
+        game,
+      };
+    } else {
+      // Update only the single game
+      const updatedGame = await prisma.games.update({
+        where: { id: gameId },
+        data,
+        include: {
+          location: true,
+          game_registrations: {
+            include: {
+              user: true,
+            },
+          },
+        },
+      });
+
+      revalidatePath("/admin");
+      revalidatePath("/schedule");
+      revalidatePath(`/game-status/${gameId}`);
+
+      return {
+        success: true,
+        message: "Game updated successfully",
+        game: updatedGame,
+      };
+    }
   } catch (error: any) {
     return {
       success: false,
@@ -218,7 +264,7 @@ export async function rescheduleGame(gameId: number, newDate: Date) {
 // Change location
 export async function changeGameLocation(
   gameId: number,
-  newLocationId: number
+  newLocationId: number,
 ) {
   try {
     await checkAdminAccess();
@@ -334,44 +380,98 @@ export async function deleteGame(gameId: number) {
 }
 
 // Get all games for admin view
-export async function getAllGamesForAdmin() {
+export async function getAllGamesForAdmin(
+  page: number = 1,
+  pageSize: number = 10,
+  filters?: {
+    status?: string;
+    seriesId?: string;
+  },
+) {
   try {
     await checkAdminAccess();
 
-    const games = await prisma.games.findMany({
-      include: {
-        location: true,
-        organizer: {
-          select: {
-            given_name: true,
-            family_name: true,
-            email: true,
+    const skip = (page - 1) * pageSize;
+
+    // Build where clause
+    const whereClause: any = {};
+
+    if (filters?.status) {
+      whereClause.status = filters.status.toUpperCase();
+    }
+
+    if (filters?.seriesId) {
+      whereClause.series_id = filters.seriesId;
+    }
+
+    const [games, totalGames, allSeries] = await prisma.$transaction([
+      prisma.games.findMany({
+        where: whereClause,
+        skip,
+        take: pageSize,
+        include: {
+          location: true,
+          organizer: {
+            select: {
+              given_name: true,
+              family_name: true,
+              email: true,
+            },
           },
-        },
-        _count: {
-          select: {
-            game_registrations: {
-              where: {
-                status: "CONFIRMED",
+          series: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+          _count: {
+            select: {
+              game_registrations: {
+                where: {
+                  status: "CONFIRMED",
+                },
               },
             },
           },
         },
-      },
-      orderBy: {
-        game_date: "asc",
-      },
-    });
+        orderBy: {
+          game_date: "asc",
+        },
+      }),
+      prisma.games.count({
+        where: whereClause,
+      }),
+      prisma.series.findMany({
+        include: {
+          _count: {
+            select: {
+              games: true,
+            },
+          },
+        },
+        orderBy: {
+          created_at: "desc",
+        },
+      }),
+    ]);
 
     return {
       success: true,
       games,
+      totalGames,
+      allSeries,
+      page,
+      pageSize,
     };
   } catch (error: any) {
     return {
       success: false,
       message: error.message || "Failed to fetch games",
       games: [],
+      totalGames: 0,
+      allSeries: [],
+      page,
+      pageSize,
     };
   }
 }

@@ -82,7 +82,7 @@ export default async function Schedule() {
         </div>
         <div className="flex items-center gap-2">
           <div className="h-4 w-4 rounded bg-green-600"></div>
-          <span>You're Registered</span>
+          <span>You&apos;re Registered</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="h-4 w-4 rounded bg-red-600"></div>

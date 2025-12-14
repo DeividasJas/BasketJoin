@@ -89,6 +89,16 @@ model Users {
   notifications      Notification[]
 }
 
+model Series {
+  id         String   @id @default(uuid())
+  name       String
+  created_at DateTime @default(now())
+
+  games Games[]
+
+  @@index([name])
+}
+
 model Games {
   id                 Int                  @id @default(autoincrement())
   game_date          DateTime
@@ -99,6 +109,7 @@ model Games {
   description        String?
   organizer_id       String?
   game_type          String?
+  series_id          String?
   created_at         DateTime             @default(now())
   modified_at        DateTime             @updatedAt
   game_registrations Game_registrations[]
@@ -106,8 +117,10 @@ model Games {
 
   location  Locations @relation(fields: [location_id], references: [id])
   organizer Users?    @relation("GameOrganizer", fields: [organizer_id], references: [id])
+  series    Series?   @relation(fields: [series_id], references: [id], onDelete: SetNull)
 
   @@unique([game_date, location_id])
+  @@index([series_id])
 }
 
 model Game_registrations {

@@ -6,6 +6,7 @@ import PlayerCard from "./playerCard";
 import { AnimatePresence, motion } from "framer-motion";
 import { CancelRegistrationBtn } from "./cancelRegistrationBtn";
 import RegistrationBtn from "./registrationBtn";
+import { toast } from "sonner";
 import {
   // Game,
   IsActivePlayer,
@@ -30,7 +31,7 @@ export default function PlayersList({
   isActivePlayer,
   participantsData,
 }: {
-  gameId: number ;
+  gameId: number;
   isLoggedIn?: boolean;
   // gameData: Game;
   isActivePlayer: IsActivePlayer;
@@ -59,13 +60,13 @@ export default function PlayersList({
           // setGame(gameData);
         }
       } catch (error) {
-        console.error(error);
+        toast.error("Failed to load players");
       } finally {
         setIsLoading(false);
       }
     };
     fetchData();
-  }, [change]);
+  }, [change, gameId]);
 
   return (
     <>
@@ -91,7 +92,7 @@ export default function PlayersList({
                         animate={{ opacity: 1 }}
                       >
                         <p
-                          className={`mt-2 mb-4 pt-2 w-full basis-full border-t text-center ${index === 10 ? "border-orange-600" : "border-red-600"}`}
+                          className={`mb-4 mt-2 w-full basis-full border-t pt-2 text-center ${index === 10 ? "border-orange-600" : "border-red-600"}`}
                         >
                           {index === 10 ? "10 players" : "12 players"}
                         </p>
@@ -119,7 +120,7 @@ export default function PlayersList({
           </AnimatePresence>
         </motion.ul>
       )}
-      <div className="mt-4 flex w-fit flex-wrap gap-2 mx-auto xs:flex-nowrap">
+      <div className="mx-auto mt-4 flex w-fit flex-wrap gap-2 xs:flex-nowrap">
         <RegistrationBtn
           setChange={setChange}
           isActive={isActive}

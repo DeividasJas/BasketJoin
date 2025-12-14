@@ -14,6 +14,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { toast } from "sonner";
 
 export default function EditProfileForm() {
   const { user, updateUser } = useProfileContext();
@@ -23,8 +24,9 @@ export default function EditProfileForm() {
     if (response.success) {
       // Update context with the updated user details
       updateUser(response.updatedUser);
+      toast.success(response.message);
     } else {
-      console.error(response.message);
+      toast.error(response.message);
     }
   };
 

@@ -47,7 +47,6 @@ export default function RegistrationBtn({
 
       router.refresh();
     } catch (error) {
-      console.error(error);
       toast.error("Unknown error");
     } finally {
       setIsLoading(false);

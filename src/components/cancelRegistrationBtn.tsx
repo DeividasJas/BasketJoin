@@ -35,7 +35,6 @@ export function CancelRegistrationBtn({
         router.refresh();
       }
     } catch (error) {
-      console.error(error);
       toast.error("An error occurred");
     } finally {
       setIsLoading(false);

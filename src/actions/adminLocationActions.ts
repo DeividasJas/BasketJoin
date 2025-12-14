@@ -228,14 +228,20 @@ export async function forceDeleteLocation(locationId: number) {
   }
 }
 
-// Get all locations for admin (with search and filter)
-export async function getAllLocationsForAdmin(filters?: {
-  search?: string;
-  city?: string;
-  isActive?: boolean;
-}) {
+// Get all locations for admin (with search, filter, and pagination)
+export async function getAllLocationsForAdmin(
+  page: number = 1,
+  pageSize: number = 10,
+  filters?: {
+    search?: string;
+    city?: string;
+    isActive?: "all" | "active" | "inactive";
+  }
+) {
   try {
     await checkAdminAccess();
+
+    const skip = (page - 1) * pageSize;
 
     const where: any = {};
 
@@ -251,38 +257,44 @@ export async function getAllLocationsForAdmin(filters?: {
       where.city = filters.city;
     }
 
-    if (filters?.isActive !== undefined) {
-      where.is_active = filters.isActive;
+    if (filters?.isActive && filters.isActive !== "all") {
+      where.is_active = filters.isActive === "active";
     }
 
-    const locations = await prisma.locations.findMany({
-      where,
-      include: {
-        _count: {
-          select: {
-            games: true,
+    const [locations, totalLocations, cities] = await prisma.$transaction([
+      prisma.locations.findMany({
+        where,
+        skip,
+        take: pageSize,
+        include: {
+          _count: {
+            select: {
+              games: true,
+            },
           },
         },
-      },
-      orderBy: {
-        name: "asc",
-      },
-    });
-
-    // Get unique cities for filter
-    const cities = await prisma.locations.findMany({
-      select: {
-        city: true,
-      },
-      distinct: ["city"],
-      orderBy: {
-        city: "asc",
-      },
-    });
+        orderBy: {
+          name: "asc",
+        },
+      }),
+      prisma.locations.count({ where }),
+      prisma.locations.findMany({
+        select: {
+          city: true,
+        },
+        distinct: ["city"],
+        orderBy: {
+          city: "asc",
+        },
+      }),
+    ]);
 
     return {
       success: true,
       locations,
+      totalLocations,
+      page,
+      pageSize,
       cities: cities.map((c) => c.city),
     };
   } catch (error: any) {
@@ -290,6 +302,9 @@ export async function getAllLocationsForAdmin(filters?: {
       success: false,
       message: error.message || "Failed to fetch locations",
       locations: [],
+      totalLocations: 0,
+      page,
+      pageSize,
       cities: [],
     };
   }

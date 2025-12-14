@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import {
   toggleLocationActive,
@@ -9,6 +10,18 @@ import {
 } from "@/actions/adminLocationActions";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import PageSizeDropdown from "./PageSizeDropdown";
+import {
+  MapPin,
+  Users,
+  Trophy,
+  DollarSign,
+  Gamepad2,
+  Edit,
+  RotateCcw,
+  CheckCircle,
+  Trash2,
+} from "lucide-react";
 
 type Location = {
   id: number;
@@ -27,19 +40,40 @@ type Location = {
 };
 
 export default function AdminLocationsList({
-  initialLocations,
+  locations,
   cities,
+  totalLocations,
+  pageSize,
 }: {
-  initialLocations: Location[];
+  locations: Location[];
   cities: string[];
+  totalLocations: number;
+  pageSize: number;
 }) {
-  const [locations, setLocations] = useState(initialLocations);
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [loading, setLoading] = useState<number | null>(null);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filterCity, setFilterCity] = useState("");
-  const [filterActive, setFilterActive] = useState<
-    "all" | "active" | "inactive"
-  >("all");
+
+  const createQueryString = useCallback(
+    (name: string, value: string) => {
+      const params = new URLSearchParams(searchParams.toString());
+      if (value) {
+        params.set(name, value);
+      } else {
+        params.delete(name);
+      }
+      return params.toString();
+    },
+    [searchParams]
+  );
+
+  const handleFilterChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    router.push(
+      `/dashboard/locations?${createQueryString(e.target.name, e.target.value)}`
+    );
+  };
 
   const handleToggleActive = async (locationId: number) => {
     setLoading(locationId);
@@ -48,14 +82,7 @@ export default function AdminLocationsList({
 
     if (result.success) {
       toast.success(result.message);
-      // Update local state
-      setLocations((prev) =>
-        prev.map((loc) =>
-          loc.id === locationId
-            ? { ...loc, is_active: result.location.is_active }
-            : loc,
-        ),
-      );
+      router.refresh();
     } else {
       toast.error(result.message);
     }
@@ -72,12 +99,11 @@ export default function AdminLocationsList({
 
     if (result.success) {
       toast.success(result.message);
-      setLocations((prev) => prev.filter((loc) => loc.id !== locationId));
+      router.refresh();
     } else if (result.requiresConfirmation) {
-      // Ask for force delete confirmation
       if (
         confirm(
-          result.message + "\n\nAre you sure you want to permanently delete?",
+          result.message + "\n\nAre you sure you want to permanently delete?"
         )
       ) {
         setLoading(locationId);
@@ -86,7 +112,7 @@ export default function AdminLocationsList({
 
         if (forceResult.success) {
           toast.success(forceResult.message);
-          setLocations((prev) => prev.filter((loc) => loc.id !== locationId));
+          router.refresh();
         } else {
           toast.error(forceResult.message);
         }
@@ -96,83 +122,64 @@ export default function AdminLocationsList({
     }
   };
 
-  // Filter locations
-  const filteredLocations = locations.filter((location) => {
-    const matchesSearch =
-      !searchTerm ||
-      location.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      location.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      location.city.toLowerCase().includes(searchTerm.toLowerCase());
-
-    const matchesCity = !filterCity || location.city === filterCity;
-
-    const matchesActive =
-      filterActive === "all" ||
-      (filterActive === "active" && location.is_active) ||
-      (filterActive === "inactive" && !location.is_active);
-
-    return matchesSearch && matchesCity && matchesActive;
-  });
-
   return (
     <div className="w-full">
       {/* Search and Filters */}
       <div className="mb-6 space-y-4">
-        {/* Search bar */}
         <input
           type="text"
+          name="search"
           placeholder="Search locations by name, address, or city..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          defaultValue={searchParams.get("search") || ""}
+          onChange={handleFilterChange}
           className="w-full rounded-md border border-zinc-300 bg-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-800"
         />
 
-        {/* Filters */}
-        <div className="flex flex-wrap gap-2">
-          {/* Active/Inactive filter */}
-          <select
-            value={filterActive}
-            onChange={(e) => setFilterActive(e.target.value as any)}
-            className="rounded-md border border-zinc-300 bg-white px-4 py-2 dark:border-zinc-700 dark:bg-zinc-800"
-          >
-            <option value="all">All Locations</option>
-            <option value="active">Active Only</option>
-            <option value="inactive">Inactive Only</option>
-          </select>
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div className="flex flex-wrap gap-2">
+            <select
+              name="isActive"
+              value={searchParams.get("isActive") || "all"}
+              onChange={handleFilterChange}
+              className="rounded-md border border-zinc-300 bg-white px-4 py-2 dark:border-zinc-700 dark:bg-zinc-800"
+            >
+              <option value="all">All Locations</option>
+              <option value="active">Active Only</option>
+              <option value="inactive">Inactive Only</option>
+            </select>
 
-          {/* City filter */}
-          <select
-            value={filterCity}
-            onChange={(e) => setFilterCity(e.target.value)}
-            className="rounded-md border border-zinc-300 bg-white px-4 py-2 dark:border-zinc-700 dark:bg-zinc-800"
-          >
-            <option value="">All Cities</option>
-            {cities.map((city) => (
-              <option key={city} value={city}>
-                {city}
-              </option>
-            ))}
-          </select>
+            <select
+              name="city"
+              value={searchParams.get("city") || ""}
+              onChange={handleFilterChange}
+              className="rounded-md border border-zinc-300 bg-white px-4 py-2 dark:border-zinc-700 dark:bg-zinc-800"
+            >
+              <option value="">All Cities</option>
+              {cities.map((city) => (
+                <option key={city} value={city}>
+                  {city}
+                </option>
+              ))}
+            </select>
+          </div>
+          <PageSizeDropdown pageSize={pageSize} />
         </div>
       </div>
 
-      {/* Results count */}
       <p className="mb-4 text-sm text-gray-600 dark:text-gray-400">
-        Showing {filteredLocations.length} of {locations.length} locations
+        Showing {locations.length} of {totalLocations} locations
       </p>
 
-      {/* Locations list */}
       <div className="space-y-4">
-        {filteredLocations.length === 0 ? (
+        {locations.length === 0 ? (
           <p className="py-8 text-center text-gray-500">No locations found</p>
         ) : (
-          filteredLocations.map((location) => (
+          locations.map((location) => (
             <div
               key={location.id}
-              className={`rounded-lg border-2 bg-white p-4 shadow-md dark:bg-zinc-900 ${
-                location.is_active
-                  ? "border-zinc-200 dark:border-zinc-800"
-                  : "border-red-300 opacity-60 dark:border-red-900"
+              className={`rounded-lg border-2 bg-white p-4 shadow-md dark:bg-zinc-900 ${location.is_active
+                ? "border-zinc-200 dark:border-zinc-800"
+                : "border-red-300 opacity-60 dark:border-red-900"
               }`}
             >
               <div className="mb-3 flex items-start justify-between">
@@ -185,23 +192,36 @@ export default function AdminLocationsList({
                       </span>
                     )}
                   </div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    📍 {location.address}, {location.city}
+                  <p className="flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-400">
+                    <MapPin className="h-4 w-4" />
+                    {location.address}, {location.city}
                   </p>
                   {location.description && (
                     <p className="mt-1 text-sm text-gray-700 dark:text-gray-300">
                       {location.description}
                     </p>
                   )}
-                  <div className="mt-2 flex gap-4 text-sm text-gray-600 dark:text-gray-400">
+                  <div className="mt-2 flex flex-wrap gap-4 text-sm text-gray-600 dark:text-gray-400">
                     {location.capacity && (
-                      <span>👥 Capacity: {location.capacity}</span>
+                      <span className="flex items-center gap-1.5">
+                        <Users className="h-4 w-4" />
+                        Capacity: {location.capacity}
+                      </span>
                     )}
-                    <span>🏀 Courts: {location.court_count}</span>
+                    <span className="flex items-center gap-1.5">
+                      <Trophy className="h-4 w-4" />
+                      Courts: {location.court_count}
+                    </span>
                     {location.price_per_game && (
-                      <span>💵 ${location.price_per_game}/game</span>
+                      <span className="flex items-center gap-1.5">
+                        <DollarSign className="h-4 w-4" />
+                        ${location.price_per_game}/game
+                      </span>
                     )}
-                    <span>🎮 {location._count.games} games hosted</span>
+                    <span className="flex items-center gap-1.5">
+                      <Gamepad2 className="h-4 w-4" />
+                      {location._count.games} games hosted
+                    </span>
                   </div>
                 </div>
               </div>
@@ -209,14 +229,23 @@ export default function AdminLocationsList({
               {/* Action buttons */}
               <div className="mt-4 flex flex-wrap gap-2">
                 <Button asChild size="sm">
-                  <Link href={`/dashboard/locations/${location.id}/edit`}>
-                    ✏️ Edit
+                  <Link
+                    href={`/dashboard/locations/${location.id}/edit`}
+                    className="flex items-center gap-1.5"
+                  >
+                    <Edit className="h-4 w-4" />
+                    <span className="hidden sm:inline">Edit</span>
                   </Link>
                 </Button>
 
                 <Button asChild variant="outline" size="sm">
-                  <Link href={`/dashboard/locations/${location.id}/games`}>
-                    🎮 View Games ({location._count.games})
+                  <Link
+                    href={`/dashboard/locations/${location.id}/games`}
+                    className="flex items-center gap-1.5"
+                  >
+                    <Gamepad2 className="h-4 w-4" />
+                    <span className="hidden md:inline">View Games ({location._count.games})</span>
+                    <span className="md:hidden">({location._count.games})</span>
                   </Link>
                 </Button>
 
@@ -225,8 +254,19 @@ export default function AdminLocationsList({
                   size="sm"
                   onClick={() => handleToggleActive(location.id)}
                   isLoading={loading === location.id}
+                  className="flex items-center gap-1.5"
                 >
-                  {location.is_active ? "🔄 Deactivate" : "✅ Activate"}
+                  {location.is_active ? (
+                    <>
+                      <RotateCcw className="h-4 w-4" />
+                      <span className="hidden sm:inline">Deactivate</span>
+                    </>
+                  ) : (
+                    <>
+                      <CheckCircle className="h-4 w-4" />
+                      <span className="hidden sm:inline">Activate</span>
+                    </>
+                  )}
                 </Button>
 
                 <Button
@@ -234,9 +274,10 @@ export default function AdminLocationsList({
                   size="sm"
                   onClick={() => handleDelete(location.id)}
                   isLoading={loading === location.id}
-                  className="ml-auto"
+                  className="ml-auto flex items-center gap-1.5"
                 >
-                  🗑️ Delete
+                  <Trash2 className="h-4 w-4" />
+                  <span className="hidden sm:inline">Delete</span>
                 </Button>
               </div>
             </div>

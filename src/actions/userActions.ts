@@ -13,7 +13,6 @@ export const getUserId = async () => {
 
     return session.user.id;
   } catch (error: any) {
-    console.error("Error getting user ID:", error);
     throw error;
   }
 };
@@ -34,7 +33,6 @@ export const getCurrentUser = async () => {
 
     return user;
   } catch (error: any) {
-    console.error("Error getting current user:", error);
     return null;
   }
 };
@@ -49,7 +47,6 @@ export const findCurrentUser = async () => {
 
     return { success: true, user };
   } catch (error: any) {
-    console.error(error);
     return { success: false, message: error.message };
   }
 };
@@ -82,7 +79,6 @@ export const updateUserForm: any = async (formData: FormData) => {
 
     return { success: true, updatedUser, message: "User updated successfully" };
   } catch (error: any) {
-    console.error(error.message);
     return { success: false, message: error.message };
   }
 };

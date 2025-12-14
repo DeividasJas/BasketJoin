@@ -104,7 +104,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           user.id = existingUser.id;
           return true;
         } catch (error) {
-          console.error("Error in signIn callback:", error);
           return false;
         }
       }

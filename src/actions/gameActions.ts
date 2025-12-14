@@ -56,7 +56,6 @@ export const getGameByIdAndLocation = async (
       },
     };
   } catch (error: any) {
-    console.error(error.message);
     return { success: false, message: error.message };
   }
 };
@@ -125,7 +124,6 @@ export const getFirstGameByLocationId = async (locationId: number) => {
       },
     };
   } catch (error: any) {
-    console.error(error.message);
     return { success: false, message: error.message };
   }
 };
@@ -182,7 +180,6 @@ export const registerToGame = async (
       registration: newRegistration,
     };
   } catch (error: any) {
-    console.error(error.message);
     return { success: false, message: error.message };
   }
 };
@@ -219,7 +216,6 @@ export const cancelRegistration = async (
     };
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error((error as Error).message);
       return { success: false, message: "Registration not found" };
     }
     return { success: false, message: "Registration not found" };
@@ -248,7 +244,6 @@ export const lastTenGamesFromUserRegistration = async () => {
     if (!lastTenGames) return { success: false, message: "No games found" };
     return { success: true, lastTenGames, user };
   } catch (error: any) {
-    console.error(error.message);
     return { success: false, message: error.message };
   }
 };
@@ -266,7 +261,6 @@ export const getAllGames = async () => {
 
     return { success: true, allGames };
   } catch (error: any) {
-    console.error(error.message);
     return { success: false, message: error.message };
   }
 };

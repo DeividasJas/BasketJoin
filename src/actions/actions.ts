@@ -14,27 +14,20 @@ export const getAllUserGames = async () => {
       where: {
         user_id: session.user.id,
       },
-      include: {
-        game: true,
-      },
+      include: { game: true },
     });
 
     if (!userPlayedGames) return { success: false, message: "No games found" };
 
     return { success: true, userPlayedGames };
   } catch (error: any) {
-    console.error(error.message);
     return { success: false, message: error.message };
   }
 };
 
 export const getUserById = async (userId: string) => {
-  // console.log("USERID", userId);
-  // console.log("end week", endOfWeek);
   const user = await prisma.users.findUnique({
-    where: {
-      id: userId,
-    },
+    where: { id: userId },
   });
   return { success: true, user };
 };
@@ -61,11 +54,9 @@ export const getLatestGame = async () => {
     if (!latestGame || !latestGame.id) return { success: false };
     return { success: true, latestGame };
   } catch (error) {
-    console.error("Error fetching latest game:", error);
-    return { success: false, error };
+    return { success: false };
   }
 };
-
 
 export const getLatestGameId = async () => {
   try {
@@ -87,12 +78,9 @@ export const getLatestGameId = async () => {
 
     return { success: true, game };
   } catch (error: any) {
-    console.error({ success: false, message: error.message });
     return { success: false, message: error.message };
   }
 };
-
-
 
 export const getGameById = async (gameId: number) => {
   try {
@@ -106,7 +94,6 @@ export const getGameById = async (gameId: number) => {
     }
     return { success: true, game };
   } catch (error: any) {
-    console.error(error.message);
     return { success: false, message: error.message };
   }
 };

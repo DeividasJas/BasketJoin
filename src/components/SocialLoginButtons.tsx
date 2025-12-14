@@ -19,7 +19,6 @@ export default function SocialLoginButtons({
     try {
       await signIn("google", { callbackUrl });
     } catch (error) {
-      console.error("Google sign in error:", error);
     } finally {
       setIsGoogleLoading(false);
     }
@@ -30,7 +29,6 @@ export default function SocialLoginButtons({
     try {
       await signIn("facebook", { callbackUrl });
     } catch (error) {
-      console.error("Facebook sign in error:", error);
     } finally {
       setIsFacebookLoading(false);
     }
@@ -41,7 +39,7 @@ export default function SocialLoginButtons({
       <Button
         type="button"
         variant="outline"
-        className="w-full flex items-center justify-center gap-2"
+        className="flex w-full items-center justify-center gap-2"
         onClick={handleGoogleSignIn}
         isLoading={isGoogleLoading}
         disabled={isFacebookLoading}
@@ -70,7 +68,7 @@ export default function SocialLoginButtons({
       <Button
         type="button"
         variant="outline"
-        className="w-full flex items-center justify-center gap-2"
+        className="flex w-full items-center justify-center gap-2"
         onClick={handleFacebookSignIn}
         isLoading={isFacebookLoading}
         disabled={isGoogleLoading}
