@@ -4,6 +4,7 @@ import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import SocialLoginButtons from "@/components/SocialLoginButtons";
 import { Button } from "@/components/ui/button";
 
@@ -40,20 +41,36 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-[80vh] items-center justify-center px-4">
-      <div className="w-full max-w-sm">
-        {/* Header */}
-        <div className="mb-8 text-center">
-          <h1 className="text-2xl font-semibold tracking-tight text-zinc-800 dark:text-zinc-100">
-            Welcome back
-          </h1>
-          <p className="mt-1.5 text-sm text-zinc-500 dark:text-zinc-400">
-            Sign in to your BasketJoin account
-          </p>
-        </div>
+    <>
+      {/* Branding */}
+      <Link
+        href="/"
+        className="mb-10 flex flex-col items-center gap-3 transition-opacity hover:opacity-80"
+      >
+        <Image
+          src="/basketball.svg"
+          width={44}
+          height={44}
+          alt="BasketJoin"
+          priority
+        />
+        <span className="text-[11px] font-semibold uppercase tracking-[0.25em] text-zinc-400 dark:text-zinc-500">
+          BasketJoin
+        </span>
+      </Link>
 
-        {/* Card */}
+      {/* Card */}
+      <div className="w-full max-w-sm">
         <div className="rounded-xl border border-zinc-200 bg-white p-6 dark:border-zinc-700/60 dark:bg-zinc-900">
+          <div className="mb-6">
+            <h1 className="text-lg font-semibold text-zinc-800 dark:text-zinc-100">
+              Welcome back
+            </h1>
+            <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+              Sign in to your account
+            </p>
+          </div>
+
           <SocialLoginButtons callbackUrl="/game-status" />
 
           {error && (
@@ -119,6 +136,6 @@ export default function LoginPage() {
           </Link>
         </p>
       </div>
-    </div>
+    </>
   );
 }

@@ -1,14 +1,11 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { getLatestGameId } from "@/actions/actions";
-import { Links, navLinks as navLinksArray } from "@/types/navLinks";
+import { navLinks as navLinksArray } from "@/types/navLinks";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
-
-const filterForAuth = (navLinks: Links[], isAuth: boolean) =>
-  navLinks.filter(({ label }) => !(isAuth && (label === "Login" || label === "Signup")));
 
 export const dynamicNavLinksFunction = async (isAuth: boolean) => {
   const { success, game } = await getLatestGameId();
@@ -16,7 +13,7 @@ export const dynamicNavLinksFunction = async (isAuth: boolean) => {
   if (!success)
     return {
       success,
-      navLinks: filterForAuth(navLinksArray, isAuth),
+      navLinks: navLinksArray,
     };
 
   const dynamicNavLinksArray = navLinksArray.map((link) =>
@@ -27,8 +24,6 @@ export const dynamicNavLinksFunction = async (isAuth: boolean) => {
 
   return {
     success,
-    navLinks: filterForAuth(dynamicNavLinksArray, isAuth),
+    navLinks: dynamicNavLinksArray,
   };
 };
-
-
