@@ -32,24 +32,22 @@ export default async function RootLayout({
   const { navLinks } = await dynamicNavLinksFunction(isAuth);
 
   return (
-    <AuthProvider>
-      <html lang="en" suppressHydrationWarning>
-        <body className={`${roboto.className} relative mx-auto flex min-h-screen w-full max-w-[1100px] flex-col bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-300`}>
-          {/* <div className={`${roboto.className} mx-auto flex min-h-screen w-full max-w-[1100px] flex-col bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-300`}> */}
-            <ThemeProvider attribute="class">
-              <Header
-                isAuthenticated={isAuth}
-                navLinksArray={navLinks}
-                userRole={userRole}
-              />
-              <ThemeChanger />
-              {children}
-              <Footer />
-              <Toaster richColors />
-            </ThemeProvider>
-          {/* </div> */}
-        </body>
-      </html>
-    </AuthProvider>
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${roboto.className} relative mx-auto flex min-h-screen w-full max-w-[1100px] flex-col bg-zinc-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-300`}>
+        <AuthProvider>
+          <ThemeProvider attribute="class">
+            <Header
+              isAuthenticated={isAuth}
+              navLinksArray={navLinks}
+              userRole={userRole}
+            />
+            <ThemeChanger />
+            {children}
+            <Footer />
+            <Toaster richColors />
+          </ThemeProvider>
+        </AuthProvider>
+      </body>
+    </html>
   );
 }

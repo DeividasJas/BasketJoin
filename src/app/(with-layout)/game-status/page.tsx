@@ -1,5 +1,5 @@
 import PlayersList from "@/components/playersList";
-import { getFirstGameByLocationId } from "@/actions/gameActions";
+import { getNextUpcomingGame } from "@/actions/gameActions";
 import NextGameCountdown from "@/components/nextGameCountdown";
 import { auth } from "@/auth";
 
@@ -9,7 +9,7 @@ export default async function GameStatusPage() {
 
 
   const { success, gameData, isActivePlayer, participantsData } =
-    await getFirstGameByLocationId(1);
+    await getNextUpcomingGame();
 
   if (!success || !gameData)
     return <h1 className="mb-2 text-center text-3xl font-bold">Unavailable</h1>;

@@ -1,4 +1,4 @@
-import { getAllGames, getFirstGameByLocationId } from "@/actions/gameActions";
+import { getAllGames, getNextUpcomingGame } from "@/actions/gameActions";
 import { getUserId } from "@/actions/userActions";
 import { CancelRegistrationBtn } from "@/components/cancelRegistrationBtn";
 import GameCalendar from "@/components/gameCalendar";
@@ -15,7 +15,7 @@ export default async function Schedule() {
 
   const { success: upcomingGamesSuccess, allGames } = await getAllGames();
   const { success, gameData, isActivePlayer, participantsData } =
-    await getFirstGameByLocationId(1);
+    await getNextUpcomingGame();
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-6">

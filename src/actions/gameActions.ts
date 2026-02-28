@@ -60,6 +60,77 @@ export const getGameByIdAndLocation = async (
   }
 };
 
+export const getNextUpcomingGame = async () => {
+  const user_id = await getUserId();
+
+  try {
+    const gameObject = await prisma.games.findFirst({
+      where: {
+        game_date: {
+          gte: new Date(),
+        },
+        status: { not: "CANCELLED" },
+      },
+      orderBy: {
+        game_date: "asc",
+      },
+      include: {
+        location: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        game_registrations: {
+          include: {
+            user: true,
+          },
+          orderBy: {
+            user: {
+              created_at: "asc",
+            },
+          },
+        },
+      },
+    });
+
+    if (!gameObject) return { success: false, message: "Game not found" };
+
+    const participantsData = gameObject.game_registrations.map(
+      (registration) => registration.user,
+    );
+
+    if (!user_id) {
+      return {
+        success: true,
+        participantsData,
+        gameData: {
+          game_date: gameObject.game_date,
+          game_id: gameObject.id,
+          location: gameObject.location,
+        },
+      };
+    }
+
+    const isActivePlayer = participantsData.some((participant) => {
+      return participant.id === user_id;
+    });
+
+    return {
+      success: true,
+      isActivePlayer,
+      participantsData,
+      gameData: {
+        game_date: gameObject.game_date,
+        game_id: gameObject.id,
+        location: gameObject.location,
+      },
+    };
+  } catch (error: any) {
+    return { success: false, message: error.message };
+  }
+};
+
 export const getFirstGameByLocationId = async (locationId: number) => {
   const user_id = await getUserId();
 
