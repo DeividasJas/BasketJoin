@@ -10,7 +10,6 @@ import {
   Clock,
   AlertCircle,
   XCircle,
-  Eye,
 } from "lucide-react";
 import { formatCurrency } from "@/lib/paymentUtils";
 import { toast } from "sonner";
@@ -40,41 +39,54 @@ type UserMembershipCardProps = {
   };
 };
 
+function StatusBadge({
+  label,
+  variant,
+}: {
+  label: string;
+  variant: "green" | "blue" | "yellow" | "red" | "zinc";
+}) {
+  const colors = {
+    green:
+      "bg-emerald-500/10 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400",
+    blue: "bg-blue-500/10 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400",
+    yellow:
+      "bg-amber-500/10 text-amber-600 dark:bg-amber-500/10 dark:text-amber-400",
+    red: "bg-red-500/10 text-red-600 dark:bg-red-500/10 dark:text-red-400",
+    zinc: "bg-zinc-200 text-zinc-600 dark:bg-zinc-700 dark:text-zinc-400",
+  };
+
+  return (
+    <span
+      className={`inline-flex rounded-full px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider ${colors[variant]}`}
+    >
+      {label}
+    </span>
+  );
+}
+
+function getStatusVariant(
+  status: string,
+): "green" | "blue" | "yellow" | "red" | "zinc" {
+  switch (status) {
+    case "ACTIVE":
+      return "green";
+    case "UPCOMING":
+      return "blue";
+    case "PENDING_PAYMENT":
+      return "yellow";
+    case "CANCELLED":
+      return "red";
+    default:
+      return "zinc";
+  }
+}
+
 export default function UserMembershipCard({
   membership,
 }: UserMembershipCardProps) {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-
-  const getLeagueStatusColor = (status: string) => {
-    switch (status) {
-      case "UPCOMING":
-        return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200";
-      case "ACTIVE":
-        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
-      case "COMPLETED":
-        return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200";
-      case "CANCELLED":
-        return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
-  };
-
-  const getMembershipStatusColor = (status: string) => {
-    switch (status) {
-      case "ACTIVE":
-        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
-      case "PENDING_PAYMENT":
-        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200";
-      case "CANCELLED":
-        return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200";
-      case "EXPIRED":
-        return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
-  };
 
   const getPaymentStatus = () => {
     const totalDue = membership.payment_schedules.reduce(
@@ -90,7 +102,7 @@ export default function UserMembershipCard({
     if (percentage === 100) {
       return {
         icon: CheckCircle,
-        color: "text-green-500",
+        color: "text-emerald-500",
         text: "Paid in full",
         percentage,
       };
@@ -98,7 +110,7 @@ export default function UserMembershipCard({
     if (percentage > 0) {
       return {
         icon: Clock,
-        color: "text-yellow-500",
+        color: "text-amber-500",
         text: `${percentage.toFixed(0)}% paid`,
         percentage,
       };
@@ -118,7 +130,7 @@ export default function UserMembershipCard({
 
     return {
       icon: Clock,
-      color: "text-gray-500",
+      color: "text-zinc-400",
       text: "Not yet due",
       percentage,
     };
@@ -136,9 +148,7 @@ export default function UserMembershipCard({
     membership.payment_schedules.every((s) => s.status !== "PAID");
 
   const handleCancel = async () => {
-    const reason = prompt(
-      "Reason for cancelling membership (optional):",
-    );
+    const reason = prompt("Reason for cancelling membership (optional):");
     if (reason === null) return;
 
     setLoading(true);
@@ -154,77 +164,73 @@ export default function UserMembershipCard({
   };
 
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+    <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-5 dark:border-zinc-700/60 dark:bg-zinc-800/50">
       {/* Header */}
       <div className="mb-4 flex items-start justify-between">
-        <div className="flex-1">
-          <Link
-            href={`/leagues/${membership.league.id}`}
-            className="text-lg font-semibold hover:text-orange-600 dark:hover:text-orange-400"
-          >
-            {membership.league.name}
-          </Link>
-          <div className="mt-2 flex flex-wrap gap-2">
-            <span
-              className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${getLeagueStatusColor(membership.league.status)}`}
-            >
-              {membership.league.status}
-            </span>
-            <span
-              className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${getMembershipStatusColor(membership.status)}`}
-            >
-              {membership.status}
-            </span>
-          </div>
+        <Link
+          href={`/leagues/${membership.league.id}`}
+          className="text-sm font-medium text-zinc-800 transition-colors hover:text-basket-400 dark:text-zinc-100 dark:hover:text-basket-400"
+        >
+          {membership.league.name}
+        </Link>
+        <div className="flex gap-1.5">
+          <StatusBadge
+            label={membership.league.status}
+            variant={getStatusVariant(membership.league.status)}
+          />
+          <StatusBadge
+            label={membership.status}
+            variant={getStatusVariant(membership.status)}
+          />
         </div>
       </div>
 
       {/* Details */}
-      <div className="space-y-3 text-sm">
+      <div className="space-y-2.5 text-[13px]">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
-            <Calendar className="h-4 w-4" />
-            <span>Season:</span>
-          </div>
-          <span className="font-medium">
-            {new Date(membership.league.start_date).toLocaleDateString()} -{" "}
+          <span className="flex items-center gap-2 text-zinc-400 dark:text-zinc-500">
+            <Calendar className="h-3.5 w-3.5" />
+            Season
+          </span>
+          <span className="text-zinc-600 dark:text-zinc-300">
+            {new Date(membership.league.start_date).toLocaleDateString()} –{" "}
             {new Date(membership.league.end_date).toLocaleDateString()}
           </span>
         </div>
 
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
-            <DollarSign className="h-4 w-4" />
-            <span>Pro-rated fee:</span>
-          </div>
-          <span className="font-semibold">
+          <span className="flex items-center gap-2 text-zinc-400 dark:text-zinc-500">
+            <DollarSign className="h-3.5 w-3.5" />
+            Fee
+          </span>
+          <span className="tabular-nums text-zinc-600 dark:text-zinc-300">
             {formatCurrency(membership.pro_rated_amount)}
           </span>
         </div>
 
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
-            <PaymentIcon className={`h-4 w-4 ${paymentStatus.color}`} />
-            <span>Payment status:</span>
-          </div>
+          <span className="flex items-center gap-2 text-zinc-400 dark:text-zinc-500">
+            <PaymentIcon className={`h-3.5 w-3.5 ${paymentStatus.color}`} />
+            Payment
+          </span>
           <span className={`font-medium ${paymentStatus.color}`}>
             {paymentStatus.text}
           </span>
         </div>
 
-        <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
-          <span>Installments:</span>
-          <span>
-            {paidSchedules} of {membership.payment_schedules.length} paid
+        <div className="flex items-center justify-between text-[11px] text-zinc-400 dark:text-zinc-500">
+          <span>Installments</span>
+          <span className="tabular-nums">
+            {paidSchedules} / {membership.payment_schedules.length} paid
           </span>
         </div>
 
-        {/* Payment Progress Bar */}
+        {/* Payment progress bar */}
         {paymentStatus.percentage > 0 && paymentStatus.percentage < 100 && (
-          <div className="mt-2">
-            <div className="h-2 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
+          <div className="pt-1">
+            <div className="h-1 w-full overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700">
               <div
-                className="h-full bg-gradient-to-r from-orange-500 to-orange-600"
+                className="h-full rounded-full bg-basket-400 transition-all"
                 style={{ width: `${paymentStatus.percentage}%` }}
               />
             </div>
@@ -233,36 +239,40 @@ export default function UserMembershipCard({
       </div>
 
       {/* Actions */}
-      <div className="mt-4 flex flex-wrap gap-2 border-t border-gray-200 pt-4 dark:border-gray-700">
-        <Link href={`/leagues/${membership.league.id}`}>
-          <Button variant="outline" size="sm">
-            <Eye className="mr-2 h-4 w-4" />
-            View League
-          </Button>
-        </Link>
-        {canCancel && (
-          <Button
-            variant="destructive"
-            size="sm"
-            onClick={handleCancel}
-            disabled={loading}
-            isLoading={loading}
-          >
-            <XCircle className="mr-2 h-4 w-4" />
-            Cancel Membership
-          </Button>
-        )}
-        {!canCancel && membership.status === "ACTIVE" && (
-          <p className="text-xs text-gray-500 dark:text-gray-400">
-            Cannot cancel: payments have been made
-          </p>
-        )}
+      <div className="mt-4 flex items-center justify-between border-t border-zinc-200 pt-3 dark:border-zinc-700/60">
+        <span className="text-[11px] text-zinc-400 dark:text-zinc-500">
+          Joined {new Date(membership.joined_at).toLocaleDateString()}
+        </span>
+        <div className="flex gap-2">
+          <Link href={`/leagues/${membership.league.id}`}>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-7 text-[12px] text-zinc-500 hover:text-basket-400 dark:text-zinc-400"
+            >
+              View
+            </Button>
+          </Link>
+          {canCancel && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleCancel}
+              disabled={loading}
+              isLoading={loading}
+              className="h-7 text-[12px] text-red-500 hover:bg-red-500/10 hover:text-red-600"
+            >
+              <XCircle className="mr-1 h-3 w-3" />
+              Cancel
+            </Button>
+          )}
+          {!canCancel && membership.status === "ACTIVE" && (
+            <span className="self-center text-[10px] text-zinc-400">
+              Payments made
+            </span>
+          )}
+        </div>
       </div>
-
-      {/* Joined Date */}
-      <p className="mt-3 text-xs text-gray-500 dark:text-gray-400">
-        Joined {new Date(membership.joined_at).toLocaleDateString()}
-      </p>
     </div>
   );
 }

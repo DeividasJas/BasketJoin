@@ -1,11 +1,16 @@
 export default function Page() {
   return (
-    <>
-      <section className="mt-6 flex h-full w-full max-w-[700px] flex-col">
-        <h2 className="mb-2 text-center text-xl">Attendance</h2>
-        <p></p>
-        <p></p>
-      </section>
-    </>
+    <div className="space-y-6">
+      <h2 className="text-[11px] font-semibold uppercase tracking-[0.15em] text-zinc-500 dark:text-zinc-400">
+        Attendance
+      </h2>
+
+      <div className="flex flex-col items-center py-12">
+        <div className="mb-3 h-10 w-10 rounded-full bg-zinc-200 dark:bg-zinc-700" />
+        <p className="text-sm text-zinc-500">
+          Detailed attendance history coming soon
+        </p>
+      </div>
+    </div>
   );
 }

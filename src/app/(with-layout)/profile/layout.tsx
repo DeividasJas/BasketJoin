@@ -16,9 +16,9 @@ export default async function LayoutProfile({
 
   return (
     <ProfileProvider>
-      <div className="mx-auto max-w-[900px] rounded-md bg-zinc-300 px-2 dark:bg-zinc-900">
+      <div className="mx-auto w-full max-w-lg">
         <ProfileNavList />
-        {children}
+        <div className="py-6">{children}</div>
       </div>
     </ProfileProvider>
   );

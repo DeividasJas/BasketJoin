@@ -1,44 +1,82 @@
 "use client";
 import LogoutBtn from "@/components/logoutBtn";
 import { useProfileContext } from "@/context/profileContext";
-
 import EditProfileForm from "@/components/editProfileForm";
 import Image from "next/image";
-import React from "react";
-// import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
-// import { redirect } from "next/navigation";
 
 export default function Page() {
-  // const { isAuthenticated } = useKindeBrowserClient();
-  // const isLoggedIn = isAuthenticated;
-  // if (!isLoggedIn) redirect("/api/auth/login");
   const { user } = useProfileContext();
 
+  const fullName = [user?.given_name, user?.family_name]
+    .filter(Boolean)
+    .join(" ");
+
   return (
-    <>
-      <section className="mt-6 flex h-full w-full max-w-[700px] flex-col">
-        <h2 className="mb-2 text-center text-xl">Settings</h2>
-        <div className="relative mb-4 flex w-full flex-col items-center justify-center gap-8 xs:flex-row">
-          {user?.picture && (
+    <div className="space-y-8">
+      {/* Section header */}
+      <h2 className="text-[11px] font-semibold uppercase tracking-[0.15em] text-zinc-500 dark:text-zinc-400">
+        Settings
+      </h2>
+
+      {/* Profile info card */}
+      <div className="flex items-center gap-5">
+        {/* Avatar */}
+        <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700">
+          {user?.picture ? (
             <Image
-              src={user?.picture}
-              width={100}
-              height={100}
-              alt="Player picture"
-              className="w-24 self-center rounded-md md:w-24 lg:w-40" // Responsive width classes
+              src={user.picture}
+              width={64}
+              height={64}
+              alt="Profile picture"
+              className="h-full w-full object-cover"
             />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center text-xl font-light text-zinc-400 dark:text-zinc-500">
+              {user?.given_name?.charAt(0) || "?"}
+            </div>
           )}
-          <section className="overflow-hidden">
-            <h4>Name: {user?.given_name}</h4>
-            <h4>Last name: {user?.family_name}</h4>
-            <h4>Username: {user?.username || "..."}</h4>
-            <h4>Email: {user?.email || "..."}</h4>
-            <h4>Joined: {user?.created_at?.toLocaleDateString()}</h4>
-          </section>
         </div>
+
+        {/* Details */}
+        <div className="min-w-0 flex-1 space-y-1">
+          {fullName && (
+            <p className="text-sm font-medium text-zinc-800 dark:text-zinc-100">
+              {fullName}
+            </p>
+          )}
+          {user?.username && (
+            <p className="text-[13px] text-zinc-400 dark:text-zinc-500">
+              @{user.username}
+            </p>
+          )}
+          {user?.email && (
+            <p className="truncate text-[13px] text-zinc-400 dark:text-zinc-500">
+              {user.email}
+            </p>
+          )}
+          {user?.created_at && (
+            <p className="text-[11px] text-zinc-400 dark:text-zinc-500">
+              Joined {user.created_at.toLocaleDateString()}
+            </p>
+          )}
+        </div>
+      </div>
+
+      {/* Divider */}
+      <div className="border-t border-zinc-200 dark:border-zinc-700/60" />
+
+      {/* Edit profile */}
+      <div className="flex justify-center">
         <EditProfileForm />
+      </div>
+
+      {/* Divider */}
+      <div className="border-t border-zinc-200 dark:border-zinc-700/60" />
+
+      {/* Logout */}
+      <div className="flex justify-center">
         <LogoutBtn />
-      </section>
-    </>
+      </div>
+    </div>
   );
 }

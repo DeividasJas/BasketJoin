@@ -8,59 +8,75 @@ import { auth } from "@/auth";
 export default async function ProfileDashboardProfileParallel() {
   const session = await auth();
 
-  // If not logged in, redirect to login page
   if (!session?.user) {
     redirect("/login");
   }
 
-  // Only attempt to find user if logged in
   const { success, user, message } = await findCurrentUser();
 
-  // Handle potential errors in user retrieval
   if (!success) {
     return (
-      <div className="flex items-center justify-center h-full w-full">
-        <p className="text-red-500">{message || "Unable to load user profile"}</p>
+      <div className="flex items-center justify-center py-8">
+        <p className="text-sm text-red-500">
+          {message || "Unable to load user profile"}
+        </p>
       </div>
     );
   }
 
-  // If no user found (but authentication succeeded), you might want to handle this case
   if (!user) {
     return (
-      <div className="flex items-center justify-center h-full w-full">
-        <p className="text-yellow-500">User profile not found</p>
+      <div className="flex items-center justify-center py-8">
+        <p className="text-sm text-zinc-400">User profile not found</p>
       </div>
     );
   }
 
+  const fullName = [user.given_name, user.family_name]
+    .filter(Boolean)
+    .join(" ");
+
   return (
-    <div className="relative flex h-full w-full flex-col">
-      <div className="flex h-full w-full flex-col items-center justify-center">
-        {user?.picture ? (
+    <div className="flex flex-col items-center">
+      {/* Avatar */}
+      <div className="relative mb-4 h-20 w-20 overflow-hidden rounded-full bg-zinc-200 ring-2 ring-zinc-200/80 dark:bg-zinc-700 dark:ring-zinc-700/80">
+        {user.picture ? (
           <Image
             src={user.picture}
-            alt="Player picture"
-            width={100}
-            height={100}
+            alt={fullName || "Profile picture"}
+            width={80}
+            height={80}
             priority={true}
-            className="mb-2 rounded-md"
+            className="h-full w-full object-cover"
           />
         ) : (
-          <div className="w-[100px] h-[100px] bg-gray-200 rounded-md mb-2 flex items-center justify-center">
-            No Picture
+          <div className="flex h-full w-full items-center justify-center text-2xl font-light text-zinc-400 dark:text-zinc-500">
+            {user.given_name?.charAt(0) || "?"}
           </div>
         )}
-        <p>{user.given_name}</p>
-        <p>{user.family_name}</p>
-        {user.username && <p>{user.username}</p>}
       </div>
 
+      {/* Name */}
+      {fullName && (
+        <h2 className="text-lg font-medium text-zinc-800 dark:text-zinc-100">
+          {fullName}
+        </h2>
+      )}
+
+      {/* Username */}
+      {user.username && (
+        <p className="mt-0.5 text-sm text-zinc-400 dark:text-zinc-500">
+          @{user.username}
+        </p>
+      )}
+
+      {/* Settings link */}
       <Link
         href="/profile/settings"
-        className="absolute bottom-0 right-0 ease-in"
+        className="mt-4 flex items-center gap-1.5 text-[12px] text-zinc-400 transition-colors hover:text-basket-400 dark:text-zinc-500 dark:hover:text-basket-400"
       >
-        <Settings className="duration-[6000ms] ease-in hover:animate-spin hover:stroke-basket-400" />
+        <Settings className="h-3.5 w-3.5" />
+        <span>Settings</span>
       </Link>
     </div>
   );
