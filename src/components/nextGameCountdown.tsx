@@ -16,17 +16,28 @@ export default function NextGameCountdown({
   const [countdownKey, setCountdownKey] = useState<string>("");
 
   const handleCountdownComplete = () => {
-    // Update dates and reset countdown key to force re-render
     setCountdownKey("");
   };
-  // Only run after mount
+
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // Don't render anything until client-side
   if (!mounted) {
-    return null;
+    return (
+      <div className="flex items-center justify-center gap-6 py-4 sm:gap-10">
+        {["Days", "Hrs", "Min", "Sec"].map((label) => (
+          <div key={label} className="flex flex-col items-center">
+            <span className="text-4xl font-extralight tabular-nums tracking-tight text-zinc-300 dark:text-zinc-700 sm:text-5xl">
+              --
+            </span>
+            <span className="mt-1.5 text-[10px] font-medium uppercase tracking-[0.2em] text-zinc-400 dark:text-zinc-500">
+              {label}
+            </span>
+          </div>
+        ))}
+      </div>
+    );
   }
 
   const renderer = ({
@@ -36,11 +47,20 @@ export default function NextGameCountdown({
     seconds,
   }: CountdownRendererProps) => {
     return (
-      <div className="mx-auto grid w-fit grid-cols-2 place-items-center gap-2 text-sm xs:grid-cols-4">
-        <CountdownItem time={days} period={"Day"} />
-        <CountdownItem time={hours} period={"Hour"} />
-        <CountdownItem time={minutes} period={"Minute"} />
-        <CountdownItem time={seconds} period={"Second"} />
+      <div className="flex items-center justify-center gap-6 py-4 sm:gap-10">
+        <CountdownItem time={days} period="Days" />
+        <span className="mt-[-18px] text-2xl font-extralight text-basket-400/50 sm:text-3xl">
+          :
+        </span>
+        <CountdownItem time={hours} period="Hrs" />
+        <span className="mt-[-18px] text-2xl font-extralight text-basket-400/50 sm:text-3xl">
+          :
+        </span>
+        <CountdownItem time={minutes} period="Min" />
+        <span className="mt-[-18px] text-2xl font-extralight text-basket-400/50 sm:text-3xl">
+          :
+        </span>
+        <CountdownItem time={seconds} period="Sec" />
       </div>
     );
   };

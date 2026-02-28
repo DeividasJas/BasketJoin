@@ -53,6 +53,8 @@ export const getGameByIdAndLocation = async (
         game_date: gameObject.game_date,
         game_id: gameObject.id,
         location: gameObject.location,
+        max_players: gameObject.max_players,
+        min_players: gameObject.min_players,
       },
     };
   } catch (error: any) {
@@ -108,6 +110,8 @@ export const getNextUpcomingGame = async () => {
           game_date: gameObject.game_date,
           game_id: gameObject.id,
           location: gameObject.location,
+          max_players: gameObject.max_players,
+          min_players: gameObject.min_players,
         },
       };
     }
@@ -124,6 +128,8 @@ export const getNextUpcomingGame = async () => {
         game_date: gameObject.game_date,
         game_id: gameObject.id,
         location: gameObject.location,
+        max_players: gameObject.max_players,
+        min_players: gameObject.min_players,
       },
     };
   } catch (error: any) {

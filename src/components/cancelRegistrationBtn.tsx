@@ -11,13 +11,11 @@ export function CancelRegistrationBtn({
   isActive,
   setChange = () => {},
   props,
-  // onClick = () => {},
 }: {
   gameId: number;
   isActive: IsActivePlayer;
   setChange?: React.Dispatch<React.SetStateAction<boolean>>;
   props?: string;
-  // onClick?: () => void;
 }) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
@@ -34,7 +32,7 @@ export function CancelRegistrationBtn({
         toast.success(message);
         router.refresh();
       }
-    } catch (error) {
+    } catch {
       toast.error("An error occurred");
     } finally {
       setIsLoading(false);
@@ -42,16 +40,14 @@ export function CancelRegistrationBtn({
   };
 
   return (
-    <>
-      <Button
-        disabled={!isActive || isLoading}
-        variant="destructive"
-        isLoading={isLoading}
-        onClick={handleClick}
-        className={`px-2 py-1 animate-in hover:scale-105 ${props}`}
-      >
-        Cancel Reservation
-      </Button>
-    </>
+    <Button
+      disabled={!isActive || isLoading}
+      variant="ghost"
+      isLoading={isLoading}
+      onClick={handleClick}
+      className={`px-4 text-red-500 transition-colors hover:bg-red-500/10 hover:text-red-600 disabled:text-red-500/30 dark:text-red-400 dark:hover:bg-red-500/10 dark:hover:text-red-400 ${props}`}
+    >
+      Cancel
+    </Button>
   );
 }

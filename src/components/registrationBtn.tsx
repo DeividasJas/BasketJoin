@@ -12,14 +12,12 @@ export default function RegistrationBtn({
   setChange = () => {},
   props,
   disabled,
-  // onClick = () => {},
 }: {
   gameId: number;
   isActive: IsActivePlayer;
   setChange?: React.Dispatch<React.SetStateAction<boolean>>;
   props?: string;
   disabled?: boolean;
-  // onClick?: () => void;
 }) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const pathname = usePathname();
@@ -46,7 +44,7 @@ export default function RegistrationBtn({
       }
 
       router.refresh();
-    } catch (error) {
+    } catch {
       toast.error("Unknown error");
     } finally {
       setIsLoading(false);
@@ -55,7 +53,7 @@ export default function RegistrationBtn({
 
   return (
     <Button
-      className={`px-2 py-1 hover:scale-105 ${props}`}
+      className={`bg-basket-400 px-6 text-white shadow-sm transition-all hover:bg-basket-300 hover:shadow-md disabled:bg-basket-400/40 ${props}`}
       disabled={isActive || isLoading || disabled}
       onClick={handleClick}
       isLoading={isLoading}

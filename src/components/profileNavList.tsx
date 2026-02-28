@@ -7,43 +7,36 @@ export default function ProfileNavList() {
   const pathname = usePathname();
 
   const profileSections: Links[] = [
-    {
-      label: "General",
-      href: "/profile",
-    },
-    {
-      label: "Attendance",
-      href: "/profile/attendance",
-    },
-    {
-      label: "Stats",
-      href: "/profile/stats",
-    },
-    {
-      label: "Memberships",
-      href: "/profile/memberships",
-    },
-    {
-      label: "Settings",
-      href: "/profile/settings",
-    },
+    { label: "General", href: "/profile" },
+    { label: "Attendance", href: "/profile/attendance" },
+    { label: "Stats", href: "/profile/stats" },
+    { label: "Memberships", href: "/profile/memberships" },
+    { label: "Settings", href: "/profile/settings" },
   ];
 
   return (
-    <nav className="w-full px-4">
-      <ul className="grid grid-cols-2 gap-3 xs:grid-cols-5">
-        {profileSections.map((link) => (
-          <Link
-            href={link.href}
-            key={link.href as string}
-            className={`rounded-lg bg-zinc-200 transition-all duration-500 dark:bg-zinc-800 ${pathname === link.href && "outline outline-2 outline-orange-400 text-orange-600 dark:outline-orange-400 dark:text-orange-400"}`}
-          >
-            <li className="overflow-hidden px-1 py-2 text-center text-sm font-medium sm:text-base">
+    <nav className="-mx-2 border-b border-zinc-200 dark:border-zinc-700/60">
+      <div className="-mb-px flex gap-0 overflow-x-auto scrollbar-none">
+        {profileSections.map((link) => {
+          const isActive = pathname === link.href;
+          return (
+            <Link
+              href={link.href}
+              key={link.href as string}
+              className={`relative whitespace-nowrap px-4 py-3 text-[13px] font-medium transition-colors ${
+                isActive
+                  ? "text-basket-400"
+                  : "text-zinc-400 hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300"
+              }`}
+            >
               {link.label}
-            </li>
-          </Link>
-        ))}
-      </ul>
+              {isActive && (
+                <span className="absolute inset-x-0 bottom-0 h-[2px] bg-basket-400" />
+              )}
+            </Link>
+          );
+        })}
+      </div>
     </nav>
   );
 }
