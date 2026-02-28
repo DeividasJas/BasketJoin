@@ -16,6 +16,10 @@ export default function DashboardNavList() {
       href: "/dashboard/locations",
     },
     {
+      label: "Leagues",
+      href: "/dashboard/leagues",
+    },
+    {
       label: "Payments",
       href: "/dashboard/payments",
     },
@@ -23,12 +27,12 @@ export default function DashboardNavList() {
 
   return (
     <nav className="w-full px-4">
-      <ul className="grid grid-cols-3 gap-3">
+      <ul className="grid grid-cols-4 gap-3">
         {dashboardSections.map((link) => (
           <Link
             href={link.href}
             key={link.href as string}
-            className={`rounded-lg bg-zinc-200 transition-all duration-500 dark:bg-zinc-800 ${pathname === link.href && "outline outline-2 outline-orange-400 text-orange-600 dark:outline-orange-400 dark:text-orange-400"}`}
+            className={`rounded-lg bg-zinc-200 transition-all duration-500 dark:bg-zinc-800 ${pathname === link.href && "text-orange-600 outline outline-2 outline-orange-400 dark:text-orange-400 dark:outline-orange-400"}`}
           >
             <li className="overflow-hidden px-1 py-2 text-center text-sm font-medium sm:text-base">
               {link.label}

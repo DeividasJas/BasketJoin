@@ -17,18 +17,18 @@ export default async function AdminGamesPage({
     page: z.coerce.number().default(1),
     pageSize: z.coerce.number().default(10),
     status: z.enum(["scheduled", "completed", "cancelled"]).optional(),
-    seriesId: z.string().optional(),
+    leagueId: z.string().optional(),
   });
 
-  const { page, pageSize, status, seriesId } = searchParamsSchema.parse(resolvedSearchParams);
+  const { page, pageSize, status, leagueId } = searchParamsSchema.parse(resolvedSearchParams);
 
   const {
     games,
     totalGames,
-    allSeries,
+    allLeagues,
     page: currentPage,
     pageSize: currentPagesize,
-  } = await getAllGamesForAdmin(page, pageSize, { status, seriesId });
+  } = await getAllGamesForAdmin(page, pageSize, { status, leagueId });
 
   const totalPages = Math.ceil(totalGames / currentPagesize);
 
@@ -52,9 +52,9 @@ export default async function AdminGamesPage({
       <AdminGamesList
         games={games}
         pageSize={currentPagesize}
-        allSeries={allSeries}
+        allLeagues={allLeagues}
         currentStatus={status}
-        currentSeriesId={seriesId}
+        currentLeagueId={leagueId}
       />
       <PaginationControls currentPage={currentPage} totalPages={totalPages} />
     </div>

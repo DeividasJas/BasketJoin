@@ -32,7 +32,7 @@ type Game = {
   min_players: number;
   description: string | null;
   game_type: string | null;
-  series_id: string | null;
+  league_id: string | null;
   location: {
     id: number;
     name: string;
@@ -44,7 +44,7 @@ type Game = {
     family_name: string | null;
     email: string | null;
   } | null;
-  series?: {
+  league?: {
     id: string;
     name: string;
   } | null;
@@ -53,7 +53,7 @@ type Game = {
   };
 };
 
-type Series = {
+type League = {
   id: string;
   name: string;
   _count: {
@@ -64,15 +64,15 @@ type Series = {
 export default function AdminGamesList({
   games,
   pageSize,
-  allSeries,
+  allLeagues,
   currentStatus,
-  currentSeriesId,
+  currentLeagueId,
 }: {
   games: Game[];
   pageSize: number;
-  allSeries: Series[];
+  allLeagues: League[];
   currentStatus?: string;
-  currentSeriesId?: string;
+  currentLeagueId?: string;
 }) {
   const [loading, setLoading] = useState<number | null>(null);
   const router = useRouter();
@@ -191,18 +191,18 @@ export default function AdminGamesList({
           ))}
         </div>
 
-        {/* Series Filter and Page Size */}
+        {/* League Filter and Page Size */}
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex flex-wrap gap-2">
             <select
-              value={currentSeriesId || ""}
-              onChange={(e) => updateFilter("seriesId", e.target.value || null)}
+              value={currentLeagueId || ""}
+              onChange={(e) => updateFilter("leagueId", e.target.value || null)}
               className="rounded-md border border-zinc-300 bg-white px-4 py-2 dark:border-zinc-700 dark:bg-zinc-800"
             >
-              <option value="">All Series</option>
-              {allSeries.map((series) => (
-                <option key={series.id} value={series.id}>
-                  {series.name} ({series._count.games} games)
+              <option value="">All Leagues</option>
+              {allLeagues.map((league) => (
+                <option key={league.id} value={league.id}>
+                  {league.name} ({league._count.games} games)
                 </option>
               ))}
             </select>
@@ -263,10 +263,10 @@ export default function AdminGamesList({
                       {game.game_type}
                     </p>
                   )}
-                  {game.series && (
+                  {game.league && (
                     <p className="flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-400">
                       <Repeat className="h-4 w-4" />
-                      {game.series.name}
+                      {game.league.name}
                     </p>
                   )}
                   {game.description && (

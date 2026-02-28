@@ -87,11 +87,11 @@ export async function updateGame(
       throw new Error("Game not found");
     }
 
-    if (applyToSeries && game.series_id) {
-      // Update all subsequent games in the series
+    if (applyToSeries && game.league_id) {
+      // Update all subsequent games in the league
       const subsequentGames = await prisma.games.findMany({
         where: {
-          series_id: game.series_id,
+          league_id: game.league_id,
           game_date: {
             gt: game.game_date,
           },
@@ -118,7 +118,7 @@ export async function updateGame(
 
       return {
         success: true,
-        message: `Game and ${subsequentGames.length} subsequent games in the series updated successfully`,
+        message: `Game and ${subsequentGames.length} subsequent games in the league updated successfully`,
         game,
       };
     } else {
@@ -385,7 +385,7 @@ export async function getAllGamesForAdmin(
   pageSize: number = 10,
   filters?: {
     status?: string;
-    seriesId?: string;
+    leagueId?: string;
   },
 ) {
   try {
@@ -400,11 +400,11 @@ export async function getAllGamesForAdmin(
       whereClause.status = filters.status.toUpperCase();
     }
 
-    if (filters?.seriesId) {
-      whereClause.series_id = filters.seriesId;
+    if (filters?.leagueId) {
+      whereClause.league_id = filters.leagueId;
     }
 
-    const [games, totalGames, allSeries] = await prisma.$transaction([
+    const [games, totalGames, allLeagues] = await prisma.$transaction([
       prisma.games.findMany({
         where: whereClause,
         skip,
@@ -418,7 +418,7 @@ export async function getAllGamesForAdmin(
               email: true,
             },
           },
-          series: {
+          league: {
             select: {
               id: true,
               name: true,
@@ -441,7 +441,7 @@ export async function getAllGamesForAdmin(
       prisma.games.count({
         where: whereClause,
       }),
-      prisma.series.findMany({
+      prisma.league.findMany({
         include: {
           _count: {
             select: {
@@ -459,7 +459,7 @@ export async function getAllGamesForAdmin(
       success: true,
       games,
       totalGames,
-      allSeries,
+      allLeagues,
       page,
       pageSize,
     };
@@ -469,7 +469,7 @@ export async function getAllGamesForAdmin(
       message: error.message || "Failed to fetch games",
       games: [],
       totalGames: 0,
-      allSeries: [],
+      allLeagues: [],
       page,
       pageSize,
     };

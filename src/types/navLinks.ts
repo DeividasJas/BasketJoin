@@ -17,8 +17,8 @@ export const navLinks: Links[] = [
     href: "/schedule",
   },
   {
-    label: "Status",
-    href: "/game-status",
+    label: "Leagues",
+    href: "/leagues",
   },
   {
     label: "Profile",

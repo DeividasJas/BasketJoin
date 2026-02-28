@@ -20,6 +20,10 @@ export default function ProfileNavList() {
       href: "/profile/stats",
     },
     {
+      label: "Memberships",
+      href: "/profile/memberships",
+    },
+    {
       label: "Settings",
       href: "/profile/settings",
     },
@@ -27,7 +31,7 @@ export default function ProfileNavList() {
 
   return (
     <nav className="w-full px-4">
-      <ul className="grid grid-cols-2 gap-3 xs:grid-cols-4">
+      <ul className="grid grid-cols-2 gap-3 xs:grid-cols-5">
         {profileSections.map((link) => (
           <Link
             href={link.href}
