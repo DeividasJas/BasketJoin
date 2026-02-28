@@ -48,10 +48,9 @@ export default function JoinLeagueButton({
       onClick={handleJoin}
       disabled={loading}
       isLoading={loading}
-      size="lg"
-      className="w-full sm:w-auto"
+      className="w-full bg-basket-400 px-6 text-white shadow-sm transition-all hover:bg-basket-300 hover:shadow-md disabled:bg-basket-400/40 sm:w-auto"
     >
-      <UserPlus className="mr-2 h-5 w-5" />
+      <UserPlus className="mr-2 h-4 w-4" />
       {loading ? "Joining..." : "Join League"}
     </Button>
   );

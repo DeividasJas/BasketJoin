@@ -6,24 +6,28 @@ export default async function LeaguesPage() {
   const { success, leagues } = await getBrowsableLeagues();
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold">Available Leagues</h1>
-        <p className="mt-2 text-gray-600 dark:text-gray-400">
-          Browse and join basketball leagues in your area
+    <div className="flex flex-col gap-6">
+      <div>
+        <h1 className="text-lg font-semibold text-zinc-800 dark:text-zinc-100">
+          Leagues
+        </h1>
+        <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+          Browse and join basketball leagues
         </p>
       </div>
 
       {!success || leagues.length === 0 ? (
-        <div className="rounded-lg border border-dashed border-gray-300 p-12 text-center dark:border-gray-700">
-          <Calendar className="mx-auto h-12 w-12 text-gray-400" />
-          <h3 className="mt-4 text-lg font-medium">No leagues available</h3>
-          <p className="mt-2 text-gray-600 dark:text-gray-400">
+        <div className="rounded-xl border border-dashed border-zinc-200 p-12 text-center dark:border-zinc-700/60">
+          <Calendar className="mx-auto h-8 w-8 text-zinc-300 dark:text-zinc-600" />
+          <p className="mt-3 text-sm font-medium text-zinc-500 dark:text-zinc-400">
+            No leagues available
+          </p>
+          <p className="mt-1 text-xs text-zinc-400 dark:text-zinc-500">
             Check back later for upcoming leagues
           </p>
         </div>
       ) : (
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2">
           {leagues.map((league) => (
             <LeagueCard key={league.id} league={league} />
           ))}

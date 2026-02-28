@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Calendar, MapPin, Users, DollarSign } from "lucide-react";
+import { MapPin, Users } from "lucide-react";
 import { formatCurrency } from "@/lib/paymentUtils";
 
 type LeagueCardProps = {
@@ -25,77 +25,58 @@ type LeagueCardProps = {
 };
 
 export default function LeagueCard({ league }: LeagueCardProps) {
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "UPCOMING":
-        return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200";
-      case "ACTIVE":
-        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
-      case "COMPLETED":
-        return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200";
-      case "CANCELLED":
-        return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
+  const statusStyle: Record<string, string> = {
+    UPCOMING: "bg-blue-50 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400",
+    ACTIVE:
+      "bg-green-50 text-green-600 dark:bg-green-500/10 dark:text-green-400",
+    COMPLETED:
+      "bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400",
+    CANCELLED: "bg-red-50 text-red-600 dark:bg-red-500/10 dark:text-red-400",
   };
 
   return (
     <Link href={`/leagues/${league.id}`} className="group">
-      <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md dark:border-gray-800 dark:bg-gray-900">
-        <div className="mb-4 flex items-start justify-between">
-          <div className="flex-1">
-            <h3 className="text-lg font-semibold group-hover:text-orange-600 dark:group-hover:text-orange-400">
-              {league.name}
-            </h3>
-          </div>
+      <div className="rounded-xl border border-zinc-200 bg-white p-5 transition-colors hover:border-zinc-300 dark:border-zinc-700/60 dark:bg-zinc-900 dark:hover:border-zinc-600">
+        <div className="flex items-start justify-between gap-3">
+          <h3 className="text-sm font-semibold text-zinc-800 transition-colors group-hover:text-basket-400 dark:text-zinc-100">
+            {league.name}
+          </h3>
           <span
-            className={`ml-2 inline-flex rounded-full px-2 py-1 text-xs font-semibold ${getStatusColor(league.status)}`}
+            className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${statusStyle[league.status] || "bg-zinc-100 text-zinc-500"}`}
           >
             {league.status}
           </span>
         </div>
 
-        <div className="space-y-3 text-sm text-gray-600 dark:text-gray-400">
-          <div className="flex items-center gap-2">
-            <MapPin className="h-4 w-4" />
-            <span>
+        <div className="mt-3 flex flex-col gap-2 text-xs text-zinc-500 dark:text-zinc-400">
+          <div className="flex items-center gap-1.5">
+            <MapPin className="h-3 w-3 shrink-0" />
+            <span className="truncate">
               {league.location.name}, {league.location.city}
             </span>
           </div>
 
-          <div className="flex items-center gap-2">
-            <Calendar className="h-4 w-4" />
-            <span>
-              {new Date(league.start_date).toLocaleDateString()} -{" "}
-              {new Date(league.end_date).toLocaleDateString()}
+          <div className="flex items-center gap-1.5">
+            <Users className="h-3 w-3 shrink-0" />
+            <span className="tabular-nums">
+              {league._count.memberships} members &middot;{" "}
+              {league._count.games} games
             </span>
           </div>
 
-          <div className="flex items-center gap-2">
-            <Users className="h-4 w-4" />
-            <span>
-              {league._count.memberships} members • {league._count.games} games
-            </span>
-          </div>
+          <p className="tabular-nums">
+            {new Date(league.start_date).toLocaleDateString()} &ndash;{" "}
+            {new Date(league.end_date).toLocaleDateString()}
+          </p>
+        </div>
 
-          <div className="mt-4 border-t border-gray-200 pt-3 dark:border-gray-700">
-            <div className="flex items-center justify-between text-sm">
-              <div className="flex items-center gap-2">
-                <DollarSign className="h-4 w-4" />
-                <span className="font-medium">Membership:</span>
-              </div>
-              <span className="font-semibold">
-                {formatCurrency(league.gym_rental_cost)}
-              </span>
-            </div>
-            <div className="mt-1 flex items-center justify-between text-sm">
-              <span className="text-xs">Guest fee per game:</span>
-              <span className="text-xs font-medium">
-                {formatCurrency(league.guest_fee_per_game)}
-              </span>
-            </div>
-          </div>
+        <div className="mt-4 flex items-center justify-between border-t border-zinc-100 pt-3 dark:border-zinc-800">
+          <span className="text-[11px] text-zinc-400 dark:text-zinc-500">
+            Membership
+          </span>
+          <span className="text-sm font-semibold tabular-nums text-zinc-800 dark:text-zinc-100">
+            {formatCurrency(league.gym_rental_cost)}
+          </span>
         </div>
       </div>
     </Link>
