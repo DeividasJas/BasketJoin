@@ -30,11 +30,6 @@ export const navLinks: Links[] = [
     requiredRoles: ["ADMIN", "ORGANIZER"],
   },
   {
-    label: "Admin",
-    href: "/admin",
-    requiredRoles: ["ADMIN"],
-  },
-  {
     label: "Login",
     href: "/login",
     postOperation: "/",

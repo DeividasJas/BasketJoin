@@ -23,7 +23,7 @@ export default async function DashboardLayout({
 
   return (
     <div className="flex flex-col gap-6">
-      <DashboardNavList />
+      <DashboardNavList userRole={userRole} />
       {children}
     </div>
   );

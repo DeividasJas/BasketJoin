@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Links } from "@/types/navLinks";
 import { usePathname } from "next/navigation";
 
-export default function DashboardNavList() {
+export default function DashboardNavList({ userRole }: { userRole: string }) {
   const pathname = usePathname();
 
   const dashboardSections: Links[] = [
@@ -11,6 +11,9 @@ export default function DashboardNavList() {
     { label: "Locations", href: "/dashboard/locations" },
     { label: "Leagues", href: "/dashboard/leagues" },
     { label: "Payments", href: "/dashboard/payments" },
+    ...(userRole === "ADMIN"
+      ? [{ label: "Admin", href: "/admin" } as Links]
+      : []),
   ];
 
   return (
