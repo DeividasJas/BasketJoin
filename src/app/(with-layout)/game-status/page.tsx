@@ -24,7 +24,7 @@ export default async function GameStatusPage() {
   const minPlayers = gameData.min_players ?? 10;
 
   return (
-    <div className="mx-auto max-w-md space-y-6">
+    <div className="mx-auto max-w-md flex flex-col gap-6">
       {/* Header */}
       <p className="text-center text-[11px] font-semibold uppercase tracking-[0.2em] text-zinc-400 dark:text-zinc-500">
         Next game in
