@@ -6,7 +6,7 @@ export default auth((req) => {
   const { pathname } = req.nextUrl;
 
   // Protected routes
-  const protectedRoutes = ["/profile", "/admin", "/game-status", "/schedule"];
+  const protectedRoutes = ["/profile", "/dashboard", "/game-status", "/schedule"];
   const isProtectedRoute = protectedRoutes.some((route) =>
     pathname.startsWith(route)
   );
@@ -16,12 +16,10 @@ export default auth((req) => {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
-  // Check admin role for /admin routes
-  if (pathname.startsWith("/admin") && isLoggedIn) {
+  // Check admin role for /dashboard/admin routes
+  if (pathname.startsWith("/dashboard/admin") && isLoggedIn) {
     const userRole = req.auth?.user?.role;
-    const hasAdminAccess = userRole === "ADMIN" || userRole === "ORGANIZER";
-
-    if (!hasAdminAccess) {
+    if (userRole !== "ADMIN") {
       return NextResponse.redirect(new URL("/", req.url));
     }
   }
@@ -37,7 +35,7 @@ export default auth((req) => {
 export const config = {
   matcher: [
     "/game-status/:path*",
-    "/admin/:path*",
+    "/dashboard/:path*",
     "/schedule/:path*",
     "/profile/:path*",
     "/login",

@@ -12,7 +12,7 @@ export default function DashboardNavList({ userRole }: { userRole: string }) {
     { label: "Leagues", href: "/dashboard/leagues" },
     { label: "Payments", href: "/dashboard/payments" },
     ...(userRole === "ADMIN"
-      ? [{ label: "Admin", href: "/admin" } as Links]
+      ? [{ label: "Admin", href: "/dashboard/admin" } as Links]
       : []),
   ];
 

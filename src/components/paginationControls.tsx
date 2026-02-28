@@ -36,7 +36,7 @@ export default function PaginationControls({
         size="sm"
         onClick={() => handlePageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className="h-8 text-xs text-zinc-500 hover:text-zinc-800 disabled:text-zinc-300 dark:text-zinc-400 dark:hover:text-zinc-200 dark:disabled:text-zinc-600"
+        className="h-8 w-20 text-xs text-zinc-500 hover:text-zinc-800 disabled:text-zinc-300 dark:text-zinc-400 dark:hover:text-zinc-200 dark:disabled:text-zinc-600"
       >
         Previous
       </Button>
@@ -48,7 +48,7 @@ export default function PaginationControls({
         size="sm"
         onClick={() => handlePageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="h-8 text-xs text-zinc-500 hover:text-zinc-800 disabled:text-zinc-300 dark:text-zinc-400 dark:hover:text-zinc-200 dark:disabled:text-zinc-600"
+        className="h-8 w-20 text-xs text-zinc-500 hover:text-zinc-800 disabled:text-zinc-300 dark:text-zinc-400 dark:hover:text-zinc-200 dark:disabled:text-zinc-600"
       >
         Next
       </Button>

@@ -16,7 +16,7 @@ export default function ProfileNavList() {
 
   return (
     <nav className="-mx-2 border-b border-zinc-200 dark:border-zinc-700/60">
-      <div className="-mb-px flex justify-center gap-0 overflow-x-auto scrollbar-none">
+      <div className="-mb-px flex gap-0 overflow-x-auto scrollbar-none sm:justify-center">
         {profileSections.map((link) => {
           const isActive = pathname === link.href;
           return (
