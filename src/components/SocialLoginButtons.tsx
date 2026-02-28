@@ -1,58 +1,48 @@
-"use client";
+'use client'
 
-import { signIn } from "next-auth/react";
-import { useState } from "react";
-import { Loader2 } from "lucide-react";
+import { signIn } from 'next-auth/react'
+import { useState } from 'react'
+import { Loader2 } from 'lucide-react'
 
 interface SocialLoginButtonsProps {
-  callbackUrl?: string;
+  callbackUrl?: string
 }
 
-export default function SocialLoginButtons({
-  callbackUrl = "/game-status",
-}: SocialLoginButtonsProps) {
-  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
-  const [isFacebookLoading, setIsFacebookLoading] = useState(false);
+export default function SocialLoginButtons({ callbackUrl = '/game-status' }: SocialLoginButtonsProps) {
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false)
+  const [isFacebookLoading, setIsFacebookLoading] = useState(false)
 
   const handleGoogleSignIn = async () => {
-    setIsGoogleLoading(true);
+    setIsGoogleLoading(true)
     try {
-      await signIn("google", { callbackUrl });
+      await signIn('google', { callbackUrl })
     } catch {
     } finally {
-      setIsGoogleLoading(false);
+      setIsGoogleLoading(false)
     }
-  };
+  }
 
   const handleFacebookSignIn = async () => {
-    setIsFacebookLoading(true);
+    setIsFacebookLoading(true)
     try {
-      await signIn("facebook", { callbackUrl });
+      await signIn('facebook', { callbackUrl })
     } catch {
     } finally {
-      setIsFacebookLoading(false);
+      setIsFacebookLoading(false)
     }
-  };
+  }
 
   const btnClasses =
-    "flex w-full items-center justify-center gap-3 rounded-xl border px-4 py-3 text-sm font-medium transition-all disabled:opacity-50 cursor-pointer border-zinc-200/80 bg-zinc-50/60 text-zinc-700 hover:bg-zinc-100 active:scale-[0.98] dark:border-zinc-700/40 dark:bg-zinc-800/30 dark:text-zinc-300 dark:hover:bg-zinc-700/40";
+    'flex w-full items-center justify-center gap-3 rounded-xl border px-4 py-3 text-sm font-medium transition-all disabled:opacity-50 cursor-pointer border-zinc-200/80 bg-zinc-50/60 text-zinc-700 hover:bg-zinc-100 active:scale-[0.98] dark:border-zinc-700/40 dark:bg-zinc-800/30 dark:text-zinc-300 dark:hover:bg-zinc-700/40'
 
   return (
     <div className="mb-6 flex flex-col gap-2.5">
-      <button
-        type="button"
-        className={btnClasses}
-        onClick={handleGoogleSignIn}
-        disabled={isGoogleLoading || isFacebookLoading}
-      >
+      <button type="button" className={btnClasses} onClick={handleGoogleSignIn} disabled={isGoogleLoading || isFacebookLoading}>
         {isGoogleLoading ? (
           <Loader2 className="h-4 w-4 animate-spin text-zinc-400" />
         ) : (
           <svg className="h-4 w-4" viewBox="0 0 24 24">
-            <path
-              fill="#4285F4"
-              d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-            />
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
             <path
               fill="#34A853"
               d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
@@ -70,12 +60,7 @@ export default function SocialLoginButtons({
         Continue with Google
       </button>
 
-      <button
-        type="button"
-        className={btnClasses}
-        onClick={handleFacebookSignIn}
-        disabled={isGoogleLoading || isFacebookLoading}
-      >
+      <button type="button" className={btnClasses} onClick={handleFacebookSignIn} disabled={isGoogleLoading || isFacebookLoading}>
         {isFacebookLoading ? (
           <Loader2 className="h-4 w-4 animate-spin text-zinc-400" />
         ) : (
@@ -89,11 +74,9 @@ export default function SocialLoginButtons({
       {/* Divider */}
       <div className="my-2 flex items-center gap-3">
         <div className="h-px flex-1 bg-zinc-200/70 dark:bg-zinc-700/40" />
-        <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-zinc-400 dark:text-zinc-500">
-          or
-        </span>
+        <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-zinc-400 dark:text-zinc-500">or</span>
         <div className="h-px flex-1 bg-zinc-200/70 dark:bg-zinc-700/40" />
       </div>
     </div>
-  );
+  )
 }

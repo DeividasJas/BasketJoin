@@ -1,21 +1,13 @@
-"use client";
-import { Button } from "@/components/ui/button";
-import RegistrationBtn from "./registrationBtn";
-import { CancelRegistrationBtn } from "./cancelRegistrationBtn";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+'use client'
+import { Button } from '@/components/ui/button'
+import RegistrationBtn from './registrationBtn'
+import { CancelRegistrationBtn } from './cancelRegistrationBtn'
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 
 export default function CalendarModal({ eventInfo }: any) {
-  const gameId = eventInfo.event._def.extendedProps.game_id;
-  const isPlaying = eventInfo.event._def.extendedProps.isActive;
-  const startTime = eventInfo.event.start?.toLocaleString("lt-LT");
+  const gameId = eventInfo.event._def.extendedProps.game_id
+  const isPlaying = eventInfo.event._def.extendedProps.isActive
+  const startTime = eventInfo.event.start?.toLocaleString('lt-LT')
 
   return (
     <Dialog>
@@ -26,11 +18,9 @@ export default function CalendarModal({ eventInfo }: any) {
         </button>
       </DialogTrigger>
 
-      <DialogContent className="rounded-xl border border-zinc-200 bg-white sm:max-w-[400px] dark:border-zinc-700/60 dark:bg-zinc-900">
+      <DialogContent className="rounded-xl border border-zinc-200 bg-white dark:border-zinc-700/60 dark:bg-zinc-900 sm:max-w-[400px]">
         <DialogHeader>
-          <DialogTitle className="text-base font-semibold text-zinc-800 dark:text-zinc-100">
-            Game Details
-          </DialogTitle>
+          <DialogTitle className="text-base font-semibold text-zinc-800 dark:text-zinc-100">Game Details</DialogTitle>
           <DialogDescription className="flex flex-col gap-1 text-sm text-zinc-500 dark:text-zinc-400">
             <span className="block">{eventInfo.event.title}</span>
             <span className="block tabular-nums">{startTime}</span>
@@ -46,5 +36,5 @@ export default function CalendarModal({ eventInfo }: any) {
         </div>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

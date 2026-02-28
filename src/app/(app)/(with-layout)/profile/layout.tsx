@@ -1,17 +1,13 @@
-import { redirect } from "next/navigation";
-import ProfileNavList from "@/components/profileNavList";
-import { ProfileProvider } from "@/context/profileContext";
-import { auth } from "@/auth";
+import { redirect } from 'next/navigation'
+import ProfileNavList from '@/components/profileNavList'
+import { ProfileProvider } from '@/context/profileContext'
+import { auth } from '@/auth'
 
-export default async function LayoutProfile({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const session = await auth();
+export default async function LayoutProfile({ children }: { children: React.ReactNode }) {
+  const session = await auth()
 
   if (!session?.user) {
-    redirect("/login");
+    redirect('/login')
   }
 
   return (
@@ -21,5 +17,5 @@ export default async function LayoutProfile({
         <div className="py-6">{children}</div>
       </div>
     </ProfileProvider>
-  );
+  )
 }

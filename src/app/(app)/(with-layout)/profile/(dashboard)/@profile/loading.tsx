@@ -1,4 +1,4 @@
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from '@/components/ui/skeleton'
 
 export default function Loading() {
   return (
@@ -11,5 +11,5 @@ export default function Loading() {
         <Skeleton className="mx-auto h-4 w-20 bg-zinc-700" />
       </div>
     </div>
-  );
+  )
 }

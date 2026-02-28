@@ -1,5 +1,5 @@
-import { prisma } from "@/utils/prisma";
-import { PaymentScheduleStatus } from "@prisma/client";
+import { prisma } from '@/utils/prisma'
+import { PaymentScheduleStatus } from '@prisma/client'
 
 /**
  * Calculate pro-rated amount based on join date
@@ -12,32 +12,29 @@ export function calculateProRatedAmount(
   joinDate: Date,
   paymentDueDates: string[], // ISO date strings
 ): {
-  totalAmount: number;
-  schedules: Array<{ dueDate: Date; amount: number }>;
-  percentageOfSeason: number;
+  totalAmount: number
+  schedules: Array<{ dueDate: Date; amount: number }>
+  percentageOfSeason: number
 } {
-  const start = new Date(seasonStart);
-  const end = new Date(seasonEnd);
-  const join = new Date(joinDate);
+  const start = new Date(seasonStart)
+  const end = new Date(seasonEnd)
+  const join = new Date(joinDate)
 
   // If joining before season starts, pay full amount
   if (join <= start) {
-    const amountPerPayment = Math.floor(
-      totalSeasonCost / paymentDueDates.length,
-    );
-    const remainder =
-      totalSeasonCost - amountPerPayment * paymentDueDates.length;
+    const amountPerPayment = Math.floor(totalSeasonCost / paymentDueDates.length)
+    const remainder = totalSeasonCost - amountPerPayment * paymentDueDates.length
 
     const schedules = paymentDueDates.map((dateStr, index) => ({
       dueDate: new Date(dateStr),
       amount: index === 0 ? amountPerPayment + remainder : amountPerPayment, // Add remainder to first payment
-    }));
+    }))
 
     return {
       totalAmount: totalSeasonCost,
       schedules,
       percentageOfSeason: 100,
-    };
+    }
   }
 
   // If joining after season ends, return 0
@@ -46,28 +43,26 @@ export function calculateProRatedAmount(
       totalAmount: 0,
       schedules: [],
       percentageOfSeason: 0,
-    };
+    }
   }
 
   // Calculate total season duration in milliseconds
-  const totalDuration = end.getTime() - start.getTime();
+  const totalDuration = end.getTime() - start.getTime()
 
   // Calculate remaining duration from join date
-  const remainingDuration = end.getTime() - join.getTime();
+  const remainingDuration = end.getTime() - join.getTime()
 
   // Calculate percentage of season remaining
-  const percentageRemaining = (remainingDuration / totalDuration) * 100;
+  const percentageRemaining = (remainingDuration / totalDuration) * 100
 
   // Calculate pro-rated total
-  const proRatedTotal = Math.floor(
-    (totalSeasonCost * remainingDuration) / totalDuration,
-  );
+  const proRatedTotal = Math.floor((totalSeasonCost * remainingDuration) / totalDuration)
 
   // Filter to only include due dates that are after join date
   const remainingDueDates = paymentDueDates
-    .map((dateStr) => new Date(dateStr))
-    .filter((date) => date >= join)
-    .sort((a, b) => a.getTime() - b.getTime());
+    .map(dateStr => new Date(dateStr))
+    .filter(date => date >= join)
+    .sort((a, b) => a.getTime() - b.getTime())
 
   if (remainingDueDates.length === 0) {
     // All due dates have passed, member owes full pro-rated amount immediately
@@ -80,44 +75,40 @@ export function calculateProRatedAmount(
         },
       ],
       percentageOfSeason: percentageRemaining,
-    };
+    }
   }
 
   // Split pro-rated amount across remaining payment dates
-  const amountPerPayment = Math.floor(proRatedTotal / remainingDueDates.length);
-  const remainder = proRatedTotal - amountPerPayment * remainingDueDates.length;
+  const amountPerPayment = Math.floor(proRatedTotal / remainingDueDates.length)
+  const remainder = proRatedTotal - amountPerPayment * remainingDueDates.length
 
   const schedules = remainingDueDates.map((date, index) => ({
     dueDate: date,
     amount: index === 0 ? amountPerPayment + remainder : amountPerPayment, // Add remainder to first payment
-  }));
+  }))
 
   return {
     totalAmount: proRatedTotal,
     schedules,
     percentageOfSeason: percentageRemaining,
-  };
+  }
 }
 
 /**
  * Create payment schedule records in database
  */
-export async function createPaymentSchedules(
-  membershipId: string,
-  leagueId: string,
-  schedules: Array<{ dueDate: Date; amount: number }>,
-) {
-  const paymentSchedules = schedules.map((schedule) => ({
+export async function createPaymentSchedules(membershipId: string, leagueId: string, schedules: Array<{ dueDate: Date; amount: number }>) {
+  const paymentSchedules = schedules.map(schedule => ({
     membership_id: membershipId,
     league_id: leagueId,
     due_date: schedule.dueDate,
     amount_due: schedule.amount,
     status: PaymentScheduleStatus.PENDING,
-  }));
+  }))
 
   return await prisma.paymentSchedule.createMany({
     data: paymentSchedules,
-  });
+  })
 }
 
 /**
@@ -125,54 +116,47 @@ export async function createPaymentSchedules(
  */
 export function isPaymentOverdue(dueDate: Date, status: string): boolean {
   if (status === PaymentScheduleStatus.PAID) {
-    return false;
+    return false
   }
 
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
 
-  const due = new Date(dueDate);
-  due.setHours(0, 0, 0, 0);
+  const due = new Date(dueDate)
+  due.setHours(0, 0, 0, 0)
 
-  return due < today;
+  return due < today
 }
 
 /**
  * Update payment schedule status based on amount paid
  */
-export function getPaymentScheduleStatus(
-  amountDue: number,
-  amountPaid: number,
-  dueDate: Date,
-): PaymentScheduleStatus {
+export function getPaymentScheduleStatus(amountDue: number, amountPaid: number, dueDate: Date): PaymentScheduleStatus {
   if (amountPaid >= amountDue) {
-    return PaymentScheduleStatus.PAID;
+    return PaymentScheduleStatus.PAID
   }
 
   if (amountPaid > 0) {
-    return PaymentScheduleStatus.PARTIALLY_PAID;
+    return PaymentScheduleStatus.PARTIALLY_PAID
   }
 
   if (isPaymentOverdue(dueDate, PaymentScheduleStatus.PENDING)) {
-    return PaymentScheduleStatus.OVERDUE;
+    return PaymentScheduleStatus.OVERDUE
   }
 
-  return PaymentScheduleStatus.PENDING;
+  return PaymentScheduleStatus.PENDING
 }
 
 /**
  * Format cents to currency string
  */
-export function formatCurrency(
-  cents: number,
-  currency: string = "EUR",
-): string {
-  const amount = cents / 100;
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
+export function formatCurrency(cents: number, currency: string = 'EUR'): string {
+  const amount = cents / 100
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
     currency,
     minimumFractionDigits: 2,
-  }).format(amount);
+  }).format(amount)
 }
 
 /**
@@ -180,25 +164,25 @@ export function formatCurrency(
  */
 export function parseCurrencyToCents(value: string): number {
   // Remove currency symbols and whitespace
-  const cleaned = value.replace(/[€$£,\s]/g, "");
-  const num = parseFloat(cleaned);
-  return Math.round(num * 100);
+  const cleaned = value.replace(/[€$£,\s]/g, '')
+  const num = parseFloat(cleaned)
+  return Math.round(num * 100)
 }
 
 /**
  * Calculate days until due date
  */
 export function daysUntilDue(dueDate: Date): number {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
 
-  const due = new Date(dueDate);
-  due.setHours(0, 0, 0, 0);
+  const due = new Date(dueDate)
+  due.setHours(0, 0, 0, 0)
 
-  const diffTime = due.getTime() - today.getTime();
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  const diffTime = due.getTime() - today.getTime()
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
 
-  return diffDays;
+  return diffDays
 }
 
 /**
@@ -207,15 +191,15 @@ export function daysUntilDue(dueDate: Date): number {
 export function getPaymentStatusColor(status: PaymentScheduleStatus): string {
   switch (status) {
     case PaymentScheduleStatus.PAID:
-      return "bg-green-500";
+      return 'bg-green-500'
     case PaymentScheduleStatus.PARTIALLY_PAID:
-      return "bg-yellow-500";
+      return 'bg-yellow-500'
     case PaymentScheduleStatus.OVERDUE:
-      return "bg-red-500";
+      return 'bg-red-500'
     case PaymentScheduleStatus.PENDING:
-      return "bg-blue-500";
+      return 'bg-blue-500'
     default:
-      return "bg-gray-500";
+      return 'bg-gray-500'
   }
 }
 
@@ -223,57 +207,45 @@ export function getPaymentStatusColor(status: PaymentScheduleStatus): string {
  * Calculate total amount owed by a member for a season
  */
 export async function calculateMemberOwed(membershipId: string): Promise<{
-  totalOwed: number;
-  totalPaid: number;
-  remainingBalance: number;
+  totalOwed: number
+  totalPaid: number
+  remainingBalance: number
 }> {
   const paymentSchedules = await prisma.paymentSchedule.findMany({
     where: { membership_id: membershipId },
-  });
+  })
 
-  const totalOwed = paymentSchedules.reduce(
-    (sum, schedule) => sum + schedule.amount_due,
-    0,
-  );
+  const totalOwed = paymentSchedules.reduce((sum, schedule) => sum + schedule.amount_due, 0)
 
-  const totalPaid = paymentSchedules.reduce(
-    (sum, schedule) => sum + schedule.amount_paid,
-    0,
-  );
+  const totalPaid = paymentSchedules.reduce((sum, schedule) => sum + schedule.amount_paid, 0)
 
   return {
     totalOwed,
     totalPaid,
     remainingBalance: totalOwed - totalPaid,
-  };
+  }
 }
 
 /**
  * Get upcoming payment schedules for a user
  */
-export async function getUpcomingPayments(
-  userId: string,
-  daysAhead: number = 30,
-) {
-  const today = new Date();
-  const futureDate = new Date(today);
-  futureDate.setDate(futureDate.getDate() + daysAhead);
+export async function getUpcomingPayments(userId: string, daysAhead: number = 30) {
+  const today = new Date()
+  const futureDate = new Date(today)
+  futureDate.setDate(futureDate.getDate() + daysAhead)
 
   const upcomingSchedules = await prisma.paymentSchedule.findMany({
     where: {
       membership: {
         user_id: userId,
-        status: "ACTIVE",
+        status: 'ACTIVE',
       },
       due_date: {
         gte: today,
         lte: futureDate,
       },
       status: {
-        in: [
-          PaymentScheduleStatus.PENDING,
-          PaymentScheduleStatus.PARTIALLY_PAID,
-        ],
+        in: [PaymentScheduleStatus.PENDING, PaymentScheduleStatus.PARTIALLY_PAID],
       },
     },
     include: {
@@ -281,34 +253,30 @@ export async function getUpcomingPayments(
       membership: true,
     },
     orderBy: {
-      due_date: "asc",
+      due_date: 'asc',
     },
-  });
+  })
 
-  return upcomingSchedules;
+  return upcomingSchedules
 }
 
 /**
  * Get overdue payments for a user
  */
 export async function getOverduePayments(userId: string) {
-  const today = new Date();
+  const today = new Date()
 
   const overdueSchedules = await prisma.paymentSchedule.findMany({
     where: {
       membership: {
         user_id: userId,
-        status: "ACTIVE",
+        status: 'ACTIVE',
       },
       due_date: {
         lt: today,
       },
       status: {
-        in: [
-          PaymentScheduleStatus.PENDING,
-          PaymentScheduleStatus.PARTIALLY_PAID,
-          PaymentScheduleStatus.OVERDUE,
-        ],
+        in: [PaymentScheduleStatus.PENDING, PaymentScheduleStatus.PARTIALLY_PAID, PaymentScheduleStatus.OVERDUE],
       },
     },
     include: {
@@ -316,9 +284,9 @@ export async function getOverduePayments(userId: string) {
       membership: true,
     },
     orderBy: {
-      due_date: "asc",
+      due_date: 'asc',
     },
-  });
+  })
 
-  return overdueSchedules;
+  return overdueSchedules
 }

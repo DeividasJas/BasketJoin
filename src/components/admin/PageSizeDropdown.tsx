@@ -1,26 +1,24 @@
-"use client";
+'use client'
 
-import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback } from "react";
+import { useRouter, useSearchParams } from 'next/navigation'
+import { useCallback } from 'react'
 
 export default function PageSizeDropdown({ pageSize }: { pageSize: number }) {
-  const router = useRouter();
-  const searchParams = useSearchParams();
+  const router = useRouter()
+  const searchParams = useSearchParams()
 
   const createQueryString = useCallback(
     (name: string, value: string) => {
-      const params = new URLSearchParams(searchParams.toString());
-      params.set(name, value);
-      return params.toString();
+      const params = new URLSearchParams(searchParams.toString())
+      params.set(name, value)
+      return params.toString()
     },
     [searchParams],
-  );
+  )
 
   const handlePageSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    router.push(
-      `/dashboard/games?${createQueryString("pageSize", e.target.value)}`,
-    );
-  };
+    router.push(`/dashboard/games?${createQueryString('pageSize', e.target.value)}`)
+  }
 
   return (
     <div className="flex items-center gap-2">
@@ -34,9 +32,7 @@ export default function PageSizeDropdown({ pageSize }: { pageSize: number }) {
         <option value={10}>10</option>
         <option value={20}>20</option>
       </select>
-      <span className="text-[11px] text-zinc-400 dark:text-zinc-500">
-        per page
-      </span>
+      <span className="text-[11px] text-zinc-400 dark:text-zinc-500">per page</span>
     </div>
-  );
+  )
 }

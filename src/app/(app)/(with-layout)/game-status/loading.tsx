@@ -1,4 +1,4 @@
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from '@/components/ui/skeleton'
 
 export default function ScheduleSkeleton() {
   return (
@@ -14,5 +14,5 @@ export default function ScheduleSkeleton() {
 
       <Skeleton className="mx-auto my-4 h-[25px] w-[157.5px] bg-zinc-400 dark:bg-zinc-700" />
     </div>
-  );
+  )
 }

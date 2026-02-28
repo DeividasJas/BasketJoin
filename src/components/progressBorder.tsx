@@ -1,21 +1,15 @@
-import { motion } from 'framer-motion';
+import { motion } from 'framer-motion'
 
-export default function ProgressBorder({
-  children,
-  progress,
-}: {
-  progress: number;
-  children: React.ReactNode;
-}) {
-  const size = 67;
-  const thickness = 2.5;
-  const color = '#71717a';
-  const trailColor = '#d6d6d6';
-  const duration = 1.1;
+export default function ProgressBorder({ children, progress }: { progress: number; children: React.ReactNode }) {
+  const size = 67
+  const thickness = 2.5
+  const color = '#71717a'
+  const trailColor = '#d6d6d6'
+  const duration = 1.1
 
-  const radius = (size - thickness) / 2;
-  const circumference = 2 * Math.PI * radius;
-  const dashOffset = circumference - (progress / 100) * circumference;
+  const radius = (size - thickness) / 2
+  const circumference = 2 * Math.PI * radius
+  const dashOffset = circumference - (progress / 100) * circumference
   return (
     <div
       style={{
@@ -34,14 +28,7 @@ export default function ProgressBorder({
         }}
       >
         {/* Background trail */}
-        <circle
-          cx={size / 2}
-          cy={size / 2}
-          r={radius}
-          stroke={trailColor}
-          strokeWidth={thickness}
-          fill='transparent'
-        />
+        <circle cx={size / 2} cy={size / 2} r={radius} stroke={trailColor} strokeWidth={thickness} fill="transparent" />
 
         {/* Animated border */}
         <motion.circle
@@ -52,7 +39,7 @@ export default function ProgressBorder({
           strokeWidth={thickness}
           strokeDasharray={circumference}
           strokeDashoffset={dashOffset}
-          fill='transparent'
+          fill="transparent"
           animate={{ strokeDashoffset: dashOffset }}
           transition={{ duration }}
           style={{
@@ -65,5 +52,5 @@ export default function ProgressBorder({
 
       {children}
     </div>
-  );
+  )
 }

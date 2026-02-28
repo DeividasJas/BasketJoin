@@ -1,38 +1,32 @@
-"use client";
-import FullCalendar from "@fullcalendar/react";
-import dayGridPlugin from "@fullcalendar/daygrid";
-import { AllGames } from "@/types/user";
-import listPlugin from "@fullcalendar/list";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { ThumbsUp, CircleOff } from "lucide-react";
+'use client'
+import FullCalendar from '@fullcalendar/react'
+import dayGridPlugin from '@fullcalendar/daygrid'
+import { AllGames } from '@/types/user'
+import listPlugin from '@fullcalendar/list'
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { ThumbsUp, CircleOff } from 'lucide-react'
 
-export default function GameCalendar({
-  allGames,
-  user_id,
-}: {
-  allGames: AllGames;
-  user_id: string;
-}) {
-  const router = useRouter();
-  const [isMounted, setIsMounted] = useState(false);
-  const [initialView, setInitialView] = useState("dayGridMonth");
+export default function GameCalendar({ allGames, user_id }: { allGames: AllGames; user_id: string }) {
+  const router = useRouter()
+  const [isMounted, setIsMounted] = useState(false)
+  const [initialView, setInitialView] = useState('dayGridMonth')
 
   useEffect(() => {
-    setIsMounted(true);
-    setInitialView(window.innerWidth < 640 ? "listMonth" : "dayGridMonth");
-  }, []);
+    setIsMounted(true)
+    setInitialView(window.innerWidth < 640 ? 'listMonth' : 'dayGridMonth')
+  }, [])
 
   const handleWindowResize = (arg: any) => {
-    const calendarApi = arg.view.calendar;
+    const calendarApi = arg.view.calendar
     if (window.innerWidth < 640) {
-      calendarApi.changeView("listMonth");
+      calendarApi.changeView('listMonth')
     } else {
-      calendarApi.changeView("dayGridMonth");
+      calendarApi.changeView('dayGridMonth')
     }
-  };
+  }
 
-  if (!allGames || !isMounted) return null;
+  if (!allGames || !isMounted) return null
 
   return (
     <div className="calendar-wrapper">
@@ -230,18 +224,12 @@ export default function GameCalendar({
         contentHeight="auto"
         firstDay={1}
         events={allGames.map((game: any) => {
-          const isUserRegistered = game.game_registrations.some(
-            (registration: any) =>
-              registration.user_id === user_id &&
-              registration.status === "CONFIRMED",
-          );
-          const registrationCount = game.game_registrations.filter(
-            (r: any) => r.status === "CONFIRMED",
-          ).length;
+          const isUserRegistered = game.game_registrations.some((registration: any) => registration.user_id === user_id && registration.status === 'CONFIRMED')
+          const registrationCount = game.game_registrations.filter((r: any) => r.status === 'CONFIRMED').length
 
           return {
             id: game.id.toString(),
-            title: `${game.location.name} (${registrationCount}/${game.max_players || "∞"})`,
+            title: `${game.location.name} (${registrationCount}/${game.max_players || '∞'})`,
             date: game.game_date,
             extendedProps: {
               game_id: game.id,
@@ -251,51 +239,43 @@ export default function GameCalendar({
               maxPlayers: game.max_players,
               status: game.status,
             },
-            backgroundColor: isUserRegistered
-              ? "#16a34a"
-              : game.status === "CANCELLED"
-                ? "#dc2626"
-                : "#3b82f6",
-            borderColor: isUserRegistered
-              ? "#15803d"
-              : game.status === "CANCELLED"
-                ? "#b91c1c"
-                : "#2563eb",
-          };
+            backgroundColor: isUserRegistered ? '#16a34a' : game.status === 'CANCELLED' ? '#dc2626' : '#3b82f6',
+            borderColor: isUserRegistered ? '#15803d' : game.status === 'CANCELLED' ? '#b91c1c' : '#2563eb',
+          }
         })}
         headerToolbar={{
-          start: "dayGridMonth,listMonth",
-          center: "title",
-          end: "prev,today,next",
+          start: 'dayGridMonth,listMonth',
+          center: 'title',
+          end: 'prev,today,next',
         }}
         displayEventTime={true}
         eventTimeFormat={{
-          hour: "numeric",
-          minute: "2-digit",
+          hour: 'numeric',
+          minute: '2-digit',
           omitZeroMinute: true,
-          meridiem: "short",
+          meridiem: 'short',
         }}
-        eventClick={(info) => {
-          const gameId = info.event.extendedProps.game_id;
-          router.push(`/game-status/${gameId}`);
+        eventClick={info => {
+          const gameId = info.event.extendedProps.game_id
+          router.push(`/game-status/${gameId}`)
         }}
-        eventContent={(eventInfo) => {
-          const { isUserRegistered, status } = eventInfo.event.extendedProps;
+        eventContent={eventInfo => {
+          const { isUserRegistered, status } = eventInfo.event.extendedProps
 
-          let borderColor, bgColor, Icon;
+          let borderColor, bgColor, Icon
 
-          if (status === "CANCELLED") {
-            borderColor = "#ef4444";
-            bgColor = "rgba(239, 68, 68, 0.12)";
-            Icon = CircleOff;
+          if (status === 'CANCELLED') {
+            borderColor = '#ef4444'
+            bgColor = 'rgba(239, 68, 68, 0.12)'
+            Icon = CircleOff
           } else if (isUserRegistered) {
-            borderColor = "#22c55e";
-            bgColor = "rgba(34, 197, 94, 0.12)";
-            Icon = ThumbsUp;
+            borderColor = '#22c55e'
+            bgColor = 'rgba(34, 197, 94, 0.12)'
+            Icon = ThumbsUp
           } else {
-            borderColor = "#3b82f6";
-            bgColor = "rgba(59, 130, 246, 0.12)";
-            Icon = null;
+            borderColor = '#3b82f6'
+            bgColor = 'rgba(59, 130, 246, 0.12)'
+            Icon = null
           }
 
           return (
@@ -304,24 +284,18 @@ export default function GameCalendar({
               style={{
                 borderLeft: `3px solid ${borderColor}`,
                 backgroundColor: bgColor,
-                borderRadius: "0 0.25rem 0.25rem 0",
+                borderRadius: '0 0.25rem 0.25rem 0',
               }}
             >
               <div className="flex items-center gap-1 truncate font-medium">
-                {Icon && (
-                  <Icon className="h-2.5 w-2.5 flex-shrink-0 opacity-80" />
-                )}
-                <span className="truncate text-[11px]">
-                  {eventInfo.event.title}
-                </span>
+                {Icon && <Icon className="h-2.5 w-2.5 flex-shrink-0 opacity-80" />}
+                <span className="truncate text-[11px]">{eventInfo.event.title}</span>
               </div>
-              <div className="truncate text-[10px] opacity-60">
-                {eventInfo.timeText}
-              </div>
+              <div className="truncate text-[10px] opacity-60">{eventInfo.timeText}</div>
             </div>
-          );
+          )
         }}
       />
     </div>
-  );
+  )
 }

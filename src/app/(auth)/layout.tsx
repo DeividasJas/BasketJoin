@@ -1,10 +1,6 @@
-import ThemeChanger from "@/components/themeChangeBtn";
+import ThemeChanger from '@/components/themeChangeBtn'
 
-export default function AuthLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <ThemeChanger />
@@ -18,8 +14,7 @@ export default function AuthLayout({
         <div
           className="absolute inset-0 hidden dark:block"
           style={{
-            background:
-              "radial-gradient(ellipse 80% 50% at 50% 30%, rgba(232,93,4,0.1), transparent)",
+            background: 'radial-gradient(ellipse 80% 50% at 50% 30%, rgba(232,93,4,0.1), transparent)',
           }}
         />
 
@@ -27,8 +22,7 @@ export default function AuthLayout({
         <div
           className="absolute inset-0 block dark:hidden"
           style={{
-            background:
-              "radial-gradient(ellipse 80% 60% at 50% 25%, rgba(255,186,8,0.07), transparent)",
+            background: 'radial-gradient(ellipse 80% 60% at 50% 25%, rgba(255,186,8,0.07), transparent)',
           }}
         />
 
@@ -41,37 +35,14 @@ export default function AuthLayout({
           fill="none"
           aria-hidden="true"
         >
-          <circle
-            cx="450"
-            cy="450"
-            r="140"
-            stroke="#E85D04"
-            strokeWidth="0.8"
-            className="opacity-[0.06] dark:opacity-[0.08]"
-          />
-          <circle
-            cx="450"
-            cy="450"
-            r="260"
-            stroke="#E85D04"
-            strokeWidth="0.6"
-            className="opacity-[0.04] dark:opacity-[0.06]"
-          />
-          <circle
-            cx="450"
-            cy="450"
-            r="400"
-            stroke="#E85D04"
-            strokeWidth="0.5"
-            className="opacity-[0.025] dark:opacity-[0.035]"
-          />
+          <circle cx="450" cy="450" r="140" stroke="#E85D04" strokeWidth="0.8" className="opacity-[0.06] dark:opacity-[0.08]" />
+          <circle cx="450" cy="450" r="260" stroke="#E85D04" strokeWidth="0.6" className="opacity-[0.04] dark:opacity-[0.06]" />
+          <circle cx="450" cy="450" r="400" stroke="#E85D04" strokeWidth="0.5" className="opacity-[0.025] dark:opacity-[0.035]" />
         </svg>
       </div>
 
       {/* Content */}
-      <div className="flex min-h-screen flex-col items-center justify-center px-5 py-12">
-        {children}
-      </div>
+      <div className="flex min-h-screen flex-col items-center justify-center px-5 py-12">{children}</div>
     </>
-  );
+  )
 }

@@ -1,19 +1,19 @@
-import { auth } from "@/auth";
-import { redirect } from "next/navigation";
+import { auth } from '@/auth'
+import { redirect } from 'next/navigation'
 
 export default async function ProfileDashboardLayout({
   stats,
   profile,
   gameHistory,
 }: {
-  stats: React.ReactNode;
-  profile: React.ReactNode;
-  gameHistory: React.ReactNode;
+  stats: React.ReactNode
+  profile: React.ReactNode
+  gameHistory: React.ReactNode
 }) {
-  const session = await auth();
+  const session = await auth()
 
   if (!session?.user) {
-    redirect("/login");
+    redirect('/login')
   }
 
   return (
@@ -33,5 +33,5 @@ export default async function ProfileDashboardLayout({
       {/* Game history */}
       <section>{gameHistory}</section>
     </div>
-  );
+  )
 }
