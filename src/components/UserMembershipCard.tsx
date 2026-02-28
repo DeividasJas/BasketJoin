@@ -186,7 +186,7 @@ export default function UserMembershipCard({
       </div>
 
       {/* Details */}
-      <div className="space-y-2.5 text-[13px]">
+      <div className="flex flex-col gap-2.5 text-[13px]">
         <div className="flex items-center justify-between">
           <span className="flex items-center gap-2 text-zinc-400 dark:text-zinc-500">
             <Calendar className="h-3.5 w-3.5" />

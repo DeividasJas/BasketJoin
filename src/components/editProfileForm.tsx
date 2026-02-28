@@ -52,8 +52,8 @@ export default function EditProfileForm() {
         </DialogHeader>
 
         <Form action={handleSubmit}>
-          <div className="space-y-4 py-4">
-            <div className="space-y-1.5">
+          <div className="flex flex-col gap-4 py-4">
+            <div className="flex flex-col gap-1.5">
               <Label
                 htmlFor="givenName"
                 className="text-[12px] font-medium text-zinc-500 dark:text-zinc-400"
@@ -67,7 +67,7 @@ export default function EditProfileForm() {
                 className="border-zinc-200 bg-white text-sm dark:border-zinc-700 dark:bg-zinc-800"
               />
             </div>
-            <div className="space-y-1.5">
+            <div className="flex flex-col gap-1.5">
               <Label
                 htmlFor="familyName"
                 className="text-[12px] font-medium text-zinc-500 dark:text-zinc-400"
@@ -81,7 +81,7 @@ export default function EditProfileForm() {
                 className="border-zinc-200 bg-white text-sm dark:border-zinc-700 dark:bg-zinc-800"
               />
             </div>
-            <div className="space-y-1.5">
+            <div className="flex flex-col gap-1.5">
               <Label
                 htmlFor="username"
                 className="text-[12px] font-medium text-zinc-500 dark:text-zinc-400"
@@ -95,7 +95,7 @@ export default function EditProfileForm() {
                 className="border-zinc-200 bg-white text-sm dark:border-zinc-700 dark:bg-zinc-800"
               />
             </div>
-            <div className="space-y-1.5">
+            <div className="flex flex-col gap-1.5">
               <Label
                 htmlFor="phoneNumber"
                 className="text-[12px] font-medium text-zinc-500 dark:text-zinc-400"

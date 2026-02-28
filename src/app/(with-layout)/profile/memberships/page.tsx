@@ -6,7 +6,7 @@ export default async function MembershipsPage() {
   const { success, memberships } = await getUserMemberships();
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-6">
       {/* Section header */}
       <div>
         <h2 className="text-[11px] font-semibold uppercase tracking-[0.15em] text-zinc-500 dark:text-zinc-400">
@@ -29,7 +29,7 @@ export default async function MembershipsPage() {
           </Link>
         </div>
       ) : (
-        <div className="space-y-4">
+        <div className="flex flex-col gap-4">
           {memberships.map((membership) => (
             <UserMembershipCard key={membership.id} membership={membership} />
           ))}

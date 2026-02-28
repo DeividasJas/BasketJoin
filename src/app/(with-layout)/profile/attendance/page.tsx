@@ -1,6 +1,6 @@
 export default function Page() {
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-6">
       <h2 className="text-[11px] font-semibold uppercase tracking-[0.15em] text-zinc-500 dark:text-zinc-400">
         Attendance
       </h2>

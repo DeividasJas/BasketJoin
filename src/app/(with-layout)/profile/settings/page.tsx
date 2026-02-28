@@ -12,7 +12,7 @@ export default function Page() {
     .join(" ");
 
   return (
-    <div className="space-y-8">
+    <div className="flex flex-col gap-8">
       {/* Section header */}
       <h2 className="text-[11px] font-semibold uppercase tracking-[0.15em] text-zinc-500 dark:text-zinc-400">
         Settings
@@ -38,7 +38,7 @@ export default function Page() {
         </div>
 
         {/* Details */}
-        <div className="min-w-0 flex-1 space-y-1">
+        <div className="min-w-0 flex-1 flex flex-col gap-1">
           {fullName && (
             <p className="text-sm font-medium text-zinc-800 dark:text-zinc-100">
               {fullName}

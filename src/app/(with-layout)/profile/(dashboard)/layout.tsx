@@ -17,7 +17,7 @@ export default async function ProfileDashboardLayout({
   }
 
   return (
-    <div className="space-y-8">
+    <div className="flex flex-col gap-8">
       {/* Profile card */}
       <section>{profile}</section>
 
