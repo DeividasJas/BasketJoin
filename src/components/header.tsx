@@ -19,11 +19,11 @@ export default function Header({
     if (href == "/") {
       return (
         <li key={href} className="flex items-center">
-          <Link href="/">
+          <Link href="/" className="transition-opacity hover:opacity-80">
             <Image
               src={"/basketball.svg"}
-              width="30"
-              height="30"
+              width="28"
+              height="28"
               alt="basketball"
               priority={true}
             />
@@ -32,28 +32,37 @@ export default function Header({
       );
     }
 
-    // Check if link requires specific roles
     if (requiredRoles && requiredRoles.length > 0) {
-      // Only show if user has one of the required roles
       if (!requiredRoles.includes(userRole)) {
         return null;
       }
     }
 
+    const isActive = pathname == href;
+
     return (
-      <li
-        key={href as string}
-        className={`rounded-md bg-zinc-300 px-3 py-2 outline outline-1  outline-zinc-400 dark:outline-zinc-700 transition-all duration-500 dark:bg-zinc-800 sm:px-4 sm:py-3 ${pathname == href && "scale-105 outline-zinc-500 outline-[2px] dark:outline-zinc-600"}`}
-      >
-        <Link href={href}>{label}</Link>
+      <li key={href as string}>
+        <Link
+          href={href}
+          className={`relative px-3 py-2 text-[13px] font-medium transition-colors sm:px-4 ${
+            isActive
+              ? "text-basket-400"
+              : "text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200"
+          }`}
+        >
+          {label}
+          {isActive && (
+            <span className="absolute inset-x-1 -bottom-[13px] h-[2px] rounded-full bg-basket-400 sm:inset-x-2" />
+          )}
+        </Link>
       </li>
     );
   });
 
   return (
-    <header className="fixed bottom-0 left-0 right-0 z-50 order-last rounded-t-sm bg-zinc-200 dark:bg-zinc-800 sm:relative sm:order-first sm:border-none sm:bg-transparent sm:dark:bg-transparent">
-      <nav className="mx-auto max-w-[700px]">
-        <ul className="flex items-center justify-around rounded border-zinc-900 py-3">
+    <header className="fixed bottom-0 left-0 right-0 z-50 order-last border-t border-zinc-200 bg-white/80 backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-950/80 sm:relative sm:order-first sm:border-b sm:border-t-0">
+      <nav className="mx-auto max-w-[900px]">
+        <ul className="flex items-center justify-around py-3 sm:py-4">
           {navLinks}
         </ul>
       </nav>
