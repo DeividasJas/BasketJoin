@@ -7,38 +7,35 @@ export default function DashboardNavList() {
   const pathname = usePathname();
 
   const dashboardSections: Links[] = [
-    {
-      label: "Games",
-      href: "/dashboard/games",
-    },
-    {
-      label: "Locations",
-      href: "/dashboard/locations",
-    },
-    {
-      label: "Leagues",
-      href: "/dashboard/leagues",
-    },
-    {
-      label: "Payments",
-      href: "/dashboard/payments",
-    },
+    { label: "Games", href: "/dashboard/games" },
+    { label: "Locations", href: "/dashboard/locations" },
+    { label: "Leagues", href: "/dashboard/leagues" },
+    { label: "Payments", href: "/dashboard/payments" },
   ];
 
   return (
-    <nav className="w-full px-4">
-      <ul className="grid grid-cols-4 gap-3">
-        {dashboardSections.map((link) => (
-          <Link
-            href={link.href}
-            key={link.href as string}
-            className={`rounded-lg bg-zinc-200 transition-all duration-500 dark:bg-zinc-800 ${pathname === link.href && "text-orange-600 outline outline-2 outline-orange-400 dark:text-orange-400 dark:outline-orange-400"}`}
-          >
-            <li className="overflow-hidden px-1 py-2 text-center text-sm font-medium sm:text-base">
-              {link.label}
+    <nav className="border-b border-zinc-200 dark:border-zinc-700/60">
+      <ul className="flex gap-0 overflow-x-auto">
+        {dashboardSections.map((link) => {
+          const isActive = pathname.startsWith(link.href as string);
+          return (
+            <li key={link.href as string}>
+              <Link
+                href={link.href}
+                className={`relative block px-4 py-2.5 text-[13px] font-medium transition-colors ${
+                  isActive
+                    ? "text-basket-400"
+                    : "text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200"
+                }`}
+              >
+                {link.label}
+                {isActive && (
+                  <span className="absolute inset-x-2 bottom-0 h-[2px] rounded-full bg-basket-400" />
+                )}
+              </Link>
             </li>
-          </Link>
-        ))}
+          );
+        })}
       </ul>
     </nav>
   );

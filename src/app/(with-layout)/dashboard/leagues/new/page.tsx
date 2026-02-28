@@ -2,6 +2,8 @@ import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { prisma } from "@/utils/prisma";
 import LeagueForm from "@/components/admin/LeagueForm";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 
 export default async function NewLeaguePage() {
   const session = await auth();
@@ -31,14 +33,22 @@ export default async function NewLeaguePage() {
   });
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold">Create New League</h1>
-        <p className="mt-2 text-gray-600 dark:text-gray-400">
-          Set up a new league with schedule and payment configuration
+    <div className="mx-auto w-full max-w-2xl flex flex-col gap-6">
+      <Link
+        href="/dashboard/leagues"
+        className="inline-flex items-center gap-1 text-xs font-medium text-zinc-400 transition-colors hover:text-zinc-600 dark:hover:text-zinc-300"
+      >
+        <ArrowLeft className="h-3 w-3" />
+        Leagues
+      </Link>
+      <div>
+        <h1 className="text-lg font-semibold text-zinc-800 dark:text-zinc-100">
+          New League
+        </h1>
+        <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
+          Configure schedule and payment settings
         </p>
       </div>
-
       <LeagueForm allLocations={allLocations} />
     </div>
   );

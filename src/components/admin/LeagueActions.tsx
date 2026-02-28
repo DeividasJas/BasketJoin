@@ -85,16 +85,21 @@ export default function LeagueActions({
     <div className="flex gap-2">
       {status === "UPCOMING" && (
         <>
-          <Button onClick={handleActivate} disabled={loading}>
-            <Play className="mr-2 h-4 w-4" />
+          <Button
+            onClick={handleActivate}
+            disabled={loading}
+            className="h-8 bg-basket-400 text-xs text-white hover:bg-basket-300"
+          >
+            <Play className="mr-1.5 h-3 w-3" />
             Activate
           </Button>
           <Button
             onClick={handleCancel}
-            variant="destructive"
+            variant="ghost"
             disabled={loading}
+            className="h-8 text-xs text-red-500 hover:bg-red-500/10 hover:text-red-600"
           >
-            <XCircle className="mr-2 h-4 w-4" />
+            <XCircle className="mr-1.5 h-3 w-3" />
             Cancel
           </Button>
         </>
@@ -102,16 +107,21 @@ export default function LeagueActions({
 
       {status === "ACTIVE" && (
         <>
-          <Button onClick={handleComplete} disabled={loading}>
-            <CheckCircle className="mr-2 h-4 w-4" />
-            Complete League
+          <Button
+            onClick={handleComplete}
+            disabled={loading}
+            className="h-8 bg-basket-400 text-xs text-white hover:bg-basket-300"
+          >
+            <CheckCircle className="mr-1.5 h-3 w-3" />
+            Complete
           </Button>
           <Button
             onClick={handleCancel}
-            variant="destructive"
+            variant="ghost"
             disabled={loading}
+            className="h-8 text-xs text-red-500 hover:bg-red-500/10 hover:text-red-600"
           >
-            <XCircle className="mr-2 h-4 w-4" />
+            <XCircle className="mr-1.5 h-3 w-3" />
             Cancel
           </Button>
         </>

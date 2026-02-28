@@ -31,37 +31,54 @@ export default async function LocationGamesPage({
   const { location } = result;
 
   return (
-    <div className="mx-auto w-full max-w-4xl px-4 py-6">
+    <div className="flex flex-col gap-6">
       <Link
         href="/dashboard/locations"
-        className="mb-4 inline-flex items-center gap-1 text-zinc-600 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
+        className="inline-flex items-center gap-1 text-xs font-medium text-zinc-400 transition-colors hover:text-zinc-600 dark:hover:text-zinc-300"
       >
-        <ArrowLeft className="h-4 w-4" />
-        Back to Locations
+        <ArrowLeft className="h-3 w-3" />
+        Locations
       </Link>
 
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold">{location.name}</h1>
-        <p className="text-gray-600 dark:text-gray-400">
-          📍 {location.address}, {location.city}
+      <div>
+        <h1 className="text-lg font-semibold text-zinc-800 dark:text-zinc-100">
+          {location.name}
+        </h1>
+        <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
+          {location.address}, {location.city}
         </p>
       </div>
 
-      <div className="mb-6 rounded-lg bg-zinc-100 p-4 dark:bg-zinc-800">
-        <h2 className="mb-2 font-bold">Location Details:</h2>
-        <div className="grid grid-cols-2 gap-4 text-sm">
-          {location.capacity && <p>👥 Capacity: {location.capacity}</p>}
-          <p>🏀 Courts: {location.court_count}</p>
-          {location.price_per_game && (
-            <p>💵 Price: ${location.price_per_game}/game</p>
+      <section className="rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-700/60 dark:bg-zinc-900">
+        <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.15em] text-zinc-400 dark:text-zinc-500">
+          Location Details
+        </p>
+        <div className="grid grid-cols-2 gap-2 text-xs text-zinc-600 dark:text-zinc-300">
+          {location.capacity && (
+            <p>
+              <span className="text-zinc-400">Capacity:</span>{" "}
+              <span className="tabular-nums">{location.capacity}</span>
+            </p>
           )}
           <p>
-            Status:{" "}
+            <span className="text-zinc-400">Courts:</span>{" "}
+            <span className="tabular-nums">{location.court_count}</span>
+          </p>
+          {location.price_per_game && (
+            <p>
+              <span className="text-zinc-400">Price:</span>{" "}
+              <span className="tabular-nums">
+                ${location.price_per_game}/game
+              </span>
+            </p>
+          )}
+          <p>
+            <span className="text-zinc-400">Status:</span>{" "}
             <span
               className={
                 location.is_active
-                  ? "font-semibold text-zinc-700 dark:text-zinc-300"
-                  : "font-semibold text-red-600 dark:text-red-400"
+                  ? "font-medium text-green-600 dark:text-green-400"
+                  : "font-medium text-red-500 dark:text-red-400"
               }
             >
               {location.is_active ? "Active" : "Inactive"}
@@ -69,63 +86,63 @@ export default async function LocationGamesPage({
           </p>
         </div>
         {location.description && (
-          <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
+          <p className="mt-3 border-t border-zinc-100 pt-3 text-xs text-zinc-500 dark:border-zinc-800 dark:text-zinc-400">
             {location.description}
           </p>
         )}
-      </div>
+      </section>
 
-      <div>
-        <h2 className="mb-4 text-2xl font-bold">
-          Games at this Location ({location.games.length} recent)
-        </h2>
+      <section>
+        <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.15em] text-zinc-400 dark:text-zinc-500">
+          Games ({location.games.length} recent)
+        </p>
 
         {location.games.length === 0 ? (
-          <p className="py-8 text-center text-gray-500">
-            No games scheduled at this location yet.
+          <p className="py-8 text-center text-sm text-zinc-400 dark:text-zinc-500">
+            No games scheduled yet.
           </p>
         ) : (
-          <div className="space-y-4">
+          <div className="flex flex-col gap-2">
             {location.games.map((game) => (
               <div
                 key={game.id}
-                className="rounded-lg border border-zinc-200 bg-white p-4 shadow-md dark:border-zinc-800 dark:bg-zinc-900"
+                className="flex items-center justify-between rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-700/60 dark:bg-zinc-900"
               >
-                <div className="flex items-start justify-between">
-                  <div>
-                    <h3 className="font-bold">
-                      {new Date(game.game_date).toLocaleDateString("en-US", {
-                        weekday: "short",
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                      })}
-                      {" at "}
-                      {new Date(game.game_date).toLocaleTimeString("en-US", {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </h3>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      Status: {game.status}
-                    </p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      Players: {game._count.game_registrations}
-                      {game.max_players && `/${game.max_players}`}
-                    </p>
-                    {game.description && (
-                      <p className="mt-2 text-sm">{game.description}</p>
-                    )}
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-medium tabular-nums text-zinc-800 dark:text-zinc-100">
+                    {new Date(game.game_date).toLocaleDateString("en-US", {
+                      weekday: "short",
+                      month: "short",
+                      day: "numeric",
+                    })}
+                    {" at "}
+                    {new Date(game.game_date).toLocaleTimeString("en-US", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </p>
+                  <div className="mt-0.5 flex items-center gap-2 text-xs text-zinc-500 dark:text-zinc-400">
+                    <span>{game.status}</span>
+                    <span>&middot;</span>
+                    <span className="tabular-nums">
+                      {game._count.game_registrations}
+                      {game.max_players && `/${game.max_players}`} players
+                    </span>
                   </div>
-                  <Button variant="outline" size="sm" asChild>
-                    <Link href={`/game-status/${game.id}`}>View Details</Link>
-                  </Button>
                 </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  asChild
+                  className="shrink-0 text-xs text-basket-400 hover:text-basket-300"
+                >
+                  <Link href={`/game-status/${game.id}`}>View</Link>
+                </Button>
               </div>
             ))}
           </div>
         )}
-      </div>
+      </section>
     </div>
   );
 }

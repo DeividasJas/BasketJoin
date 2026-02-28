@@ -160,17 +160,21 @@ export default function LeagueForm({
     }
   };
 
-  return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
-        <h2 className="mb-4 text-lg font-semibold">Basic Information</h2>
+  const inputClasses =
+    "w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3.5 py-2.5 text-sm placeholder:text-zinc-400 focus:border-basket-400 focus:outline-none focus:ring-2 focus:ring-basket-400/20 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:placeholder:text-zinc-500";
+  const labelClasses =
+    "mb-1.5 block text-[11px] font-semibold uppercase tracking-[0.15em] text-zinc-400";
 
-        <div className="space-y-4">
+  return (
+    <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+      <div className="flex flex-col gap-5 rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-700/60 dark:bg-zinc-900">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.15em] text-zinc-500">
+          Basic Information
+        </p>
+
+        <div className="flex flex-col gap-4">
           <div>
-            <label
-              htmlFor="locationId"
-              className="mb-2 block text-sm font-medium"
-            >
+            <label htmlFor="locationId" className={labelClasses}>
               Location
             </label>
             <select
@@ -181,7 +185,7 @@ export default function LeagueForm({
               }
               required
               disabled={!!leagueId}
-              className="w-full rounded-md border border-zinc-300 bg-white px-4 py-2 dark:border-zinc-700 dark:bg-zinc-800"
+              className={`${inputClasses} disabled:opacity-50`}
             >
               <option value="">Select a location</option>
               {allLocations.map((location) => (
@@ -193,7 +197,7 @@ export default function LeagueForm({
           </div>
 
           <div>
-            <label htmlFor="name" className="mb-2 block text-sm font-medium">
+            <label htmlFor="name" className={labelClasses}>
               League Name
             </label>
             <input
@@ -205,15 +209,12 @@ export default function LeagueForm({
               }
               required
               placeholder="e.g., Tuesday Night Basketball - Winter 2025"
-              className="w-full rounded-md border border-gray-300 px-4 py-2 dark:border-gray-700 dark:bg-gray-800"
+              className={inputClasses}
             />
           </div>
 
           <div>
-            <label
-              htmlFor="description"
-              className="mb-2 block text-sm font-medium"
-            >
+            <label htmlFor="description" className={labelClasses}>
               Description (optional)
             </label>
             <textarea
@@ -224,16 +225,13 @@ export default function LeagueForm({
               }
               rows={3}
               placeholder="Brief description of the league..."
-              className="w-full rounded-md border border-gray-300 px-4 py-2 dark:border-gray-700 dark:bg-gray-800"
+              className={inputClasses}
             />
           </div>
 
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <label
-                htmlFor="startDate"
-                className="mb-2 block text-sm font-medium"
-              >
+              <label htmlFor="startDate" className={labelClasses}>
                 Start Date
               </label>
               <input
@@ -244,15 +242,12 @@ export default function LeagueForm({
                   setFormData({ ...formData, startDate: e.target.value })
                 }
                 required
-                className="w-full rounded-md border border-gray-300 px-4 py-2 dark:border-gray-700 dark:bg-gray-800"
+                className={inputClasses}
               />
             </div>
 
             <div>
-              <label
-                htmlFor="endDate"
-                className="mb-2 block text-sm font-medium"
-              >
+              <label htmlFor="endDate" className={labelClasses}>
                 End Date
               </label>
               <input
@@ -263,23 +258,22 @@ export default function LeagueForm({
                   setFormData({ ...formData, endDate: e.target.value })
                 }
                 required
-                className="w-full rounded-md border border-gray-300 px-4 py-2 dark:border-gray-700 dark:bg-gray-800"
+                className={inputClasses}
               />
             </div>
           </div>
         </div>
       </div>
 
-      <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
-        <h2 className="mb-4 text-lg font-semibold">Game Settings</h2>
+      <div className="flex flex-col gap-5 rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-700/60 dark:bg-zinc-900">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.15em] text-zinc-500">
+          Game Settings
+        </p>
 
-        <div className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2">
+        <div className="flex flex-col gap-4">
+          <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <label
-                htmlFor="minPlayers"
-                className="mb-2 block text-sm font-medium"
-              >
+              <label htmlFor="minPlayers" className={labelClasses}>
                 Minimum Players
               </label>
               <input
@@ -291,15 +285,12 @@ export default function LeagueForm({
                 }
                 min="1"
                 placeholder="10"
-                className="w-full rounded-md border border-gray-300 px-4 py-2 dark:border-gray-700 dark:bg-gray-800"
+                className={inputClasses}
               />
             </div>
 
             <div>
-              <label
-                htmlFor="maxPlayers"
-                className="mb-2 block text-sm font-medium"
-              >
+              <label htmlFor="maxPlayers" className={labelClasses}>
                 Maximum Players (optional)
               </label>
               <input
@@ -311,16 +302,13 @@ export default function LeagueForm({
                 }
                 min="1"
                 placeholder="20"
-                className="w-full rounded-md border border-gray-300 px-4 py-2 dark:border-gray-700 dark:bg-gray-800"
+                className={inputClasses}
               />
             </div>
           </div>
 
           <div>
-            <label
-              htmlFor="gameType"
-              className="mb-2 block text-sm font-medium"
-            >
+            <label htmlFor="gameType" className={labelClasses}>
               Game Type (optional)
             </label>
             <input
@@ -331,15 +319,12 @@ export default function LeagueForm({
                 setFormData({ ...formData, gameType: e.target.value })
               }
               placeholder="e.g., 5v5, Full Court"
-              className="w-full rounded-md border border-gray-300 px-4 py-2 dark:border-gray-700 dark:bg-gray-800"
+              className={inputClasses}
             />
           </div>
 
           <div>
-            <label
-              htmlFor="gameDescription"
-              className="mb-2 block text-sm font-medium"
-            >
+            <label htmlFor="gameDescription" className={labelClasses}>
               Game Description (optional)
             </label>
             <textarea
@@ -350,22 +335,21 @@ export default function LeagueForm({
               }
               rows={2}
               placeholder="Additional game details..."
-              className="w-full rounded-md border border-gray-300 px-4 py-2 dark:border-gray-700 dark:bg-gray-800"
+              className={inputClasses}
             />
           </div>
         </div>
       </div>
 
-      <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
-        <h2 className="mb-4 text-lg font-semibold">Pricing</h2>
+      <div className="flex flex-col gap-5 rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-700/60 dark:bg-zinc-900">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.15em] text-zinc-500">
+          Pricing
+        </p>
 
-        <div className="space-y-4">
+        <div className="flex flex-col gap-4">
           <div>
-            <label
-              htmlFor="gymRentalCost"
-              className="mb-2 block text-sm font-medium"
-            >
-              Total Gym Rental Cost (€)
+            <label htmlFor="gymRentalCost" className={labelClasses}>
+              Total Gym Rental Cost
             </label>
             <input
               type="number"
@@ -378,19 +362,16 @@ export default function LeagueForm({
               min="0"
               step="0.01"
               placeholder="600.00"
-              className="w-full rounded-md border border-gray-300 px-4 py-2 dark:border-gray-700 dark:bg-gray-800"
+              className={inputClasses}
             />
-            <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+            <p className="mt-1 text-[11px] text-zinc-400">
               Total cost for all games in this league
             </p>
           </div>
 
           <div>
-            <label
-              htmlFor="guestFeePerGame"
-              className="mb-2 block text-sm font-medium"
-            >
-              Guest Fee Per Game (€)
+            <label htmlFor="guestFeePerGame" className={labelClasses}>
+              Guest Fee Per Game
             </label>
             <input
               type="number"
@@ -403,45 +384,52 @@ export default function LeagueForm({
               min="0"
               step="0.01"
               placeholder="5.00"
-              className="w-full rounded-md border border-gray-300 px-4 py-2 dark:border-gray-700 dark:bg-gray-800"
+              className={inputClasses}
             />
-            <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+            <p className="mt-1 text-[11px] text-zinc-400">
               Fee charged to non-members per game
             </p>
           </div>
         </div>
       </div>
 
-      <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
-        <h2 className="mb-4 text-lg font-semibold">Payment Schedule</h2>
+      <div className="flex flex-col gap-5 rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-700/60 dark:bg-zinc-900">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.15em] text-zinc-500">
+          Payment Schedule
+        </p>
 
-        <div className="mb-4 flex gap-2">
+        <div className="flex gap-2">
           <div className="flex-1">
             <input
               type="date"
               value={newDueDate}
               onChange={(e) => setNewDueDate(e.target.value)}
-              className="w-full rounded-md border border-gray-300 px-4 py-2 dark:border-gray-700 dark:bg-gray-800"
+              className={inputClasses}
             />
           </div>
-          <Button type="button" onClick={handleAddDueDate} variant="outline">
-            <Calendar className="mr-2 h-4 w-4" />
-            Add Due Date
+          <Button
+            type="button"
+            onClick={handleAddDueDate}
+            variant="ghost"
+            className="h-auto border border-zinc-200 text-xs text-zinc-600 hover:text-zinc-800 dark:border-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200"
+          >
+            <Calendar className="mr-1.5 h-3.5 w-3.5" />
+            Add Date
           </Button>
         </div>
 
         {formData.paymentDueDates.length === 0 ? (
-          <p className="text-sm text-gray-600 dark:text-gray-400">
+          <p className="text-xs text-zinc-400 dark:text-zinc-500">
             No payment due dates added yet. Add at least one due date.
           </p>
         ) : (
-          <div className="space-y-2">
+          <div className="flex flex-col gap-1.5">
             {formData.paymentDueDates.map((date) => (
               <div
                 key={date}
-                className="flex items-center justify-between rounded-md border border-gray-200 bg-gray-50 px-4 py-2 dark:border-gray-700 dark:bg-gray-800"
+                className="flex items-center justify-between rounded-lg border border-zinc-200 bg-zinc-50 px-3.5 py-2 dark:border-zinc-700 dark:bg-zinc-800"
               >
-                <span className="text-sm">
+                <span className="text-sm tabular-nums text-zinc-700 dark:text-zinc-300">
                   {new Date(date).toLocaleDateString("en-US", {
                     year: "numeric",
                     month: "long",
@@ -451,30 +439,35 @@ export default function LeagueForm({
                 <button
                   type="button"
                   onClick={() => handleRemoveDueDate(date)}
-                  className="text-red-600 hover:text-red-700 dark:text-red-400"
+                  className="text-red-500 hover:text-red-600"
                 >
-                  <X className="h-4 w-4" />
+                  <X className="h-3.5 w-3.5" />
                 </button>
               </div>
             ))}
           </div>
         )}
 
-        <p className="mt-4 text-sm text-gray-600 dark:text-gray-400">
+        <p className="text-[11px] text-zinc-400">
           Members will be charged in installments on these dates. The total cost
           will be split equally across all payment dates.
         </p>
       </div>
 
-      <div className="flex gap-4">
-        <Button type="submit" disabled={loading}>
-          {loading ? "Saving..." : leagueId ? "Update League" : "Create League"}
+      <div className="flex gap-3">
+        <Button
+          type="submit"
+          isLoading={loading}
+          className="flex-1 bg-basket-400 text-white hover:bg-basket-300"
+        >
+          {leagueId ? "Update League" : "Create League"}
         </Button>
         <Button
           type="button"
-          variant="outline"
+          variant="ghost"
           onClick={() => router.back()}
           disabled={loading}
+          className="text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200"
         >
           Cancel
         </Button>

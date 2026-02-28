@@ -191,11 +191,11 @@ export default function GameForm({ locations, mode, game }: GameFormProps) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white dark:bg-zinc-900 rounded-lg p-6 shadow-md space-y-4"
+      className="flex flex-col gap-5 rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-700/60 dark:bg-zinc-900"
     >
       {/* Date and Time */}
       <div>
-        <label className="block text-sm font-medium mb-2">
+        <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-[0.15em] text-zinc-400">
           Date and Time (UTC) <span className="text-red-500">*</span>
         </label>
         <input
@@ -205,26 +205,26 @@ export default function GameForm({ locations, mode, game }: GameFormProps) {
             setFormData({ ...formData, game_date: e.target.value })
           }
           required
-          className="w-full px-4 py-2 rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3.5 py-2.5 text-sm focus:border-basket-400 focus:outline-none focus:ring-2 focus:ring-basket-400/20 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
         />
       </div>
 
       {/* Recurring Game Toggle (only in create mode) */}
       {mode === "create" && (
-        <div className="flex items-center space-x-3 rounded-lg border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 p-4">
+        <div className="flex items-center gap-3 rounded-lg border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-700 dark:bg-zinc-800">
           <Switch
             id="recurring-toggle"
             checked={isRecurring}
             onCheckedChange={setIsRecurring}
           />
-          <label htmlFor="recurring-toggle" className="cursor-pointer font-medium">
+          <label htmlFor="recurring-toggle" className="cursor-pointer text-sm font-medium text-zinc-700 dark:text-zinc-300">
             Make this a recurring game
           </label>
         </div>
       )}
 
       {mode === "edit" && game?.league_id && (
-        <div className="flex items-center space-x-3 rounded-lg border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 p-4">
+        <div className="flex items-center gap-3 rounded-lg border border-zinc-200 bg-zinc-50 p-4 dark:border-zinc-700 dark:bg-zinc-800">
           <Switch
             id="series-update-toggle"
             checked={applyToSeries}
@@ -232,7 +232,7 @@ export default function GameForm({ locations, mode, game }: GameFormProps) {
           />
           <label
             htmlFor="series-update-toggle"
-            className="cursor-pointer font-medium"
+            className="cursor-pointer text-sm font-medium text-zinc-700 dark:text-zinc-300"
           >
             Apply to all subsequent games in the series
           </label>
@@ -241,14 +241,14 @@ export default function GameForm({ locations, mode, game }: GameFormProps) {
 
       {/* Recurring Options */}
       {isRecurring && mode === "create" && (
-        <div className="space-y-4 rounded-lg border border-blue-300 dark:border-blue-700 bg-blue-50 dark:bg-blue-950/30 p-4">
-          <h3 className="font-semibold text-blue-900 dark:text-blue-100">
+        <div className="flex flex-col gap-4 rounded-lg border border-basket-400/20 bg-basket-400/5 p-4 dark:border-basket-400/15 dark:bg-basket-400/5">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.15em] text-basket-400">
             Recurring Schedule
-          </h3>
+          </p>
 
           {/* Series Name */}
           <div>
-            <label className="block text-sm font-medium mb-2">
+            <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-[0.15em] text-zinc-400">
               Series Name <span className="text-red-500">*</span>
             </label>
             <input
@@ -257,20 +257,20 @@ export default function GameForm({ locations, mode, game }: GameFormProps) {
               onChange={(e) => setSeriesName(e.target.value)}
               maxLength={50}
               placeholder="e.g., Monday Night Basketball"
-              className="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3.5 py-2.5 text-sm focus:border-basket-400 focus:outline-none focus:ring-2 focus:ring-basket-400/20 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
               required
             />
-            <p className="mt-1 text-xs text-gray-500">
+            <p className="mt-1 text-[11px] tabular-nums text-zinc-400">
               {seriesName.length}/50 characters
             </p>
           </div>
 
           {/* Pattern Selection */}
           <div>
-            <label className="block text-sm font-medium mb-2">
+            <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-[0.15em] text-zinc-400">
               Repeat Pattern <span className="text-red-500">*</span>
             </label>
-            <div className="flex gap-3">
+            <div className="flex gap-4">
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="radio"
@@ -280,9 +280,9 @@ export default function GameForm({ locations, mode, game }: GameFormProps) {
                   onChange={(e) =>
                     setRecurrencePattern(e.target.value as "weekly" | "monthly" | "custom")
                   }
-                  className="h-4 w-4"
+                  className="h-3.5 w-3.5 accent-basket-400"
                 />
-                <span className="text-sm">Weekly</span>
+                <span className="text-sm text-zinc-700 dark:text-zinc-300">Weekly</span>
               </label>
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
@@ -293,9 +293,9 @@ export default function GameForm({ locations, mode, game }: GameFormProps) {
                   onChange={(e) =>
                     setRecurrencePattern(e.target.value as "weekly" | "monthly" | "custom")
                   }
-                  className="h-4 w-4"
+                  className="h-3.5 w-3.5 accent-basket-400"
                 />
-                <span className="text-sm">Monthly</span>
+                <span className="text-sm text-zinc-700 dark:text-zinc-300">Monthly</span>
               </label>
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
@@ -306,9 +306,9 @@ export default function GameForm({ locations, mode, game }: GameFormProps) {
                   onChange={(e) =>
                     setRecurrencePattern(e.target.value as "weekly" | "monthly" | "custom")
                   }
-                  className="h-4 w-4"
+                  className="h-3.5 w-3.5 accent-basket-400"
                 />
-                <span className="text-sm">Custom</span>
+                <span className="text-sm text-zinc-700 dark:text-zinc-300">Custom</span>
               </label>
             </div>
           </div>
@@ -316,7 +316,7 @@ export default function GameForm({ locations, mode, game }: GameFormProps) {
           {/* Custom Interval */}
           {recurrencePattern === "custom" && (
             <div>
-              <label className="block text-sm font-medium mb-2">
+              <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-[0.15em] text-zinc-400">
                 Repeat every (days) <span className="text-red-500">*</span>
               </label>
               <input
@@ -326,9 +326,9 @@ export default function GameForm({ locations, mode, game }: GameFormProps) {
                 min="1"
                 max="365"
                 required
-                className="w-full px-4 py-2 rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3.5 py-2.5 text-sm focus:border-basket-400 focus:outline-none focus:ring-2 focus:ring-basket-400/20 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
               />
-              <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+              <p className="mt-1 text-[11px] text-zinc-400">
                 Between 1 and 365 days
               </p>
             </div>
@@ -336,10 +336,10 @@ export default function GameForm({ locations, mode, game }: GameFormProps) {
 
           {/* End Type Selection */}
           <div>
-            <label className="block text-sm font-medium mb-2">
+            <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-[0.15em] text-zinc-400">
               Ends <span className="text-red-500">*</span>
             </label>
-            <div className="flex gap-3">
+            <div className="flex gap-4">
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="radio"
@@ -347,9 +347,9 @@ export default function GameForm({ locations, mode, game }: GameFormProps) {
                   value="count"
                   checked={endType === "count"}
                   onChange={(e) => setEndType(e.target.value as "count" | "date")}
-                  className="h-4 w-4"
+                  className="h-3.5 w-3.5 accent-basket-400"
                 />
-                <span className="text-sm">After X occurrences</span>
+                <span className="text-sm text-zinc-700 dark:text-zinc-300">After X occurrences</span>
               </label>
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
@@ -358,9 +358,9 @@ export default function GameForm({ locations, mode, game }: GameFormProps) {
                   value="date"
                   checked={endType === "date"}
                   onChange={(e) => setEndType(e.target.value as "count" | "date")}
-                  className="h-4 w-4"
+                  className="h-3.5 w-3.5 accent-basket-400"
                 />
-                <span className="text-sm">On date</span>
+                <span className="text-sm text-zinc-700 dark:text-zinc-300">On date</span>
               </label>
             </div>
           </div>
@@ -368,7 +368,7 @@ export default function GameForm({ locations, mode, game }: GameFormProps) {
           {/* Occurrence Count */}
           {endType === "count" && (
             <div>
-              <label className="block text-sm font-medium mb-2">
+              <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-[0.15em] text-zinc-400">
                 Number of games <span className="text-red-500">*</span>
               </label>
               <input
@@ -378,9 +378,9 @@ export default function GameForm({ locations, mode, game }: GameFormProps) {
                 min="1"
                 max="100"
                 required
-                className="w-full px-4 py-2 rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3.5 py-2.5 text-sm focus:border-basket-400 focus:outline-none focus:ring-2 focus:ring-basket-400/20 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
               />
-              <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+              <p className="mt-1 text-[11px] text-zinc-400">
                 Maximum 100 games
               </p>
             </div>
@@ -389,7 +389,7 @@ export default function GameForm({ locations, mode, game }: GameFormProps) {
           {/* End Date */}
           {endType === "date" && (
             <div>
-              <label className="block text-sm font-medium mb-2">
+              <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-[0.15em] text-zinc-400">
                 End date <span className="text-red-500">*</span>
               </label>
               <input
@@ -398,7 +398,7 @@ export default function GameForm({ locations, mode, game }: GameFormProps) {
                 onChange={(e) => setEndDate(e.target.value)}
                 min={formData.game_date ? formData.game_date.split("T")[0] : ""}
                 required
-                className="w-full px-4 py-2 rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3.5 py-2.5 text-sm focus:border-basket-400 focus:outline-none focus:ring-2 focus:ring-basket-400/20 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
               />
             </div>
           )}
@@ -418,7 +418,7 @@ export default function GameForm({ locations, mode, game }: GameFormProps) {
 
       {/* Location */}
       <div>
-        <label className="block text-sm font-medium mb-2">
+        <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-[0.15em] text-zinc-400">
           Location <span className="text-red-500">*</span>
         </label>
         <select
@@ -427,7 +427,7 @@ export default function GameForm({ locations, mode, game }: GameFormProps) {
             setFormData({ ...formData, location_id: e.target.value })
           }
           required
-          className="w-full px-4 py-2 rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3.5 py-2.5 text-sm focus:border-basket-400 focus:outline-none focus:ring-2 focus:ring-basket-400/20 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
         >
           <option value="">Select a location</option>
           {locations.map((location) => (
@@ -440,7 +440,7 @@ export default function GameForm({ locations, mode, game }: GameFormProps) {
 
       {/* Min Players */}
       <div>
-        <label className="block text-sm font-medium mb-2">
+        <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-[0.15em] text-zinc-400">
           Minimum Players <span className="text-red-500">*</span>
         </label>
         <input
@@ -451,13 +451,13 @@ export default function GameForm({ locations, mode, game }: GameFormProps) {
           }
           required
           min="2"
-          className="w-full px-4 py-2 rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3.5 py-2.5 text-sm focus:border-basket-400 focus:outline-none focus:ring-2 focus:ring-basket-400/20 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
         />
       </div>
 
       {/* Max Players */}
       <div>
-        <label className="block text-sm font-medium mb-2">
+        <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-[0.15em] text-zinc-400">
           Maximum Players (optional)
         </label>
         <input
@@ -468,13 +468,13 @@ export default function GameForm({ locations, mode, game }: GameFormProps) {
           }
           min="2"
           placeholder="No limit"
-          className="w-full px-4 py-2 rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3.5 py-2.5 text-sm placeholder:text-zinc-400 focus:border-basket-400 focus:outline-none focus:ring-2 focus:ring-basket-400/20 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:placeholder:text-zinc-500"
         />
       </div>
 
       {/* Game Type */}
       <div>
-        <label className="block text-sm font-medium mb-2">
+        <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-[0.15em] text-zinc-400">
           Game Type (optional)
         </label>
         <input
@@ -484,13 +484,13 @@ export default function GameForm({ locations, mode, game }: GameFormProps) {
             setFormData({ ...formData, game_type: e.target.value })
           }
           placeholder="e.g., Pickup, Tournament, League"
-          className="w-full px-4 py-2 rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3.5 py-2.5 text-sm placeholder:text-zinc-400 focus:border-basket-400 focus:outline-none focus:ring-2 focus:ring-basket-400/20 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:placeholder:text-zinc-500"
         />
       </div>
 
       {/* Description */}
       <div>
-        <label className="block text-sm font-medium mb-2">
+        <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-[0.15em] text-zinc-400">
           Description (optional)
         </label>
         <textarea
@@ -500,23 +500,24 @@ export default function GameForm({ locations, mode, game }: GameFormProps) {
           }
           rows={4}
           placeholder="Add any special instructions or notes..."
-          className="w-full px-4 py-2 rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3.5 py-2.5 text-sm placeholder:text-zinc-400 focus:border-basket-400 focus:outline-none focus:ring-2 focus:ring-basket-400/20 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:placeholder:text-zinc-500"
         />
       </div>
 
       {/* Buttons */}
-      <div className="flex gap-4">
+      <div className="flex gap-3 border-t border-zinc-100 pt-5 dark:border-zinc-800">
         <Button
           type="submit"
           isLoading={loading}
-          className="flex-1"
+          className="flex-1 bg-basket-400 text-white hover:bg-basket-300"
         >
           {mode === "create" ? "Create Game" : "Update Game"}
         </Button>
         <Button
           type="button"
-          variant="secondary"
+          variant="ghost"
           onClick={() => router.back()}
+          className="text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200"
         >
           Cancel
         </Button>

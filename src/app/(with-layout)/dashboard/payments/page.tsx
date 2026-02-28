@@ -2,15 +2,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { prisma } from "@/utils/prisma";
 import { formatCurrency } from "@/lib/paymentUtils";
-import {
-  DollarSign,
-  TrendingUp,
-  Users,
-  Calendar,
-  CheckCircle,
-  Clock,
-  AlertCircle,
-} from "lucide-react";
+import { Calendar } from "lucide-react";
 import PaymentSchedulesTable from "@/components/admin/PaymentSchedulesTable";
 
 export default async function PaymentsPage({
@@ -115,109 +107,90 @@ export default async function PaymentsPage({
   });
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold">Payment Management</h1>
-        <p className="mt-2 text-gray-600 dark:text-gray-400">
+    <div className="flex flex-col gap-6">
+      <div>
+        <h1 className="text-lg font-semibold text-zinc-800 dark:text-zinc-100">
+          Payments
+        </h1>
+        <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
           Track membership payments and schedules
         </p>
       </div>
 
-      <div className="mb-8 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                Total Expected
-              </p>
-              <p className="mt-2 text-3xl font-bold">
-                {formatCurrency(totalDue)}
-              </p>
-            </div>
-            <DollarSign className="h-10 w-10 text-blue-500" />
-          </div>
-        </div>
-
-        <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                Total Collected
-              </p>
-              <p className="mt-2 text-3xl font-bold">
-                {formatCurrency(totalPaid)}
-              </p>
-            </div>
-            <TrendingUp className="h-10 w-10 text-green-500" />
-          </div>
-          <p className="mt-2 text-xs text-gray-600 dark:text-gray-400">
-            {totalDue > 0 ? Math.round((totalPaid / totalDue) * 100) : 0}% of
-            expected
+      {/* Stats Grid */}
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <div className="rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-700/60 dark:bg-zinc-900">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.15em] text-zinc-400 dark:text-zinc-500">
+            Expected
+          </p>
+          <p className="mt-1 text-2xl font-extralight tabular-nums text-zinc-800 dark:text-zinc-100">
+            {formatCurrency(totalDue)}
           </p>
         </div>
 
-        <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                Remaining
-              </p>
-              <p className="mt-2 text-3xl font-bold">
-                {formatCurrency(totalPending)}
-              </p>
-            </div>
-            <Clock className="h-10 w-10 text-orange-500" />
-          </div>
-          <p className="mt-2 text-xs text-gray-600 dark:text-gray-400">
-            {pendingCount} pending installments
+        <div className="rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-700/60 dark:bg-zinc-900">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.15em] text-zinc-400 dark:text-zinc-500">
+            Collected
+          </p>
+          <p className="mt-1 text-2xl font-extralight tabular-nums text-zinc-800 dark:text-zinc-100">
+            {formatCurrency(totalPaid)}
+          </p>
+          <p className="mt-1 text-[10px] tabular-nums text-zinc-400 dark:text-zinc-500">
+            {totalDue > 0 ? Math.round((totalPaid / totalDue) * 100) : 0}%
           </p>
         </div>
 
-        <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                Overdue
-              </p>
-              <p className="mt-2 text-3xl font-bold text-red-600">
-                {overdueCount}
-              </p>
-            </div>
-            <AlertCircle className="h-10 w-10 text-red-500" />
-          </div>
-          <p className="mt-2 text-xs text-gray-600 dark:text-gray-400">
-            Require immediate attention
+        <div className="rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-700/60 dark:bg-zinc-900">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.15em] text-zinc-400 dark:text-zinc-500">
+            Remaining
+          </p>
+          <p className="mt-1 text-2xl font-extralight tabular-nums text-zinc-800 dark:text-zinc-100">
+            {formatCurrency(totalPending)}
+          </p>
+          <p className="mt-1 text-[10px] tabular-nums text-zinc-400 dark:text-zinc-500">
+            {pendingCount} pending
+          </p>
+        </div>
+
+        <div className="rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-700/60 dark:bg-zinc-900">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.15em] text-zinc-400 dark:text-zinc-500">
+            Overdue
+          </p>
+          <p className="mt-1 text-2xl font-extralight tabular-nums text-red-500">
+            {overdueCount}
           </p>
         </div>
       </div>
 
+      {/* Upcoming Payments Notice */}
       {upcomingPayments.length > 0 && (
-        <div className="mb-8 rounded-lg border border-blue-200 bg-blue-50 p-6 dark:border-blue-900 dark:bg-blue-950">
-          <div className="flex items-center gap-2">
-            <Calendar className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-            <h2 className="text-lg font-semibold text-blue-900 dark:text-blue-100">
-              Upcoming Payments (Next 30 Days)
-            </h2>
+        <div className="flex items-start gap-3 rounded-xl border border-basket-400/20 bg-basket-400/5 p-4 dark:border-basket-400/10 dark:bg-basket-400/5">
+          <Calendar className="mt-0.5 h-4 w-4 shrink-0 text-basket-400" />
+          <div>
+            <p className="text-sm font-medium text-zinc-800 dark:text-zinc-100">
+              {upcomingPayments.length} payment
+              {upcomingPayments.length !== 1 ? "s" : ""} due in 30 days
+            </p>
+            <p className="mt-0.5 text-xs tabular-nums text-zinc-500 dark:text-zinc-400">
+              {formatCurrency(
+                upcomingPayments.reduce(
+                  (sum, p) => sum + (p.amount_due - p.amount_paid),
+                  0,
+                ),
+              )}{" "}
+              total
+            </p>
           </div>
-          <p className="mt-2 text-sm text-blue-800 dark:text-blue-200">
-            {upcomingPayments.length} payment
-            {upcomingPayments.length !== 1 ? "s" : ""} due totaling{" "}
-            {formatCurrency(
-              upcomingPayments.reduce(
-                (sum, p) => sum + (p.amount_due - p.amount_paid),
-                0,
-              ),
-            )}
-          </p>
         </div>
       )}
 
-      <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+      {/* Payment Table */}
+      <section className="rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-700/60 dark:bg-zinc-900">
         <PaymentSchedulesTable
           schedules={paymentSchedules}
           currentStatus={statusFilter}
         />
-      </div>
+      </section>
     </div>
   );
 }

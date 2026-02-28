@@ -147,200 +147,175 @@ export default function AdminGamesList({
     router.push(`?${params.toString()}`);
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "SCHEDULED":
-        return "bg-blue-500";
-
-      case "CANCELLED":
-        return "bg-red-500";
-
-      case "COMPLETED":
-        return "bg-green-500";
-
-      case "IN_PROGRESS":
-        return "bg-yellow-500";
-
-      default:
-        return "bg-gray-500";
-    }
+  const statusStyle: Record<string, string> = {
+    SCHEDULED:
+      "bg-blue-50 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400",
+    CANCELLED: "bg-red-50 text-red-600 dark:bg-red-500/10 dark:text-red-400",
+    COMPLETED:
+      "bg-green-50 text-green-600 dark:bg-green-500/10 dark:text-green-400",
+    IN_PROGRESS:
+      "bg-yellow-50 text-yellow-600 dark:bg-yellow-500/10 dark:text-yellow-400",
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full flex flex-col gap-4">
       {/* Filters */}
-      <div className="mb-6 space-y-4">
-        {/* Status Filter Buttons */}
-        <div className="flex flex-wrap items-center gap-2">
-          <Button
-            onClick={() => updateFilter("status", null)}
-            variant={!currentStatus ? "default" : "secondary"}
-            size="sm"
-          >
-            All
-          </Button>
-          {["scheduled", "completed", "cancelled"].map((status) => (
-            <Button
-              key={status}
+      <div className="flex flex-col gap-3">
+        <div className="flex flex-wrap items-center gap-1.5">
+          {[null, "scheduled", "completed", "cancelled"].map((status) => (
+            <button
+              key={status || "all"}
               onClick={() => updateFilter("status", status)}
-              variant={currentStatus === status ? "default" : "secondary"}
-              size="sm"
+              className={`rounded-full px-3 py-1 text-[11px] font-medium transition-colors ${
+                currentStatus === status || (!currentStatus && !status)
+                  ? "bg-zinc-800 text-white dark:bg-zinc-100 dark:text-zinc-900"
+                  : "text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200"
+              }`}
             >
-              {status.charAt(0).toUpperCase() + status.slice(1)}
-            </Button>
+              {status
+                ? status.charAt(0).toUpperCase() + status.slice(1)
+                : "All"}
+            </button>
           ))}
         </div>
 
-        {/* League Filter and Page Size */}
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="flex flex-wrap gap-2">
-            <select
-              value={currentLeagueId || ""}
-              onChange={(e) => updateFilter("leagueId", e.target.value || null)}
-              className="rounded-md border border-zinc-300 bg-white px-4 py-2 dark:border-zinc-700 dark:bg-zinc-800"
-            >
-              <option value="">All Leagues</option>
-              {allLeagues.map((league) => (
-                <option key={league.id} value={league.id}>
-                  {league.name} ({league._count.games} games)
-                </option>
-              ))}
-            </select>
-          </div>
-
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <select
+            value={currentLeagueId || ""}
+            onChange={(e) => updateFilter("leagueId", e.target.value || null)}
+            className="rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-1.5 text-xs text-zinc-600 focus:border-basket-400 focus:outline-none focus:ring-2 focus:ring-basket-400/20 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
+          >
+            <option value="">All Leagues</option>
+            {allLeagues.map((league) => (
+              <option key={league.id} value={league.id}>
+                {league.name} ({league._count.games})
+              </option>
+            ))}
+          </select>
           <PageSizeDropdown pageSize={pageSize} />
         </div>
       </div>
 
       {/* Games list */}
-      <div className="space-y-4">
+      <div className="flex flex-col gap-2">
         {games.length === 0 ? (
-          <p className="py-8 text-center text-gray-500">
-            No games found for this filter
+          <p className="py-8 text-center text-sm text-zinc-400 dark:text-zinc-500">
+            No games found
           </p>
         ) : (
           games.map((game) => (
             <div
               key={game.id}
-              className="rounded-lg border border-zinc-200 bg-white p-4 shadow-md dark:border-zinc-800 dark:bg-zinc-900"
+              className="rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-700/60 dark:bg-zinc-900"
             >
-              <div className="mb-3 flex items-start justify-between">
-                <div className="flex-1">
-                  <div className="mb-2 flex items-center gap-2">
-                    <h3 className="text-lg font-bold">
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2">
+                    <p className="text-sm font-medium tabular-nums text-zinc-800 dark:text-zinc-100">
                       {new Date(game.game_date).toLocaleDateString("en-US", {
                         weekday: "short",
                         month: "short",
                         day: "numeric",
-                        year: "numeric",
                       })}
                       {" at "}
                       {new Date(game.game_date).toLocaleTimeString("en-US", {
                         hour: "2-digit",
                         minute: "2-digit",
                       })}
-                    </h3>
+                    </p>
                     <span
-                      className={`rounded px-2 py-1 text-xs text-white ${getStatusColor(
-                        game.status,
-                      )}`}
+                      className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${statusStyle[game.status] || "bg-zinc-100 text-zinc-500"}`}
                     >
                       {game.status}
                     </span>
                   </div>
-                  <p className="flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-400">
-                    <MapPin className="h-4 w-4" />
-                    {game.location.name} - {game.location.city}
-                  </p>
-                  <p className="flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-400">
-                    <Users className="h-4 w-4" />
-                    {game._count.game_registrations}/{game.max_players || "∞"}{" "}
-                    players
-                  </p>
-                  {game.game_type && (
-                    <p className="flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-400">
-                      <Trophy className="h-4 w-4" />
-                      {game.game_type}
-                    </p>
-                  )}
-                  {game.league && (
-                    <p className="flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-400">
-                      <Repeat className="h-4 w-4" />
-                      {game.league.name}
-                    </p>
-                  )}
-                  {game.description && (
-                    <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
-                      {game.description}
-                    </p>
-                  )}
+                  <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-zinc-500 dark:text-zinc-400">
+                    <span className="flex items-center gap-1">
+                      <MapPin className="h-3 w-3" />
+                      {game.location.name}
+                    </span>
+                    <span className="flex items-center gap-1 tabular-nums">
+                      <Users className="h-3 w-3" />
+                      {game._count.game_registrations}/{game.max_players || "∞"}
+                    </span>
+                    {game.league && (
+                      <span className="flex items-center gap-1">
+                        <Repeat className="h-3 w-3" />
+                        {game.league.name}
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
 
-              {/* Action buttons */}
-              <div className="mt-4 flex flex-wrap gap-2">
-                <Button asChild size="sm">
-                  <Link
-                    href={`/dashboard/games/${game.id}/edit`}
-                    className="flex items-center gap-1.5"
-                  >
-                    <Edit className="h-4 w-4" />
-                    <span className="hidden sm:inline">Edit</span>
+              {/* Actions */}
+              <div className="mt-3 flex flex-wrap items-center gap-1.5 border-t border-zinc-100 pt-3 dark:border-zinc-800">
+                <Button
+                  asChild
+                  size="sm"
+                  className="h-7 bg-basket-400 text-[11px] text-white hover:bg-basket-300"
+                >
+                  <Link href={`/dashboard/games/${game.id}/edit`}>
+                    <Edit className="mr-1 h-3 w-3" />
+                    Edit
                   </Link>
                 </Button>
 
                 {game.status === "SCHEDULED" && (
                   <>
-                    <Button asChild variant="outline" size="sm">
-                      <Link
-                        href={`/dashboard/locations/${game.id}/reschedule`}
-                        className="flex items-center gap-1.5"
-                      >
-                        <RotateCcw className="h-4 w-4" />
-                        <span className="hidden sm:inline">Reschedule</span>
-                      </Link>
-                    </Button>
-                    <Button asChild variant="outline" size="sm">
-                      <Link
-                        href={`/dashboard/locations/${game.id}/change-location`}
-                        className="flex items-center gap-1.5"
-                      >
-                        <MapPin className="h-4 w-4" />
-                        <span className="hidden lg:inline">Change Location</span>
+                    <Button
+                      asChild
+                      variant="ghost"
+                      size="sm"
+                      className="h-7 text-[11px] text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200"
+                    >
+                      <Link href={`/dashboard/games/${game.id}/reschedule`}>
+                        <RotateCcw className="mr-1 h-3 w-3" />
+                        Reschedule
                       </Link>
                     </Button>
                     <Button
-                      variant="outline"
+                      asChild
+                      variant="ghost"
+                      size="sm"
+                      className="h-7 text-[11px] text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200"
+                    >
+                      <Link href={`/dashboard/games/${game.id}/change-location`}>
+                        <MapPin className="mr-1 h-3 w-3" />
+                        <span className="hidden sm:inline">Location</span>
+                      </Link>
+                    </Button>
+                    <Button
+                      variant="ghost"
                       size="sm"
                       onClick={() => handleCancelGame(game.id)}
                       isLoading={loading === game.id}
-                      className="flex items-center gap-1.5"
+                      className="h-7 text-[11px] text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200"
                     >
-                      <X className="h-4 w-4" />
-                      <span className="hidden md:inline">Cancel Game</span>
+                      <X className="mr-1 h-3 w-3" />
+                      Cancel
                     </Button>
                     <Button
-                      variant="outline"
+                      variant="ghost"
                       size="sm"
                       onClick={() => handleMarkCompleted(game.id)}
                       isLoading={loading === game.id}
-                      className="flex items-center gap-1.5"
+                      className="h-7 text-[11px] text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200"
                     >
-                      <CheckCircle className="h-4 w-4" />
-                      <span className="hidden lg:inline">Mark Completed</span>
+                      <CheckCircle className="mr-1 h-3 w-3" />
+                      <span className="hidden sm:inline">Complete</span>
                     </Button>
                   </>
                 )}
 
                 <Button
-                  variant="destructive"
+                  variant="ghost"
                   size="sm"
                   onClick={() => handleDeleteGame(game.id)}
                   isLoading={loading === game.id}
-                  className="ml-auto flex items-center gap-1.5"
+                  className="ml-auto h-7 text-[11px] text-red-500 hover:bg-red-500/10 hover:text-red-600"
                 >
-                  <Trash2 className="h-4 w-4" />
-                  <span className="hidden sm:inline">Delete</span>
+                  <Trash2 className="h-3 w-3" />
                 </Button>
               </div>
             </div>

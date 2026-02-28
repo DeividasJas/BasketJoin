@@ -2,6 +2,8 @@ import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { prisma } from "@/utils/prisma";
 import LeagueForm from "@/components/admin/LeagueForm";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 
 export default async function EditLeaguePage({
   params,
@@ -61,11 +63,20 @@ export default async function EditLeaguePage({
   const paymentDueDates: string[] = JSON.parse(league.payment_due_dates);
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold">Edit League</h1>
-        <p className="mt-2 text-gray-600 dark:text-gray-400">
-          Update league settings and configuration
+    <div className="mx-auto w-full max-w-2xl flex flex-col gap-6">
+      <Link
+        href={`/dashboard/leagues/${league.id}`}
+        className="inline-flex items-center gap-1 text-xs font-medium text-zinc-400 transition-colors hover:text-zinc-600 dark:hover:text-zinc-300"
+      >
+        <ArrowLeft className="h-3 w-3" />
+        League Details
+      </Link>
+      <div>
+        <h1 className="text-lg font-semibold text-zinc-800 dark:text-zinc-100">
+          Edit League
+        </h1>
+        <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
+          Update settings and configuration
         </p>
       </div>
 
@@ -89,4 +100,5 @@ export default async function EditLeaguePage({
       />
     </div>
   );
+
 }

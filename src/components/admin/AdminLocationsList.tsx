@@ -122,37 +122,40 @@ export default function AdminLocationsList({
     }
   };
 
+  const selectClasses =
+    "rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-1.5 text-xs text-zinc-600 focus:border-basket-400 focus:outline-none focus:ring-2 focus:ring-basket-400/20 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300";
+
   return (
-    <div className="w-full">
-      {/* Search and Filters */}
-      <div className="mb-6 space-y-4">
+    <div className="w-full flex flex-col gap-4">
+      {/* Filters */}
+      <div className="flex flex-col gap-3">
         <input
           type="text"
           name="search"
-          placeholder="Search locations by name, address, or city..."
+          placeholder="Search locations..."
           defaultValue={searchParams.get("search") || ""}
           onChange={handleFilterChange}
-          className="w-full rounded-md border border-zinc-300 bg-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-800"
+          className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3.5 py-2 text-sm placeholder:text-zinc-400 focus:border-basket-400 focus:outline-none focus:ring-2 focus:ring-basket-400/20 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:placeholder:text-zinc-500"
         />
 
-        <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex flex-wrap gap-2">
             <select
               name="isActive"
               value={searchParams.get("isActive") || "all"}
               onChange={handleFilterChange}
-              className="rounded-md border border-zinc-300 bg-white px-4 py-2 dark:border-zinc-700 dark:bg-zinc-800"
+              className={selectClasses}
             >
-              <option value="all">All Locations</option>
-              <option value="active">Active Only</option>
-              <option value="inactive">Inactive Only</option>
+              <option value="all">All</option>
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
             </select>
 
             <select
               name="city"
               value={searchParams.get("city") || ""}
               onChange={handleFilterChange}
-              className="rounded-md border border-zinc-300 bg-white px-4 py-2 dark:border-zinc-700 dark:bg-zinc-800"
+              className={selectClasses}
             >
               <option value="">All Cities</option>
               {cities.map((city) => (
@@ -166,121 +169,105 @@ export default function AdminLocationsList({
         </div>
       </div>
 
-      <p className="mb-4 text-sm text-gray-600 dark:text-gray-400">
-        Showing {locations.length} of {totalLocations} locations
+      <p className="text-[11px] tabular-nums text-zinc-400 dark:text-zinc-500">
+        {locations.length} of {totalLocations}
       </p>
 
-      <div className="space-y-4">
+      <div className="flex flex-col gap-2">
         {locations.length === 0 ? (
-          <p className="py-8 text-center text-gray-500">No locations found</p>
+          <p className="py-8 text-center text-sm text-zinc-400 dark:text-zinc-500">
+            No locations found
+          </p>
         ) : (
           locations.map((location) => (
             <div
               key={location.id}
-              className={`rounded-lg border-2 bg-white p-4 shadow-md dark:bg-zinc-900 ${
+              className={`rounded-xl border bg-white p-4 dark:bg-zinc-900 ${
                 location.is_active
-                  ? "border-zinc-200 dark:border-zinc-800"
-                  : "border-red-300 opacity-60 dark:border-red-900"
+                  ? "border-zinc-200 dark:border-zinc-700/60"
+                  : "border-red-200 opacity-60 dark:border-red-900/40"
               }`}
             >
-              <div className="mb-3 flex items-start justify-between">
-                <div className="flex-1">
-                  <div className="mb-2 flex items-center gap-2">
-                    <h3 className="text-lg font-bold">{location.name}</h3>
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2">
+                    <p className="text-sm font-medium text-zinc-800 dark:text-zinc-100">
+                      {location.name}
+                    </p>
                     {!location.is_active && (
-                      <span className="rounded bg-red-500 px-2 py-1 text-xs text-white">
-                        INACTIVE
+                      <span className="rounded-full bg-red-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-red-500 dark:bg-red-500/10 dark:text-red-400">
+                        Inactive
                       </span>
                     )}
                   </div>
-                  <p className="flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-400">
-                    <MapPin className="h-4 w-4" />
+                  <p className="mt-0.5 flex items-center gap-1 text-xs text-zinc-500 dark:text-zinc-400">
+                    <MapPin className="h-3 w-3" />
                     {location.address}, {location.city}
                   </p>
-                  {location.description && (
-                    <p className="mt-1 text-sm text-gray-700 dark:text-gray-300">
-                      {location.description}
-                    </p>
-                  )}
-                  <div className="mt-2 flex flex-wrap gap-4 text-sm text-gray-600 dark:text-gray-400">
-                    {location.capacity && (
-                      <span className="flex items-center gap-1.5">
-                        <Users className="h-4 w-4" />
-                        Capacity: {location.capacity}
-                      </span>
-                    )}
-                    <span className="flex items-center gap-1.5">
-                      <Trophy className="h-4 w-4" />
-                      Courts: {location.court_count}
-                    </span>
+                  <div className="mt-1.5 flex flex-wrap gap-x-3 gap-y-0.5 text-[11px] tabular-nums text-zinc-400 dark:text-zinc-500">
+                    {location.capacity && <span>Cap: {location.capacity}</span>}
+                    <span>{location.court_count} courts</span>
                     {location.price_per_game && (
-                      <span className="flex items-center gap-1.5">
-                        <DollarSign className="h-4 w-4" />€
-                        {location.price_per_game}/game
-                      </span>
+                      <span>${location.price_per_game}/game</span>
                     )}
-                    <span className="flex items-center gap-1.5">
-                      <Gamepad2 className="h-4 w-4" />
-                      {location._count.games} games hosted
-                    </span>
+                    <span>{location._count.games} games</span>
                   </div>
                 </div>
               </div>
 
-              {/* Action buttons */}
-              <div className="mt-4 flex flex-wrap gap-2">
-                <Button asChild size="sm">
-                  <Link
-                    href={`/dashboard/locations/${location.id}/edit`}
-                    className="flex items-center gap-1.5"
-                  >
-                    <Edit className="h-4 w-4" />
-                    <span className="hidden sm:inline">Edit</span>
-                  </Link>
-                </Button>
-
-                <Button asChild variant="outline" size="sm">
-                  <Link
-                    href={`/dashboard/locations/${location.id}/games`}
-                    className="flex items-center gap-1.5"
-                  >
-                    <Gamepad2 className="h-4 w-4" />
-                    <span className="hidden md:inline">
-                      View Games ({location._count.games})
-                    </span>
-                    <span className="md:hidden">({location._count.games})</span>
+              {/* Actions */}
+              <div className="mt-3 flex flex-wrap items-center gap-1.5 border-t border-zinc-100 pt-3 dark:border-zinc-800">
+                <Button
+                  asChild
+                  size="sm"
+                  className="h-7 bg-basket-400 text-[11px] text-white hover:bg-basket-300"
+                >
+                  <Link href={`/dashboard/locations/${location.id}/edit`}>
+                    <Edit className="mr-1 h-3 w-3" />
+                    Edit
                   </Link>
                 </Button>
 
                 <Button
-                  variant="outline"
+                  asChild
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 text-[11px] text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200"
+                >
+                  <Link href={`/dashboard/locations/${location.id}/games`}>
+                    <Gamepad2 className="mr-1 h-3 w-3" />
+                    Games ({location._count.games})
+                  </Link>
+                </Button>
+
+                <Button
+                  variant="ghost"
                   size="sm"
                   onClick={() => handleToggleActive(location.id)}
                   isLoading={loading === location.id}
-                  className="flex items-center gap-1.5"
+                  className="h-7 text-[11px] text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200"
                 >
                   {location.is_active ? (
                     <>
-                      <RotateCcw className="h-4 w-4" />
-                      <span className="hidden sm:inline">Deactivate</span>
+                      <RotateCcw className="mr-1 h-3 w-3" />
+                      Deactivate
                     </>
                   ) : (
                     <>
-                      <CheckCircle className="h-4 w-4" />
-                      <span className="hidden sm:inline">Activate</span>
+                      <CheckCircle className="mr-1 h-3 w-3" />
+                      Activate
                     </>
                   )}
                 </Button>
 
                 <Button
-                  variant="destructive"
+                  variant="ghost"
                   size="sm"
                   onClick={() => handleDelete(location.id)}
                   isLoading={loading === location.id}
-                  className="ml-auto flex items-center gap-1.5"
+                  className="ml-auto h-7 text-[11px] text-red-500 hover:bg-red-500/10 hover:text-red-600"
                 >
-                  <Trash2 className="h-4 w-4" />
-                  <span className="hidden sm:inline">Delete</span>
+                  <Trash2 className="h-3 w-3" />
                 </Button>
               </div>
             </div>

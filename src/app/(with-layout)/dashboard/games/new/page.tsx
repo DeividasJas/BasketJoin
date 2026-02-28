@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { getAllLocations } from "@/actions/adminGameActions";
 import GameForm from "@/components/admin/GameForm";
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 
 export default async function NewGamePage() {
   const session = await auth();
@@ -19,14 +20,17 @@ export default async function NewGamePage() {
   const { locations } = await getAllLocations();
 
   return (
-    <div className="mx-auto w-full max-w-2xl px-4 py-6">
+    <div className="mx-auto w-full max-w-2xl flex flex-col gap-6">
       <Link
-        href="/dashboard/locations"
-        className="mb-4 inline-flex items-center gap-1 text-zinc-600 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
+        href="/dashboard/games"
+        className="inline-flex items-center gap-1 text-xs font-medium text-zinc-400 transition-colors hover:text-zinc-600 dark:hover:text-zinc-300"
       >
-        ← Back to Games
+        <ArrowLeft className="h-3 w-3" />
+        Games
       </Link>
-      <h1 className="mb-6 text-3xl font-bold">Create New Game</h1>
+      <h1 className="text-lg font-semibold text-zinc-800 dark:text-zinc-100">
+        New Game
+      </h1>
       <GameForm locations={locations} mode="create" />
     </div>
   );

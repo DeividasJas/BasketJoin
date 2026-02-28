@@ -33,18 +33,24 @@ export default async function AdminGamesPage({
   const totalPages = Math.ceil(totalGames / currentPagesize);
 
   return (
-    <div className="mx-auto w-full max-w-4xl px-4 py-6">
-      <div className="mb-6 flex flex-wrap items-center justify-between">
+    <div className="flex flex-col gap-6">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-3xl font-bold">Game Management</h1>
-          <p className="mt-1 text-gray-600 dark:text-gray-400">
+          <h1 className="text-lg font-semibold text-zinc-800 dark:text-zinc-100">
+            Games
+          </h1>
+          <p className="mt-0.5 text-xs tabular-nums text-zinc-500 dark:text-zinc-400">
             {totalGames} game{totalGames !== 1 ? "s" : ""} total
           </p>
         </div>
-        <Button variant="outline" asChild>
-          <Link href="/dashboard/games/new" className="flex items-center gap-2">
-            <Plus className="h-4 w-4" />
-            Create New Game
+        <Button
+          variant="outline"
+          asChild
+          className="h-8 border-zinc-200 text-xs dark:border-zinc-700"
+        >
+          <Link href="/dashboard/games/new" className="flex items-center gap-1.5">
+            <Plus className="h-3 w-3" />
+            New Game
           </Link>
         </Button>
       </div>

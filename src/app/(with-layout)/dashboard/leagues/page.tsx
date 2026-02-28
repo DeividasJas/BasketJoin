@@ -3,7 +3,7 @@ import { auth } from "@/auth";
 import { prisma } from "@/utils/prisma";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Plus, Calendar, Users, DollarSign } from "lucide-react";
+import { Plus, Calendar, Users } from "lucide-react";
 import { formatCurrency } from "@/lib/paymentUtils";
 
 export default async function LeaguesPage() {
@@ -37,54 +37,56 @@ export default async function LeaguesPage() {
     orderBy: { start_date: "desc" },
   });
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "UPCOMING":
-        return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200";
-      case "ACTIVE":
-        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
-      case "COMPLETED":
-        return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200";
-      case "CANCELLED":
-        return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
+  const statusStyle: Record<string, string> = {
+    UPCOMING: "bg-blue-50 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400",
+    ACTIVE:
+      "bg-green-50 text-green-600 dark:bg-green-500/10 dark:text-green-400",
+    COMPLETED:
+      "bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400",
+    CANCELLED: "bg-red-50 text-red-600 dark:bg-red-500/10 dark:text-red-400",
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-8 flex items-center justify-between">
+    <div className="flex flex-col gap-6">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-3xl font-bold">Leagues Management</h1>
-          <p className="mt-2 text-gray-600 dark:text-gray-400">
-            Manage leagues and payment schedules
+          <h1 className="text-lg font-semibold text-zinc-800 dark:text-zinc-100">
+            Leagues
+          </h1>
+          <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
+            Manage leagues and payments
           </p>
         </div>
-        <Link href="/dashboard/leagues/new">
-          <Button>
-            <Plus className="mr-2 h-4 w-4" />
+        <Button
+          variant="outline"
+          asChild
+          className="h-8 border-zinc-200 text-xs dark:border-zinc-700"
+        >
+          <Link
+            href="/dashboard/leagues/new"
+            className="flex items-center gap-1.5"
+          >
+            <Plus className="h-3 w-3" />
             New League
-          </Button>
-        </Link>
+          </Link>
+        </Button>
       </div>
 
       {leagues.length === 0 ? (
-        <div className="rounded-lg border border-dashed border-gray-300 p-12 text-center dark:border-gray-700">
-          <Calendar className="mx-auto h-12 w-12 text-gray-400" />
-          <h3 className="mt-4 text-lg font-medium">No leagues yet</h3>
-          <p className="mt-2 text-gray-600 dark:text-gray-400">
-            Get started by creating your first league
+        <div className="rounded-xl border border-dashed border-zinc-200 p-12 text-center dark:border-zinc-700/60">
+          <Calendar className="mx-auto h-8 w-8 text-zinc-300 dark:text-zinc-600" />
+          <p className="mt-3 text-sm font-medium text-zinc-500 dark:text-zinc-400">
+            No leagues yet
           </p>
-          <Link href="/dashboard/leagues/new">
-            <Button className="mt-4">
-              <Plus className="mr-2 h-4 w-4" />
-              Create League
-            </Button>
-          </Link>
+          <Button
+            asChild
+            className="mt-4 bg-basket-400 text-xs text-white hover:bg-basket-300"
+          >
+            <Link href="/dashboard/leagues/new">Create League</Link>
+          </Button>
         </div>
       ) : (
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2">
           {leagues.map((league) => {
             const paymentDueDates: string[] = JSON.parse(
               league.payment_due_dates,
@@ -96,54 +98,48 @@ export default async function LeaguesPage() {
                 href={`/dashboard/leagues/${league.id}`}
                 className="group"
               >
-                <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md dark:border-gray-800 dark:bg-gray-900">
-                  <div className="mb-4 flex items-start justify-between">
-                    <div>
-                      <h3 className="text-lg font-semibold group-hover:text-blue-600 dark:group-hover:text-blue-400">
+                <div className="rounded-xl border border-zinc-200 bg-white p-5 transition-colors hover:border-zinc-300 dark:border-zinc-700/60 dark:bg-zinc-900 dark:hover:border-zinc-600">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <h3 className="text-sm font-semibold text-zinc-800 transition-colors group-hover:text-basket-400 dark:text-zinc-100">
                         {league.name}
                       </h3>
-                      <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                      <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">
                         {league.location.name}
                       </p>
                     </div>
                     <span
-                      className={`rounded-full px-3 py-1 text-xs font-medium ${getStatusColor(league.status)}`}
+                      className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${statusStyle[league.status] || "bg-zinc-100 text-zinc-500"}`}
                     >
                       {league.status}
                     </span>
                   </div>
 
-                  <div className="space-y-3">
-                    <div className="flex items-center text-sm">
-                      <Calendar className="mr-2 h-4 w-4 text-gray-500" />
-                      <span className="text-gray-600 dark:text-gray-400">
-                        {new Date(league.start_date).toLocaleDateString()} -{" "}
+                  <div className="mt-3 flex flex-col gap-1.5 text-xs text-zinc-500 dark:text-zinc-400">
+                    <div className="flex items-center gap-1.5">
+                      <Calendar className="h-3 w-3 shrink-0" />
+                      <span className="tabular-nums">
+                        {new Date(league.start_date).toLocaleDateString()}{" "}
+                        &ndash;{" "}
                         {new Date(league.end_date).toLocaleDateString()}
                       </span>
                     </div>
-
-                    <div className="flex items-center text-sm">
-                      <Users className="mr-2 h-4 w-4 text-gray-500" />
-                      <span className="text-gray-600 dark:text-gray-400">
-                        {league._count.memberships} members
+                    <div className="flex items-center gap-1.5">
+                      <Users className="h-3 w-3 shrink-0" />
+                      <span className="tabular-nums">
+                        {league._count.memberships} members &middot;{" "}
+                        {league._count.games} games
                       </span>
                     </div>
+                  </div>
 
-                    <div className="flex items-center text-sm">
-                      <DollarSign className="mr-2 h-4 w-4 text-gray-500" />
-                      <span className="text-gray-600 dark:text-gray-400">
-                        {formatCurrency(league.gym_rental_cost)} total cost
-                      </span>
-                    </div>
-
-                    <div className="mt-4 border-t border-gray-200 pt-3 dark:border-gray-700">
-                      <div className="flex justify-between text-xs text-gray-500">
-                        <span>{paymentDueDates.length} payment dates</span>
-                        <span>
-                          {formatCurrency(league.guest_fee_per_game)} guest fee
-                        </span>
-                      </div>
-                    </div>
+                  <div className="mt-4 flex items-center justify-between border-t border-zinc-100 pt-3 dark:border-zinc-800">
+                    <span className="text-[11px] text-zinc-400 dark:text-zinc-500">
+                      {formatCurrency(league.gym_rental_cost)}
+                    </span>
+                    <span className="text-[11px] tabular-nums text-zinc-400 dark:text-zinc-500">
+                      {paymentDueDates.length} payments
+                    </span>
                   </div>
                 </div>
               </Link>

@@ -74,11 +74,11 @@ export default function LocationForm({ mode, location }: LocationFormProps) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-4 rounded-lg bg-white p-6 shadow-md dark:bg-zinc-900"
+      className="flex flex-col gap-5 rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-700/60 dark:bg-zinc-900"
     >
       {/* Name */}
       <div>
-        <label className="mb-2 block text-sm font-medium">
+        <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-[0.15em] text-zinc-400">
           Location Name <span className="text-red-500">*</span>
         </label>
         <input
@@ -87,13 +87,13 @@ export default function LocationForm({ mode, location }: LocationFormProps) {
           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           required
           placeholder="e.g., Downtown Basketball Court"
-          className="w-full rounded-md border border-zinc-300 bg-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-800"
+          className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3.5 py-2.5 text-sm placeholder:text-zinc-400 focus:border-basket-400 focus:outline-none focus:ring-2 focus:ring-basket-400/20 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:placeholder:text-zinc-500"
         />
       </div>
 
       {/* Address */}
       <div>
-        <label className="mb-2 block text-sm font-medium">
+        <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-[0.15em] text-zinc-400">
           Address <span className="text-red-500">*</span>
         </label>
         <input
@@ -104,13 +104,13 @@ export default function LocationForm({ mode, location }: LocationFormProps) {
           }
           required
           placeholder="e.g., 123 Main Street"
-          className="w-full rounded-md border border-zinc-300 bg-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-800"
+          className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3.5 py-2.5 text-sm placeholder:text-zinc-400 focus:border-basket-400 focus:outline-none focus:ring-2 focus:ring-basket-400/20 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:placeholder:text-zinc-500"
         />
       </div>
 
       {/* City */}
       <div>
-        <label className="mb-2 block text-sm font-medium">
+        <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-[0.15em] text-zinc-400">
           City <span className="text-red-500">*</span>
         </label>
         <input
@@ -119,13 +119,13 @@ export default function LocationForm({ mode, location }: LocationFormProps) {
           onChange={(e) => setFormData({ ...formData, city: e.target.value })}
           required
           placeholder="e.g., New York"
-          className="w-full rounded-md border border-zinc-300 bg-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-800"
+          className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3.5 py-2.5 text-sm placeholder:text-zinc-400 focus:border-basket-400 focus:outline-none focus:ring-2 focus:ring-basket-400/20 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:placeholder:text-zinc-500"
         />
       </div>
 
       {/* Court Count */}
       <div>
-        <label className="mb-2 block text-sm font-medium">
+        <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-[0.15em] text-zinc-400">
           Number of Courts <span className="text-red-500">*</span>
         </label>
         <input
@@ -136,13 +136,13 @@ export default function LocationForm({ mode, location }: LocationFormProps) {
           }
           required
           min="1"
-          className="w-full rounded-md border border-zinc-300 bg-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-800"
+          className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3.5 py-2.5 text-sm focus:border-basket-400 focus:outline-none focus:ring-2 focus:ring-basket-400/20 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
         />
       </div>
 
       {/* Capacity */}
       <div>
-        <label className="mb-2 block text-sm font-medium">
+        <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-[0.15em] text-zinc-400">
           Venue Capacity (optional)
         </label>
         <input
@@ -153,13 +153,13 @@ export default function LocationForm({ mode, location }: LocationFormProps) {
           }
           min="10"
           placeholder="Maximum number of players"
-          className="w-full rounded-md border border-zinc-300 bg-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-800"
+          className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3.5 py-2.5 text-sm placeholder:text-zinc-400 focus:border-basket-400 focus:outline-none focus:ring-2 focus:ring-basket-400/20 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:placeholder:text-zinc-500"
         />
       </div>
 
       {/* Price per game */}
       <div>
-        <label className="mb-2 block text-sm font-medium">
+        <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-[0.15em] text-zinc-400">
           Price per Game (optional)
         </label>
         <input
@@ -170,13 +170,13 @@ export default function LocationForm({ mode, location }: LocationFormProps) {
           }
           min="0"
           placeholder="Cost in dollars"
-          className="w-full rounded-md border border-zinc-300 bg-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-800"
+          className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3.5 py-2.5 text-sm placeholder:text-zinc-400 focus:border-basket-400 focus:outline-none focus:ring-2 focus:ring-basket-400/20 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:placeholder:text-zinc-500"
         />
       </div>
 
       {/* Description */}
       <div>
-        <label className="mb-2 block text-sm font-medium">
+        <label className="mb-1.5 block text-[11px] font-semibold uppercase tracking-[0.15em] text-zinc-400">
           Description (optional)
         </label>
         <textarea
@@ -186,16 +186,16 @@ export default function LocationForm({ mode, location }: LocationFormProps) {
           }
           rows={4}
           placeholder="Add details about parking, facilities, access instructions..."
-          className="w-full rounded-md border border-zinc-300 bg-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-800"
+          className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3.5 py-2.5 text-sm placeholder:text-zinc-400 focus:border-basket-400 focus:outline-none focus:ring-2 focus:ring-basket-400/20 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:placeholder:text-zinc-500"
         />
       </div>
 
       {/* Buttons */}
-      <div className="flex gap-4">
-        <Button type="submit" isLoading={loading} className="flex-1">
+      <div className="flex gap-3 border-t border-zinc-100 pt-5 dark:border-zinc-800">
+        <Button type="submit" isLoading={loading} className="flex-1 bg-basket-400 text-white hover:bg-basket-300">
           {mode === "create" ? "Create Location" : "Update Location"}
         </Button>
-        <Button type="button" onClick={() => router.back()} variant="secondary">
+        <Button type="button" onClick={() => router.back()} variant="ghost" className="text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200">
           Cancel
         </Button>
       </div>
