@@ -203,10 +203,16 @@ export async function createRecurringGames(data: {
       };
     }
 
-    // Create series first
-    const series = await prisma.series.create({
+    // Create league first
+    const league = await prisma.league.create({
       data: {
         name: data.seriesName.trim(),
+        start_date: generatedDates[0],
+        end_date: generatedDates[generatedDates.length - 1],
+        location_id: data.location_id,
+        gym_rental_cost: 0,
+        guest_fee_per_game: 0,
+        payment_due_dates: "[]",
       },
     });
 
@@ -226,7 +232,7 @@ export async function createRecurringGames(data: {
               description: data.description,
               game_type: data.game_type,
               organizer_id: userId,
-              series_id: series.id,
+              league_id: league.id,
               status: "SCHEDULED",
             },
           });
@@ -261,7 +267,7 @@ export async function createRecurringGames(data: {
       message,
       createdCount: created.length,
       skippedGames: skipped,
-      seriesId: series.id,
+      leagueId: league.id,
     };
   } catch (error: any) {
     return {
@@ -333,7 +339,7 @@ export async function updateSeriesGames(
       // Update all future games in series
       prisma.games.updateMany({
         where: {
-          series_id: seriesId,
+          league_id: seriesId,
           game_date: { gt: editedGame.game_date },
           status: { in: ["SCHEDULED"] },
         },
@@ -365,7 +371,7 @@ export async function deleteSeriesGames(
     await checkAdminAccess();
 
     const whereClause: any = {
-      series_id: seriesId,
+      league_id: seriesId,
     };
 
     if (preservePastGames) {
@@ -450,7 +456,7 @@ export async function checkFutureGamesInSeries(
 
     const futureGamesCount = await prisma.games.count({
       where: {
-        series_id: seriesId,
+        league_id: seriesId,
         game_date: { gt: game.game_date },
         status: "SCHEDULED",
       },
@@ -477,7 +483,7 @@ export async function getSeriesGames(seriesId: string) {
 
     const games = await prisma.games.findMany({
       where: {
-        series_id: seriesId,
+        league_id: seriesId,
       },
       include: {
         location: true,

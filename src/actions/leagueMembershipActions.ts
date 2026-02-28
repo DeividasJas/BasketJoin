@@ -56,7 +56,7 @@ export async function joinLeague(
 
     // Only allow joining active or upcoming leagues
     if (
-      ![LeagueStatus.ACTIVE, LeagueStatus.UPCOMING].includes(league.status)
+      league.status !== LeagueStatus.ACTIVE && league.status !== LeagueStatus.UPCOMING
     ) {
       return {
         success: false,

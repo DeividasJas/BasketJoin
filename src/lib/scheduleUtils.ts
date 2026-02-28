@@ -31,7 +31,7 @@ export function generateRecurringDates(
   pattern: RecurringPattern
 ): Date[] {
   const dates: Date[] = [];
-  let current = new Date(startDate);
+  const current = new Date(startDate);
 
   // Ensure we start from the beginning of the day
   current.setHours(0, 0, 0, 0);

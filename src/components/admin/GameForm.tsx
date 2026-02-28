@@ -29,7 +29,7 @@ type Game = {
   min_players: number;
   description: string | null;
   game_type: string | null;
-  series_id: string | null;
+  league_id: string | null;
 };
 
 type GameFormProps = {
@@ -223,7 +223,7 @@ export default function GameForm({ locations, mode, game }: GameFormProps) {
         </div>
       )}
 
-      {mode === "edit" && game?.series_id && (
+      {mode === "edit" && game?.league_id && (
         <div className="flex items-center space-x-3 rounded-lg border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800 p-4">
           <Switch
             id="series-update-toggle"

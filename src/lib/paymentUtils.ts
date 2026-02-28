@@ -104,12 +104,12 @@ export function calculateProRatedAmount(
  */
 export async function createPaymentSchedules(
   membershipId: string,
-  seasonId: string,
+  leagueId: string,
   schedules: Array<{ dueDate: Date; amount: number }>,
 ) {
   const paymentSchedules = schedules.map((schedule) => ({
     membership_id: membershipId,
-    season_id: seasonId,
+    league_id: leagueId,
     due_date: schedule.dueDate,
     amount_due: schedule.amount,
     status: PaymentScheduleStatus.PENDING,
@@ -277,11 +277,7 @@ export async function getUpcomingPayments(
       },
     },
     include: {
-      season: {
-        include: {
-          series: true,
-        },
-      },
+      league: true,
       membership: true,
     },
     orderBy: {
@@ -316,11 +312,7 @@ export async function getOverduePayments(userId: string) {
       },
     },
     include: {
-      season: {
-        include: {
-          series: true,
-        },
-      },
+      league: true,
       membership: true,
     },
     orderBy: {
