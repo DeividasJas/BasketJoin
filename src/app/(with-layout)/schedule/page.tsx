@@ -18,17 +18,15 @@ export default async function Schedule() {
     await getNextUpcomingGame();
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-6">
-      <h1 className="mb-6 text-center text-3xl font-bold">Game Schedule</h1>
-
+    <div className="flex flex-col gap-6">
       {/* Next Game Section */}
       {gameData && success ? (
-        <div className="mb-8 rounded-lg bg-zinc-100 p-6 dark:bg-zinc-800">
-          <h3 className="mb-2 text-center text-lg font-semibold">
-            Next Game Starts In:
-          </h3>
+        <section className="rounded-xl border border-zinc-200 bg-white p-6 dark:border-zinc-700/60 dark:bg-zinc-900">
+          <p className="mb-4 text-center text-[11px] font-semibold uppercase tracking-[0.15em] text-zinc-400 dark:text-zinc-500">
+            Next Game Starts In
+          </p>
           <NextGameCountdown gameDate={gameData?.game_date} />
-          <div className="mt-4 flex flex-wrap items-center justify-center gap-4">
+          <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
             {isLoggedIn && (
               <>
                 {isActivePlayer ? (
@@ -45,68 +43,84 @@ export default async function Schedule() {
               </>
             )}
             {gameData && participantsData && (
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                <span className="font-semibold">
+              <span className="text-xs tabular-nums text-zinc-500 dark:text-zinc-400">
+                <span className="font-semibold text-zinc-700 dark:text-zinc-200">
                   {12 - participantsData.length}
                 </span>{" "}
                 spots left
-              </p>
+              </span>
             )}
             <Link
               href={`/game-status/${gameData.game_id}`}
-              className="text-sm text-zinc-700 hover:underline dark:text-zinc-300"
+              className="text-xs font-medium text-basket-400 transition-colors hover:text-basket-300"
             >
               View Details
             </Link>
           </div>
-        </div>
+        </section>
       ) : (
-        <div className="mb-8 rounded-lg bg-zinc-100 p-6 text-center dark:bg-zinc-800">
-          <p className="text-gray-600 dark:text-gray-400">
+        <section className="rounded-xl border border-zinc-200 bg-white p-8 text-center dark:border-zinc-700/60 dark:bg-zinc-900">
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">
             No upcoming games scheduled yet.
           </p>
           {session?.user?.role === "ADMIN" ||
           session?.user?.role === "ORGANIZER" ? (
-            <Button variant="outline" asChild className="mt-4">
+            <Button
+              variant="outline"
+              asChild
+              className="mt-4 border-zinc-200 text-xs dark:border-zinc-700"
+            >
               <Link href="/dashboard/locations/new">Create First Game</Link>
             </Button>
           ) : null}
-        </div>
+        </section>
       )}
 
       {/* Calendar Legend */}
-      <div className="mb-4 flex flex-wrap justify-center gap-4 text-sm">
-        <div className="flex items-center gap-2">
-          <div className="h-4 w-4 rounded bg-blue-500"></div>
-          <span>Available</span>
+      <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-5">
+        <div className="flex items-center gap-1.5">
+          <span className="h-2 w-2 rounded-full bg-blue-500" />
+          <span className="text-[11px] text-zinc-500 dark:text-zinc-400">
+            Available
+          </span>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="h-4 w-4 rounded bg-green-600"></div>
-          <span>You&apos;re Registered</span>
+        <div className="flex items-center gap-1.5">
+          <span className="h-2 w-2 rounded-full bg-green-500" />
+          <span className="text-[11px] text-zinc-500 dark:text-zinc-400">
+            Registered
+          </span>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="h-4 w-4 rounded bg-red-600"></div>
-          <span>Cancelled</span>
+        <div className="flex items-center gap-1.5">
+          <span className="h-2 w-2 rounded-full bg-red-500" />
+          <span className="text-[11px] text-zinc-500 dark:text-zinc-400">
+            Cancelled
+          </span>
         </div>
       </div>
 
       {/* Calendar */}
       {upcomingGamesSuccess && allGames && allGames.length > 0 ? (
-        <div className="rounded-lg bg-white p-4 shadow-md dark:bg-zinc-900">
-          <GameCalendar allGames={allGames} user_id={user_id || ""} />
-        </div>
+        <section className="overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-700/60 dark:bg-zinc-900">
+          <div className="p-3 sm:p-4">
+            <GameCalendar allGames={allGames} user_id={user_id || ""} />
+          </div>
+        </section>
       ) : (
-        <div className="rounded-lg bg-white p-8 text-center shadow-md dark:bg-zinc-900">
-          <p className="mb-4 text-gray-500 dark:text-gray-400">
+        <section className="rounded-xl border border-zinc-200 bg-white p-8 text-center dark:border-zinc-700/60 dark:bg-zinc-900">
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">
             No games in the calendar yet.
           </p>
           {session?.user?.role === "ADMIN" ||
           session?.user?.role === "ORGANIZER" ? (
-            <Button variant="outline" asChild>
+            <Button
+              variant="outline"
+              asChild
+              className="mt-4 border-zinc-200 text-xs dark:border-zinc-700"
+            >
               <Link href="/dashboard/locations">Manage Games</Link>
             </Button>
           ) : null}
-        </div>
+        </section>
       )}
     </div>
   );

@@ -37,55 +37,114 @@ export default function GameCalendar({
   return (
     <div className="calendar-wrapper">
       <style jsx global>{`
-        /* Base calendar styling */
         .fc {
           --fc-border-color: rgb(228 228 231);
-          --fc-button-bg-color: rgb(212 212 216);
-          --fc-button-border-color: rgb(161 161 170);
-          --fc-button-hover-bg-color: rgb(161 161 170);
-          --fc-button-hover-border-color: rgb(113 113 122);
-          --fc-button-active-bg-color: rgb(63 63 70);
-          --fc-button-active-border-color: rgb(39 39 42);
-          --fc-button-text-color: rgb(24 24 27);
-          --fc-today-bg-color: rgba(59, 130, 246, 0.1);
+          --fc-button-bg-color: transparent;
+          --fc-button-border-color: rgb(228 228 231);
+          --fc-button-hover-bg-color: rgb(244 244 245);
+          --fc-button-hover-border-color: rgb(212 212 216);
+          --fc-button-active-bg-color: rgb(24 24 27);
+          --fc-button-active-border-color: rgb(24 24 27);
+          --fc-button-text-color: rgb(113 113 122);
+          --fc-today-bg-color: rgba(251, 146, 60, 0.06);
+          font-size: 0.8125rem;
         }
 
-        /* Dark mode styling */
+        .fc .fc-toolbar-title {
+          font-size: 0.9375rem;
+          font-weight: 600;
+          color: rgb(24 24 27);
+        }
+
+        .fc .fc-button {
+          border-radius: 0.5rem;
+          font-size: 0.75rem;
+          font-weight: 500;
+          padding: 0.375rem 0.75rem;
+          text-transform: capitalize;
+          box-shadow: none !important;
+        }
+
+        .fc .fc-button-primary:not(:disabled):active,
+        .fc .fc-button-primary:not(:disabled).fc-button-active {
+          background-color: rgb(24 24 27);
+          border-color: rgb(24 24 27);
+          color: white;
+        }
+
+        .fc .fc-col-header-cell-cushion {
+          font-size: 0.6875rem;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          color: rgb(161 161 170);
+          padding: 0.5rem 0;
+        }
+
+        .fc .fc-daygrid-day-number {
+          font-size: 0.75rem;
+          padding: 0.375rem;
+          color: rgb(113 113 122);
+        }
+
+        .fc .fc-day-today .fc-daygrid-day-number {
+          color: rgb(251 146 60);
+          font-weight: 600;
+        }
+
         .dark .fc {
           --fc-border-color: rgb(39 39 42);
-          --fc-button-bg-color: rgb(39 39 42);
+          --fc-button-bg-color: transparent;
           --fc-button-border-color: rgb(63 63 70);
-          --fc-button-hover-bg-color: rgb(63 63 70);
+          --fc-button-hover-bg-color: rgb(39 39 42);
           --fc-button-hover-border-color: rgb(82 82 91);
-          --fc-button-active-bg-color: rgb(82 82 91);
-          --fc-button-active-border-color: rgb(113 113 122);
-          --fc-button-text-color: rgb(250 250 250);
-          --fc-today-bg-color: rgba(59, 130, 246, 0.15);
+          --fc-button-active-bg-color: rgb(244 244 245);
+          --fc-button-active-border-color: rgb(244 244 245);
+          --fc-button-text-color: rgb(161 161 170);
+          --fc-today-bg-color: rgba(251, 146, 60, 0.08);
         }
 
-        /* Dark mode calendar background */
+        .dark .fc .fc-toolbar-title {
+          color: rgb(244 244 245);
+        }
+
+        .dark .fc .fc-button-primary:not(:disabled):active,
+        .dark .fc .fc-button-primary:not(:disabled).fc-button-active {
+          background-color: rgb(244 244 245);
+          border-color: rgb(244 244 245);
+          color: rgb(24 24 27);
+        }
+
         .dark .fc .fc-view-harness {
-          background-color: rgb(24 24 27);
+          background-color: transparent;
         }
 
         .dark .fc .fc-col-header-cell,
         .dark .fc .fc-daygrid-day {
-          background-color: rgb(24 24 27);
-          color: rgb(250 250 250);
+          background-color: transparent;
+          color: rgb(244 244 245);
+        }
+
+        .dark .fc .fc-col-header-cell-cushion {
+          color: rgb(113 113 122);
         }
 
         .dark .fc .fc-daygrid-day-number {
-          color: rgb(212 212 216);
+          color: rgb(161 161 170);
+        }
+
+        .dark .fc .fc-day-today .fc-daygrid-day-number {
+          color: rgb(251 146 60);
         }
 
         .dark .fc .fc-list {
-          background-color: rgb(24 24 27);
+          background-color: transparent;
           border-color: rgb(39 39 42);
         }
 
         .dark .fc .fc-list-day-cushion {
           background-color: rgb(39 39 42);
-          color: rgb(250 250 250);
+          color: rgb(244 244 245);
         }
 
         .dark .fc .fc-list-event:hover td {
@@ -94,14 +153,13 @@ export default function GameCalendar({
 
         .dark .fc .fc-list-event-time,
         .dark .fc .fc-list-event-title {
-          color: rgb(250 250 250);
+          color: rgb(228 228 231);
         }
 
-        /* Mobile optimizations */
         @media (max-width: 640px) {
           .fc .fc-toolbar {
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 0.375rem;
           }
 
           .fc .fc-toolbar-chunk {
@@ -111,15 +169,15 @@ export default function GameCalendar({
 
           .fc .fc-button {
             padding: 0.25rem 0.5rem;
-            font-size: 0.875rem;
+            font-size: 0.6875rem;
           }
 
           .fc .fc-toolbar-title {
-            font-size: 1.125rem;
+            font-size: 0.875rem;
           }
 
           .fc .fc-list-event {
-            font-size: 0.875rem;
+            font-size: 0.8125rem;
           }
 
           .fc .fc-list-event-time {
@@ -127,35 +185,21 @@ export default function GameCalendar({
           }
         }
 
-        /* Improve button styling */
-        .fc .fc-button-primary:not(:disabled):active,
-        .fc .fc-button-primary:not(:disabled).fc-button-active {
-          background-color: var(--fc-button-active-bg-color);
-          border-color: var(--fc-button-active-border-color);
-        }
-
-        /* List view colored indicators */
         .fc-list-event-dot {
-          border-width: 6px !important;
+          border-width: 5px !important;
           border-radius: 50%;
         }
 
-        /* Ensure event backgrounds are visible and span wider */
         .fc-daygrid-event {
-          border-radius: 4px;
-          padding: 1px;
-          margin-left: 2px !important;
-          margin-right: 2px !important;
-          margin-top: 2px !important;
-          margin-bottom: 2px !important;
-          min-height: 32px;
+          border-radius: 0.375rem;
+          padding: 0;
+          margin: 1px 2px !important;
+          min-height: 28px;
+          border: none !important;
         }
 
         .fc-daygrid-event-harness {
-          margin-left: 0 !important;
-          margin-right: 0 !important;
-          margin-top: 1px !important;
-          margin-bottom: 1px !important;
+          margin: 1px 0 !important;
         }
 
         .fc-event-main {
@@ -163,19 +207,17 @@ export default function GameCalendar({
           min-height: inherit;
         }
 
-        /* List view event styling */
         .dark .fc .fc-list-event-dot {
           opacity: 0.9;
         }
 
-        /* Mobile list view - larger touch targets */
         @media (max-width: 640px) {
           .fc-list-event {
-            padding: 0.5rem 0;
+            padding: 0.375rem 0;
           }
 
           .fc-list-event-dot {
-            border-width: 8px !important;
+            border-width: 6px !important;
           }
         }
       `}</style>
@@ -210,10 +252,10 @@ export default function GameCalendar({
               status: game.status,
             },
             backgroundColor: isUserRegistered
-              ? "#16a34a" // green for registered
+              ? "#16a34a"
               : game.status === "CANCELLED"
-                ? "#dc2626" // red for cancelled
-                : "#3b82f6", // blue for available
+                ? "#dc2626"
+                : "#3b82f6",
             borderColor: isUserRegistered
               ? "#15803d"
               : game.status === "CANCELLED"
@@ -240,39 +282,40 @@ export default function GameCalendar({
         eventContent={(eventInfo) => {
           const { isUserRegistered, status } = eventInfo.event.extendedProps;
 
-          // Determine colors and icon based on priority: cancelled > registered > available
           let borderColor, bgColor, Icon;
 
           if (status === "CANCELLED") {
-            // Cancelled games (red)
-            borderColor = "#dc2626";
-            bgColor = "rgba(220, 38, 38, 0.15)";
+            borderColor = "#ef4444";
+            bgColor = "rgba(239, 68, 68, 0.12)";
             Icon = CircleOff;
           } else if (isUserRegistered) {
-            // User registered games (green)
-            borderColor = "#16a34a";
-            bgColor = "rgba(22, 163, 74, 0.15)";
+            borderColor = "#22c55e";
+            bgColor = "rgba(34, 197, 94, 0.12)";
             Icon = ThumbsUp;
           } else {
-            // Available games (blue)
             borderColor = "#3b82f6";
-            bgColor = "rgba(59, 130, 246, 0.15)";
+            bgColor = "rgba(59, 130, 246, 0.12)";
             Icon = null;
           }
 
           return (
             <div
-              className="h-full w-full cursor-pointer overflow-hidden px-2 py-1.5 text-xs"
+              className="h-full w-full cursor-pointer overflow-hidden px-2 py-1 text-xs"
               style={{
-                borderLeft: `4px solid ${borderColor}`,
+                borderLeft: `3px solid ${borderColor}`,
                 backgroundColor: bgColor,
+                borderRadius: "0 0.25rem 0.25rem 0",
               }}
             >
-              <div className="flex items-center gap-1.5 truncate font-semibold">
-                {Icon && <Icon className="h-3 w-3 flex-shrink-0" />}
-                <span className="truncate">{eventInfo.event.title}</span>
+              <div className="flex items-center gap-1 truncate font-medium">
+                {Icon && (
+                  <Icon className="h-2.5 w-2.5 flex-shrink-0 opacity-80" />
+                )}
+                <span className="truncate text-[11px]">
+                  {eventInfo.event.title}
+                </span>
               </div>
-              <div className="truncate text-[10px] opacity-90">
+              <div className="truncate text-[10px] opacity-60">
                 {eventInfo.timeText}
               </div>
             </div>
