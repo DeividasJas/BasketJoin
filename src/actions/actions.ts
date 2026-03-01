@@ -1,13 +1,13 @@
-"use server";
-import { prisma } from "@/utils/prisma";
-import { auth } from "@/auth";
+'use server'
+import { prisma } from '@/utils/prisma'
+import { auth } from '@/auth'
 
 export const getAllUserGames = async () => {
   try {
-    const session = await auth();
+    const session = await auth()
 
     if (!session?.user?.id) {
-      return { success: false, message: "Not authenticated" };
+      return { success: false, message: 'Not authenticated' }
     }
 
     const userPlayedGames = await prisma.game_registrations.findMany({
@@ -15,22 +15,22 @@ export const getAllUserGames = async () => {
         user_id: session.user.id,
       },
       include: { game: true },
-    });
+    })
 
-    if (!userPlayedGames) return { success: false, message: "No games found" };
+    if (!userPlayedGames) return { success: false, message: 'No games found' }
 
-    return { success: true, userPlayedGames };
+    return { success: true, userPlayedGames }
   } catch (error: any) {
-    return { success: false, message: error.message };
+    return { success: false, message: error.message }
   }
-};
+}
 
 export const getUserById = async (userId: string) => {
   const user = await prisma.users.findUnique({
     where: { id: userId },
-  });
-  return { success: true, user };
-};
+  })
+  return { success: true, user }
+}
 
 export const getLatestGame = async () => {
   try {
@@ -47,16 +47,16 @@ export const getLatestGame = async () => {
         game_registrations: true,
       },
       orderBy: {
-        game_date: "asc",
+        game_date: 'asc',
       },
-    });
+    })
 
-    if (!latestGame || !latestGame.id) return { success: false };
-    return { success: true, latestGame };
+    if (!latestGame || !latestGame.id) return { success: false }
+    return { success: true, latestGame }
   } catch (error) {
-    return { success: false };
+    return { success: false }
   }
-};
+}
 
 export const getLatestGameId = async () => {
   try {
@@ -69,18 +69,18 @@ export const getLatestGameId = async () => {
       select: {
         id: true,
       },
-    });
+    })
 
     // Check if a game was found
     if (!game) {
-      return { success: false, message: "No games found" };
+      return { success: false, message: 'No games found' }
     }
 
-    return { success: true, game };
+    return { success: true, game }
   } catch (error: any) {
-    return { success: false, message: error.message };
+    return { success: false, message: error.message }
   }
-};
+}
 
 export const getGameById = async (gameId: number) => {
   try {
@@ -88,12 +88,12 @@ export const getGameById = async (gameId: number) => {
       where: {
         id: gameId,
       },
-    });
+    })
     if (!game) {
-      return { success: false, message: "Game not found" };
+      return { success: false, message: 'Game not found' }
     }
-    return { success: true, game };
+    return { success: true, game }
   } catch (error: any) {
-    return { success: false, message: error.message };
+    return { success: false, message: error.message }
   }
-};
+}

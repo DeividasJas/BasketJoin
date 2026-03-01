@@ -3,12 +3,12 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
+  output   = "../src/generated/prisma/client"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 // Enums
@@ -29,6 +29,43 @@ enum RegistrationStatus {
   CONFIRMED
   CANCELLED
   WAITLIST
+}
+
+enum LeagueStatus {
+  UPCOMING
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum ScheduleType {
+  RECURRING
+  CUSTOM
+}
+
+enum MembershipStatus {
+  ACTIVE
+  PENDING_PAYMENT
+  EXPIRED
+  CANCELLED
+}
+
+enum PaymentScheduleStatus {
+  PENDING
+  PAID
+  OVERDUE
+  PARTIALLY_PAID
+}
+
+enum PaymentType {
+  MEMBERSHIP_FEE
+  GUEST_FEE
+  REBATE
+}
+
+enum RegistrationType {
+  MEMBER
+  GUEST
 }
 
 // NextAuth.js models
@@ -87,16 +124,8 @@ model Users {
   sessions           Session[]
   organized_games    Games[]              @relation("GameOrganizer")
   notifications      Notification[]
-}
-
-model Series {
-  id         String   @id @default(uuid())
-  name       String
-  created_at DateTime @default(now())
-
-  games Games[]
-
-  @@index([name])
+  memberships        LeagueMembership[]
+  payments           Payment[]
 }
 
 model Games {
@@ -109,7 +138,7 @@ model Games {
   description        String?
   organizer_id       String?
   game_type          String?
-  series_id          String?
+  league_id          String?
   created_at         DateTime             @default(now())
   modified_at        DateTime             @updatedAt
   game_registrations Game_registrations[]
@@ -117,19 +146,21 @@ model Games {
 
   location  Locations @relation(fields: [location_id], references: [id])
   organizer Users?    @relation("GameOrganizer", fields: [organizer_id], references: [id])
-  series    Series?   @relation(fields: [series_id], references: [id], onDelete: SetNull)
+  league    League?   @relation(fields: [league_id], references: [id], onDelete: SetNull)
 
   @@unique([game_date, location_id])
-  @@index([series_id])
+  @@index([league_id])
 }
 
 model Game_registrations {
-  id          String             @id @default(cuid())
-  user_id     String
-  game_id     Int
-  status      RegistrationStatus @default(CONFIRMED)
-  created_at  DateTime           @default(now())
-  modified_at DateTime           @updatedAt
+  id                String             @id @default(cuid())
+  user_id           String
+  game_id           Int
+  status            RegistrationStatus @default(CONFIRMED)
+  registration_type RegistrationType   @default(GUEST)
+  guest_fee_paid    Boolean            @default(false)
+  created_at        DateTime           @default(now())
+  modified_at       DateTime           @updatedAt
 
   user Users @relation(fields: [user_id], references: [id])
   game Games @relation(fields: [game_id], references: [id])
@@ -151,6 +182,7 @@ model Locations {
   created_at     DateTime @default(now())
   modified_at    DateTime @updatedAt
   games          Games[]
+  leagues        League[]
 }
 
 model Notification {
@@ -164,4 +196,119 @@ model Notification {
 
   user Users  @relation(fields: [user_id], references: [id])
   game Games? @relation(fields: [game_id], references: [id])
+}
+
+// League System - Combines Series + Season
+
+model League {
+  id                 String         @id @default(uuid())
+  name               String
+  description        String?
+  location_id        Int
+
+  // Time boundaries
+  start_date         DateTime
+  end_date           DateTime
+  status             LeagueStatus   @default(UPCOMING)
+
+  // Payment settings
+  gym_rental_cost    Int // In cents
+  guest_fee_per_game Int // In cents
+  payment_due_dates  String // JSON array of ISO dates
+
+  // Game settings
+  min_players        Int            @default(10)
+  max_players        Int?
+  game_type          String?
+  game_description   String?
+
+  // Schedule configuration
+  schedule_type      ScheduleType   @default(CUSTOM)
+  recurring_pattern  String? // JSON: {frequency: "WEEKLY", dayOfWeek: 1, time: "19:00"}
+  custom_dates       String? // JSON array of ISO date strings
+
+  // Timestamps
+  created_at         DateTime       @default(now())
+  modified_at        DateTime       @updatedAt
+
+  // Relations
+  location           Locations          @relation(fields: [location_id], references: [id])
+  games              Games[]
+  memberships        LeagueMembership[]
+  payments           Payment[]
+  payment_schedules  PaymentSchedule[]
+
+  @@index([location_id])
+  @@index([status])
+  @@index([start_date])
+  @@index([end_date])
+}
+
+model LeagueMembership {
+  id               String           @id @default(uuid())
+  user_id          String
+  league_id        String
+  status           MembershipStatus @default(ACTIVE)
+  joined_at        DateTime         @default(now())
+  pro_rated_amount Int // Total amount member owes (pro-rated from join date) in cents
+  created_at       DateTime         @default(now())
+  modified_at      DateTime         @updatedAt
+
+  user              Users               @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  league            League              @relation(fields: [league_id], references: [id], onDelete: Cascade)
+  payment_schedules PaymentSchedule[]
+  payments          Payment[]
+
+  @@unique([user_id, league_id])
+  @@index([user_id])
+  @@index([league_id])
+  @@index([status])
+}
+
+model PaymentSchedule {
+  id            String                 @id @default(uuid())
+  league_id     String
+  membership_id String
+  due_date      DateTime
+  amount_due    Int // In cents - calculated based on pro-rating
+  amount_paid   Int                    @default(0) // In cents - tracks partial payments
+  status        PaymentScheduleStatus  @default(PENDING)
+  notes         String?
+  created_at    DateTime               @default(now())
+  modified_at   DateTime               @updatedAt
+  paid_at       DateTime?
+
+  league     League           @relation(fields: [league_id], references: [id], onDelete: Cascade)
+  membership LeagueMembership @relation(fields: [membership_id], references: [id], onDelete: Cascade)
+  payments   Payment[]
+
+  @@index([league_id])
+  @@index([membership_id])
+  @@index([due_date])
+  @@index([status])
+}
+
+model Payment {
+  id                  String      @id @default(uuid())
+  user_id             String
+  league_id           String
+  membership_id       String?
+  payment_schedule_id String?
+  payment_type        PaymentType
+  amount              Int // In cents
+  payment_method      String? // BANK_TRANSFER, CASH, OTHER
+  payment_date        DateTime    @default(now())
+  notes               String?
+  created_at          DateTime    @default(now())
+
+  user             Users                @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  league           League               @relation(fields: [league_id], references: [id], onDelete: Cascade)
+  membership       LeagueMembership?    @relation(fields: [membership_id], references: [id], onDelete: SetNull)
+  payment_schedule PaymentSchedule?     @relation(fields: [payment_schedule_id], references: [id], onDelete: SetNull)
+
+  @@index([user_id])
+  @@index([league_id])
+  @@index([membership_id])
+  @@index([payment_type])
+  @@index([payment_date])
 }

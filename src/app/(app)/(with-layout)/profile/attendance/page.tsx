@@ -1,0 +1,12 @@
+export default function Page() {
+  return (
+    <div className="flex flex-col gap-6">
+      <h2 className="text-[11px] font-semibold uppercase tracking-[0.15em] text-zinc-500 dark:text-zinc-400">Attendance</h2>
+
+      <div className="flex flex-col items-center py-12">
+        <div className="mb-3 h-10 w-10 rounded-full bg-zinc-200 dark:bg-zinc-700" />
+        <p className="text-sm text-zinc-500">Detailed attendance history coming soon</p>
+      </div>
+    </div>
+  )
+}

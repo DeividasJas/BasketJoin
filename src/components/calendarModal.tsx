@@ -1,80 +1,40 @@
-"use client";
-import { Button } from "@/components/ui/button";
-import RegistrationBtn from "./registrationBtn";
-import { CancelRegistrationBtn } from "./cancelRegistrationBtn";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+'use client'
+import { Button } from '@/components/ui/button'
+import RegistrationBtn from './registrationBtn'
+import { CancelRegistrationBtn } from './cancelRegistrationBtn'
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 
 export default function CalendarModal({ eventInfo }: any) {
-
-  const gameId = eventInfo.event._def.extendedProps.game_id;
-  const isPlaying = eventInfo.event._def.extendedProps.isActive;
-  const startTime = eventInfo.event.start?.toLocaleString("lt-LT");
+  const gameId = eventInfo.event._def.extendedProps.game_id
+  const isPlaying = eventInfo.event._def.extendedProps.isActive
+  const startTime = eventInfo.event.start?.toLocaleString('lt-LT')
 
   return (
-    <>
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button className="m-0 mx-auto flex h-fit w-fit flex-wrap justify-start gap-0 overflow-hidden bg-orange-800 px-1 py-1 hover:bg-orange-900">
-            <p>{eventInfo.timeText}</p>
-            <p>{eventInfo.event.title}</p>
-          </Button>
-        </DialogTrigger>
+    <Dialog>
+      <DialogTrigger asChild>
+        <button className="flex h-full w-full cursor-pointer flex-col overflow-hidden rounded px-1.5 py-1 text-left text-xs transition-opacity hover:opacity-80">
+          <span className="truncate font-medium">{eventInfo.event.title}</span>
+          <span className="text-[10px] opacity-60">{eventInfo.timeText}</span>
+        </button>
+      </DialogTrigger>
 
-        <DialogContent className="bg-zinc-800 sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Game Time!</DialogTitle>
-            <DialogDescription>
-              Location: {eventInfo.event.title} <br />
-              Time: {startTime}
-            </DialogDescription>
-          </DialogHeader>
-          <div className="flex flex-col items-center justify-center gap-2 sm:flex-row">
-            <DialogClose asChild className="w-full">
-              <Button
-                className="bg-red-60 w-min border p-0"
-                disabled={isPlaying}
-                // onClick={(e) => {
-                //   // Manually trigger DialogClose
-                //   const closeButton = e.currentTarget.closest(
-                //     "[data-dialog-close]",
-                //   );
-                //   if (closeButton) {
-                //     closeButton.click();
-                //   }
-                // }}
-              >
-                <RegistrationBtn
-                  props={"w-[137px]"}
-                  gameId={gameId}
-                  isActive={isPlaying}
-                />
-              </Button>
-            </DialogClose>
-
-            <DialogClose asChild className="w-min">
-              <CancelRegistrationBtn
-                props={"w-full"}
-                gameId={gameId}
-                isActive={isPlaying}
-                // onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-                //   const closeButton = e.currentTarget.closest(
-                //     "[data-dialog-close]",
-                //   ) as HTMLElement;
-                //   closeButton?.click();
-                // }}
-              />
-            </DialogClose>
-          </div>
-        </DialogContent>
-      </Dialog>
-    </>
-  );
+      <DialogContent className="rounded-xl border border-zinc-200 bg-white dark:border-zinc-700/60 dark:bg-zinc-900 sm:max-w-[400px]">
+        <DialogHeader>
+          <DialogTitle className="text-base font-semibold text-zinc-800 dark:text-zinc-100">Game Details</DialogTitle>
+          <DialogDescription className="flex flex-col gap-1 text-sm text-zinc-500 dark:text-zinc-400">
+            <span className="block">{eventInfo.event.title}</span>
+            <span className="block tabular-nums">{startTime}</span>
+          </DialogDescription>
+        </DialogHeader>
+        <div className="flex items-center justify-end gap-2 pt-2">
+          <DialogClose asChild>
+            <CancelRegistrationBtn gameId={gameId} isActive={isPlaying} />
+          </DialogClose>
+          <DialogClose asChild>
+            <RegistrationBtn gameId={gameId} isActive={isPlaying} />
+          </DialogClose>
+        </div>
+      </DialogContent>
+    </Dialog>
+  )
 }

@@ -1,19 +1,18 @@
-
-'use client';
-import { motion } from 'framer-motion';
+'use client'
+import { motion } from 'framer-motion'
 
 export default function AnimatedHeader({ children }: { children: React.ReactNode }) {
   return (
     <motion.header
       layout
-      transition={{ 
+      transition={{
         duration: 2,
-        type: "spring",
-        stiffness: 100
+        type: 'spring',
+        stiffness: 100,
       }}
-      className='order-last sm:order-first'
+      className="order-last sm:order-first"
     >
       {children}
     </motion.header>
-  );
+  )
 }

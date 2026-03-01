@@ -1,10 +1,10 @@
-"use client";
-import { useState } from "react";
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
-import { registerToGame } from "@/actions/gameActions";
-import { IsActivePlayer } from "@/types/prismaTypes";
-import { usePathname, useRouter } from "next/navigation";
+'use client'
+import { useState } from 'react'
+import { toast } from 'sonner'
+import { Button } from '@/components/ui/button'
+import { registerToGame } from '@/actions/gameActions'
+import { IsActivePlayer } from '@/types/prismaTypes'
+import { usePathname, useRouter } from 'next/navigation'
 
 export default function RegistrationBtn({
   gameId,
@@ -12,50 +12,48 @@ export default function RegistrationBtn({
   setChange = () => {},
   props,
   disabled,
-  // onClick = () => {},
 }: {
-  gameId: number;
-  isActive: IsActivePlayer;
-  setChange?: React.Dispatch<React.SetStateAction<boolean>>;
-  props?: string;
-  disabled?: boolean;
-  // onClick?: () => void;
+  gameId: number
+  isActive: IsActivePlayer
+  setChange?: React.Dispatch<React.SetStateAction<boolean>>
+  props?: string
+  disabled?: boolean
 }) {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const pathname = usePathname();
-  const router = useRouter();
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const pathname = usePathname()
+  const router = useRouter()
 
   const handleClick = async () => {
     try {
-      setIsLoading((prev) => !prev);
-      const { success, message } = await registerToGame(gameId);
+      setIsLoading(prev => !prev)
+      const { success, message } = await registerToGame(gameId)
 
       if (!success) {
-        toast.error(message);
-        return;
+        toast.error(message)
+        return
       }
 
-      toast.success(message);
+      toast.success(message)
 
       if (pathname !== `/game-status/${gameId}`) {
         setTimeout(() => {
-          router.push(`/game-status/${gameId}`);
-        }, 500);
+          router.push(`/game-status/${gameId}`)
+        }, 500)
       } else {
-        setChange((prev) => !prev);
+        setChange(prev => !prev)
       }
 
-      router.refresh();
-    } catch (error) {
-      toast.error("Unknown error");
+      router.refresh()
+    } catch {
+      toast.error('Unknown error')
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
     <Button
-      className={`px-2 py-1 hover:scale-105 ${props}`}
+      className={`bg-basket-400 px-6 text-white shadow-sm transition-all hover:bg-basket-300 hover:shadow-md disabled:bg-basket-400/40 ${props}`}
       disabled={isActive || isLoading || disabled}
       onClick={handleClick}
       isLoading={isLoading}
@@ -63,5 +61,5 @@ export default function RegistrationBtn({
     >
       Join Game
     </Button>
-  );
+  )
 }
