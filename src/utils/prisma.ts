@@ -1,12 +1,20 @@
 import { PrismaClient } from '@/generated/prisma/client/client'
 import { PrismaPg } from '@prisma/adapter-pg'
+import { withAccelerate } from '@prisma/extension-accelerate'
 
 const globalForPrisma = global as unknown as { prisma: PrismaClient }
 
 function createPrismaClient() {
-  const adapter = new PrismaPg({
-    connectionString: process.env.DATABASE_URL!,
-  })
+  const databaseUrl = process.env.DATABASE_URL!
+  const isAccelerate = databaseUrl.startsWith('prisma+postgres://')
+
+  if (isAccelerate) {
+    // Production: route through Accelerate (connection pooling + caching)
+    return new PrismaClient({ accelerateUrl: databaseUrl }).$extends(withAccelerate())
+  }
+
+  // Local: direct PostgreSQL via adapter
+  const adapter = new PrismaPg({ connectionString: databaseUrl })
   return new PrismaClient({ adapter })
 }
 
