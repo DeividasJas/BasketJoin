@@ -3,7 +3,7 @@
 import { auth } from '@/auth'
 import { prisma } from '@/utils/prisma'
 import { revalidatePath } from 'next/cache'
-import { LeagueStatus, GameStatus } from '@prisma/client'
+import { LeagueStatus, GameStatus } from '@/generated/prisma/client/client'
 import type { CreateLeagueResult } from '@/types/prismaTypes'
 import { generateRecurringDates, validateScheduleConfig, parseCustomDates, type RecurringPattern } from '@/lib/scheduleUtils'
 

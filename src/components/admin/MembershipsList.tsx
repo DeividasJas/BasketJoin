@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { Users, Mail } from 'lucide-react'
-import { formatCurrency } from '@/lib/paymentUtils'
+import { formatCurrency } from '@/lib/paymentFormatUtils'
 
 interface Membership {
   id: string

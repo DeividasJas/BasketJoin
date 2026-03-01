@@ -1,4 +1,4 @@
-import { League } from '@prisma/client'
+import { League } from '@/generated/prisma/client/client'
 
 /**
  * Schedule generation utilities for League management

@@ -3,7 +3,7 @@
 import { auth } from '@/auth'
 import { prisma } from '@/utils/prisma'
 import { revalidatePath } from 'next/cache'
-import { PaymentType } from '@prisma/client'
+import { PaymentType } from '@/generated/prisma/client/client'
 import type { RecordPaymentResult } from '@/types/prismaTypes'
 import { getPaymentScheduleStatus } from '@/lib/paymentUtils'
 

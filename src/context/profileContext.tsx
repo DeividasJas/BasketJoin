@@ -1,6 +1,6 @@
 'use client'
 import { findCurrentUser } from '@/actions/userActions'
-import { Users as User } from '@prisma/client'
+import { Users as User } from '@/generated/prisma/client/browser'
 import { createContext, useState, useContext, useEffect } from 'react'
 import { toast } from 'sonner'
 

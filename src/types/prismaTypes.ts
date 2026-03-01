@@ -1,11 +1,11 @@
-import { Game_registrations, Prisma } from '@prisma/client'
+import { Game_registrations, Prisma } from '@/generated/prisma/client/client'
 import { getGameByIdAndLocation } from '@/actions/gameActions'
 
-export type Players = Prisma.PromiseReturnType<typeof getGameByIdAndLocation>['participantsData']
+export type Players = Awaited<ReturnType<typeof getGameByIdAndLocation>>['participantsData']
 
-export type Game = Prisma.PromiseReturnType<typeof getGameByIdAndLocation>['gameData']
+export type Game = Awaited<ReturnType<typeof getGameByIdAndLocation>>['gameData']
 
-export type IsActivePlayer = Prisma.PromiseReturnType<typeof getGameByIdAndLocation>['isActivePlayer']
+export type IsActivePlayer = Awaited<ReturnType<typeof getGameByIdAndLocation>>['isActivePlayer']
 
 export type CancelRegistration = {
   success: boolean

@@ -1,4 +1,3 @@
-import { Prisma } from '@prisma/client'
 import { getAllGames } from '@/actions/gameActions'
 
 export type KindeUser = {
@@ -10,7 +9,7 @@ export type KindeUser = {
   phone_number?: string
 }
 
-export type AllGames = Prisma.PromiseReturnType<typeof getAllGames>['allGames']
+export type AllGames = Awaited<ReturnType<typeof getAllGames>>['allGames']
 
 export type Game = {
   game_date: Date

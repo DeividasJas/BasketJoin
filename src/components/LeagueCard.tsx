@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { MapPin, Users } from 'lucide-react'
-import { formatCurrency } from '@/lib/paymentUtils'
+import { formatCurrency } from '@/lib/paymentFormatUtils'
 
 type LeagueCardProps = {
   league: {

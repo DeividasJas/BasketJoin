@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { UserPlus } from 'lucide-react'
 import { toast } from 'sonner'
 import { joinLeague } from '@/actions/leagueMembershipActions'
-import { formatCurrency } from '@/lib/paymentUtils'
+import { formatCurrency } from '@/lib/paymentFormatUtils'
 
 interface JoinLeagueButtonProps {
   leagueId: string

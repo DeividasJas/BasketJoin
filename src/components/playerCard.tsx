@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import { Users } from '@prisma/client'
+import { Users } from '@/generated/prisma/client/client'
 
 export default function PlayerCard({ player }: { player: Users }) {
   const name = [player.given_name, player.family_name].filter(Boolean).join(' ')

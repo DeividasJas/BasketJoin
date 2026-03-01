@@ -4,7 +4,7 @@ import { useState, useTransition } from 'react'
 import { toast } from 'sonner'
 import { updateUserRole, toggleUserActive } from '@/actions/adminUserActions'
 import { Mail, Users, Shield, ShieldAlert, ShieldCheck } from 'lucide-react'
-import { UserRole } from '@prisma/client'
+import { UserRole } from '@/generated/prisma/client/browser'
 
 type User = {
   id: string

@@ -2,7 +2,7 @@
 
 import { auth } from '@/auth'
 import { prisma } from '@/utils/prisma'
-import { UserRole } from '@prisma/client'
+import { UserRole } from '@/generated/prisma/client/client'
 import { revalidatePath } from 'next/cache'
 
 async function checkAdminOnly() {

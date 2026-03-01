@@ -30,6 +30,8 @@ export default auth(req => {
   return NextResponse.next()
 })
 
+export const runtime = 'nodejs'
+
 export const config = {
   matcher: ['/game-status/:path*', '/dashboard/:path*', '/schedule/:path*', '/profile/:path*', '/login', '/signup'],
 }

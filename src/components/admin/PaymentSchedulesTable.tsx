@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { DollarSign } from 'lucide-react'
-import { formatCurrency, daysUntilDue } from '@/lib/paymentUtils'
+import { formatCurrency, daysUntilDue } from '@/lib/paymentFormatUtils'
 import { recordMembershipPayment } from '@/actions/paymentActions'
 import { toast } from 'sonner'
 
