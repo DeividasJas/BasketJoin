@@ -141,90 +141,115 @@ export default function AdminLocationsList({
         {locations.length} of {totalLocations}
       </p>
 
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2.5">
         {locations.length === 0 ? (
           <p className="py-8 text-center text-sm text-zinc-400 dark:text-zinc-500">No locations found</p>
         ) : (
           locations.map(location => (
             <div
               key={location.id}
-              className={`rounded-xl border bg-white p-4 dark:bg-zinc-900 ${
-                location.is_active ? 'border-zinc-200 dark:border-zinc-700/60' : 'border-red-200 opacity-60 dark:border-red-900/40'
+              className={`group relative overflow-hidden rounded-xl border bg-white transition-all hover:shadow-sm dark:bg-zinc-900 ${
+                location.is_active
+                  ? 'border-zinc-200 hover:border-zinc-300 dark:border-zinc-700/60 dark:hover:border-zinc-600'
+                  : 'border-red-200/60 opacity-60 dark:border-red-900/30'
               }`}
             >
-              <div className="flex items-start justify-between gap-3">
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
-                    <p className="text-sm font-medium text-zinc-800 dark:text-zinc-100">{location.name}</p>
-                    {!location.is_active && (
-                      <span className="rounded-full bg-red-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-red-500 dark:bg-red-500/10 dark:text-red-400">
-                        Inactive
-                      </span>
-                    )}
-                  </div>
-                  <p className="mt-0.5 flex items-center gap-1 text-xs text-zinc-500 dark:text-zinc-400">
-                    <MapPin className="h-3 w-3" />
-                    {location.address}, {location.city}
-                  </p>
-                  <div className="mt-1.5 flex flex-wrap gap-x-3 gap-y-0.5 text-[11px] tabular-nums text-zinc-400 dark:text-zinc-500">
-                    {location.capacity && <span>Cap: {location.capacity}</span>}
-                    <span>{location.court_count} courts</span>
-                    {location.price_per_game && <span>${location.price_per_game}/game</span>}
-                    <span>{location._count.games} games</span>
+              {/* Active/inactive accent bar */}
+              <div className={`absolute left-0 top-0 h-full w-1 ${location.is_active ? 'bg-green-500' : 'bg-red-400'}`} />
+
+              <div className="py-3.5 pl-5 pr-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2">
+                      <p className="font-serif text-[15px] font-semibold text-zinc-800 dark:text-zinc-100">{location.name}</p>
+                      {!location.is_active && (
+                        <span className="rounded-full bg-red-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-red-500 dark:bg-red-500/10 dark:text-red-400">
+                          Inactive
+                        </span>
+                      )}
+                    </div>
+                    <p className="mt-1 flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400">
+                      <MapPin className="h-3.5 w-3.5 text-zinc-400 dark:text-zinc-500" />
+                      {location.address}, {location.city}
+                    </p>
                   </div>
                 </div>
-              </div>
 
-              {/* Actions */}
-              <div className="mt-3 flex flex-wrap items-center gap-1.5 border-t border-zinc-100 pt-3 dark:border-zinc-800">
-                <Button asChild size="sm" className="h-7 bg-basket-400 text-[11px] text-white hover:bg-basket-300">
-                  <Link href={`/dashboard/locations/${location.id}/edit`}>
-                    <Edit className="mr-1 h-3 w-3" />
-                    Edit
-                  </Link>
-                </Button>
-
-                <Button
-                  asChild
-                  variant="ghost"
-                  size="sm"
-                  className="h-7 text-[11px] text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200"
-                >
-                  <Link href={`/dashboard/locations/${location.id}/games`}>
-                    <Gamepad2 className="mr-1 h-3 w-3" />
-                    Games ({location._count.games})
-                  </Link>
-                </Button>
-
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => handleToggleActive(location.id)}
-                  isLoading={loading === location.id}
-                  className="h-7 text-[11px] text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200"
-                >
-                  {location.is_active ? (
-                    <>
-                      <RotateCcw className="mr-1 h-3 w-3" />
-                      Deactivate
-                    </>
-                  ) : (
-                    <>
-                      <CheckCircle className="mr-1 h-3 w-3" />
-                      Activate
-                    </>
+                {/* Stats row */}
+                <div className="mt-3 flex flex-wrap gap-3">
+                  {location.capacity && (
+                    <div className="rounded-lg bg-zinc-50 px-2.5 py-1.5 dark:bg-zinc-800/60">
+                      <p className="text-[10px] uppercase tracking-wider text-zinc-400 dark:text-zinc-500">Capacity</p>
+                      <p className="text-sm font-medium tabular-nums text-zinc-700 dark:text-zinc-200">{location.capacity}</p>
+                    </div>
                   )}
-                </Button>
+                  <div className="rounded-lg bg-zinc-50 px-2.5 py-1.5 dark:bg-zinc-800/60">
+                    <p className="text-[10px] uppercase tracking-wider text-zinc-400 dark:text-zinc-500">Courts</p>
+                    <p className="text-sm font-medium tabular-nums text-zinc-700 dark:text-zinc-200">{location.court_count}</p>
+                  </div>
+                  {location.price_per_game && (
+                    <div className="rounded-lg bg-zinc-50 px-2.5 py-1.5 dark:bg-zinc-800/60">
+                      <p className="text-[10px] uppercase tracking-wider text-zinc-400 dark:text-zinc-500">Per Game</p>
+                      <p className="text-sm font-medium tabular-nums text-zinc-700 dark:text-zinc-200">${location.price_per_game}</p>
+                    </div>
+                  )}
+                  <div className="rounded-lg bg-zinc-50 px-2.5 py-1.5 dark:bg-zinc-800/60">
+                    <p className="text-[10px] uppercase tracking-wider text-zinc-400 dark:text-zinc-500">Games</p>
+                    <p className="text-sm font-medium tabular-nums text-zinc-700 dark:text-zinc-200">{location._count.games}</p>
+                  </div>
+                </div>
 
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => handleDelete(location.id)}
-                  isLoading={loading === location.id}
-                  className="ml-auto h-7 text-[11px] text-red-500 hover:bg-red-500/10 hover:text-red-600"
-                >
-                  <Trash2 className="h-3 w-3" />
-                </Button>
+                {/* Actions */}
+                <div className="mt-3 flex flex-wrap items-center gap-1.5 border-t border-zinc-100 pt-3 dark:border-zinc-800">
+                  <Button asChild size="sm" className="h-7 bg-basket-400 text-[11px] text-white hover:bg-basket-300">
+                    <Link href={`/dashboard/locations/${location.id}/edit`}>
+                      <Edit className="mr-1 h-3 w-3" />
+                      Edit
+                    </Link>
+                  </Button>
+
+                  <Button
+                    asChild
+                    variant="ghost"
+                    size="sm"
+                    className="h-7 text-[11px] text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200"
+                  >
+                    <Link href={`/dashboard/locations/${location.id}/games`}>
+                      <Gamepad2 className="mr-1 h-3 w-3" />
+                      Games ({location._count.games})
+                    </Link>
+                  </Button>
+
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleToggleActive(location.id)}
+                    isLoading={loading === location.id}
+                    className="h-7 text-[11px] text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200"
+                  >
+                    {location.is_active ? (
+                      <>
+                        <RotateCcw className="mr-1 h-3 w-3" />
+                        Deactivate
+                      </>
+                    ) : (
+                      <>
+                        <CheckCircle className="mr-1 h-3 w-3" />
+                        Activate
+                      </>
+                    )}
+                  </Button>
+
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleDelete(location.id)}
+                    isLoading={loading === location.id}
+                    className="ml-auto h-7 text-[11px] text-red-500 hover:bg-red-500/10 hover:text-red-600"
+                  >
+                    <Trash2 className="h-3 w-3" />
+                  </Button>
+                </div>
               </div>
             </div>
           ))
