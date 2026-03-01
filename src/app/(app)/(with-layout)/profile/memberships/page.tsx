@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import { getUserMemberships } from '@/actions/leagueMembershipActions'
 import UserMembershipCard from '@/components/UserMembershipCard'
 import Link from 'next/link'
