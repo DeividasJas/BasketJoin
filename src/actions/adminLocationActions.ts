@@ -3,6 +3,7 @@
 import { auth } from '@/auth'
 import { prisma } from '@/utils/prisma'
 import { revalidatePath } from 'next/cache'
+import { isDemoUser, demoFilter } from '@/lib/demo'
 
 // Helper function to check admin access
 async function checkAdminAccess() {
@@ -42,6 +43,7 @@ export async function createLocation(data: {
         court_count: data.court_count || 1,
         price_per_game: data.price_per_game,
         is_active: true,
+        is_demo: await isDemoUser(),
       },
     })
 
@@ -242,8 +244,9 @@ export async function getAllLocationsForAdmin(
     await checkAdminAccess()
 
     const skip = (page - 1) * pageSize
+    const isDemo = await demoFilter()
 
-    const where: any = {}
+    const where: any = { is_demo: isDemo }
 
     if (filters?.search) {
       where.OR = [
@@ -279,6 +282,7 @@ export async function getAllLocationsForAdmin(
       }),
       prisma.locations.count({ where }),
       prisma.locations.findMany({
+        where: { is_demo: isDemo },
         select: {
           city: true,
         },

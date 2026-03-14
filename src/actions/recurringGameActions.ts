@@ -3,6 +3,7 @@
 import { auth } from '@/auth'
 import { prisma } from '@/utils/prisma'
 import { revalidatePath } from 'next/cache'
+import { isDemoUser, demoFilter } from '@/lib/demo'
 
 // Safety limits
 const MAX_GAMES = 100
@@ -91,12 +92,15 @@ export async function previewRecurringDates(startDate: Date, recurrence: Recurre
 // Check for conflicts with existing games
 export async function checkRecurringConflicts(dates: Date[], locationId: number) {
   try {
+    const isDemo = await demoFilter()
+
     const conflicts = await prisma.games.findMany({
       where: {
         location_id: locationId,
         game_date: {
           in: dates,
         },
+        is_demo: isDemo,
       },
       select: {
         id: true,
@@ -186,6 +190,8 @@ export async function createRecurringGames(data: {
     }
 
     // Create league first
+    const isDemo = await isDemoUser()
+
     const league = await prisma.league.create({
       data: {
         name: data.seriesName.trim(),
@@ -195,6 +201,7 @@ export async function createRecurringGames(data: {
         gym_rental_cost: 0,
         guest_fee_per_game: 0,
         payment_due_dates: '[]',
+        is_demo: isDemo,
       },
     })
 
@@ -216,6 +223,7 @@ export async function createRecurringGames(data: {
               organizer_id: userId,
               league_id: league.id,
               status: 'SCHEDULED',
+              is_demo: isDemo,
             },
           })
           created.push(game)
@@ -430,11 +438,14 @@ export async function checkFutureGamesInSeries(gameId: number, seriesId: string)
       }
     }
 
+    const isDemo = await demoFilter()
+
     const futureGamesCount = await prisma.games.count({
       where: {
         league_id: seriesId,
         game_date: { gt: game.game_date },
         status: 'SCHEDULED',
+        is_demo: isDemo,
       },
     })
 
@@ -456,10 +467,12 @@ export async function checkFutureGamesInSeries(gameId: number, seriesId: string)
 export async function getSeriesGames(seriesId: string) {
   try {
     await checkAdminAccess()
+    const isDemo = await demoFilter()
 
     const games = await prisma.games.findMany({
       where: {
         league_id: seriesId,
+        is_demo: isDemo,
       },
       include: {
         location: true,

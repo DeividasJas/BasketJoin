@@ -6,6 +6,7 @@ import { revalidatePath } from 'next/cache'
 import { LeagueStatus, GameStatus } from '@/generated/prisma/client/client'
 import type { CreateLeagueResult } from '@/types/prismaTypes'
 import { generateRecurringDates, validateScheduleConfig, parseCustomDates, type RecurringPattern } from '@/lib/scheduleUtils'
+import { isDemoUser, demoFilter } from '@/lib/demo'
 
 /**
  * Create a new league with optional schedule generation
@@ -107,6 +108,7 @@ export async function createLeague(formData: {
         recurring_pattern: formData.recurringPattern ? JSON.stringify(formData.recurringPattern) : null,
         custom_dates: formData.customDates ? JSON.stringify(formData.customDates) : null,
         status: LeagueStatus.UPCOMING,
+        is_demo: await isDemoUser(),
       },
       include: {
         location: true,
@@ -175,6 +177,8 @@ export async function generateGamesForLeague(leagueId: string): Promise<void> {
 
   // Create games
   if (gameDates.length > 0) {
+    const isDemo = await isDemoUser()
+
     await prisma.games.createMany({
       data: gameDates.map(date => ({
         game_date: date,
@@ -185,6 +189,7 @@ export async function generateGamesForLeague(leagueId: string): Promise<void> {
         game_type: league.game_type,
         description: league.game_description,
         status: GameStatus.SCHEDULED,
+        is_demo: isDemo,
       })),
     })
   }
@@ -402,6 +407,8 @@ export async function regenerateFutureGames(leagueId: string): Promise<void> {
   })
 
   // 6. Transfer registrations to new games by index
+  const isDemo = await isDemoUser()
+
   for (const { gameIndex, registrations } of registrationsByIndex) {
     if (newGames[gameIndex] && registrations.length > 0) {
       await prisma.game_registrations.createMany({
@@ -411,6 +418,7 @@ export async function regenerateFutureGames(leagueId: string): Promise<void> {
           registration_type: reg.registration_type,
           status: reg.status,
           guest_fee_paid: reg.guest_fee_paid,
+          is_demo: isDemo,
         })),
         skipDuplicates: true,
       })
@@ -571,6 +579,8 @@ export async function completeLeague(leagueId: string): Promise<{ success: boole
 
     // Create rebate payment records for each member
     if (rebatePerMember > 0) {
+      const isDemo = await isDemoUser()
+
       const rebatePayments = league.memberships.map(membership => ({
         user_id: membership.user_id,
         league_id: leagueId,
@@ -579,6 +589,7 @@ export async function completeLeague(leagueId: string): Promise<{ success: boole
         amount: rebatePerMember,
         payment_method: 'REBATE',
         notes: `League end rebate from guest fees. Total collected: €${totalGuestFees / 100}, Split among ${activeMembers} members`,
+        is_demo: isDemo,
       }))
 
       await prisma.payment.createMany({
@@ -670,7 +681,10 @@ export async function cancelLeague(leagueId: string, reason?: string): Promise<{
  */
 export async function getAllLeagues() {
   try {
+    const isDemo = await demoFilter()
+
     const leagues = await prisma.league.findMany({
+      where: { is_demo: isDemo },
       include: {
         location: true,
         memberships: {
@@ -785,8 +799,10 @@ export async function getLeagueById(leagueId: string) {
  */
 export async function getActiveLeagues() {
   try {
+    const isDemo = await demoFilter()
+
     const leagues = await prisma.league.findMany({
-      where: { status: LeagueStatus.ACTIVE },
+      where: { status: LeagueStatus.ACTIVE, is_demo: isDemo },
       include: {
         location: true,
         _count: {
@@ -815,8 +831,10 @@ export async function getActiveLeagues() {
  */
 export async function getUpcomingLeagues() {
   try {
+    const isDemo = await demoFilter()
+
     const leagues = await prisma.league.findMany({
-      where: { status: LeagueStatus.UPCOMING },
+      where: { status: LeagueStatus.UPCOMING, is_demo: isDemo },
       include: {
         location: true,
         _count: {
@@ -845,11 +863,14 @@ export async function getUpcomingLeagues() {
  */
 export async function getBrowsableLeagues() {
   try {
+    const isDemo = await demoFilter()
+
     const leagues = await prisma.league.findMany({
       where: {
         status: {
           in: [LeagueStatus.ACTIVE, LeagueStatus.UPCOMING],
         },
+        is_demo: isDemo,
       },
       include: {
         location: true,

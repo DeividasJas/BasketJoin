@@ -6,6 +6,7 @@ import { revalidatePath } from 'next/cache'
 import { PaymentType } from '@/generated/prisma/client/client'
 import type { RecordPaymentResult } from '@/types/prismaTypes'
 import { getPaymentScheduleStatus } from '@/lib/paymentUtils'
+import { isDemoUser, demoFilter } from '@/lib/demo'
 
 /**
  * Record a membership fee payment (admin marks payment as received)
@@ -76,6 +77,7 @@ export async function recordMembershipPayment(formData: {
         payment_method: formData.paymentMethod || 'BANK_TRANSFER',
         payment_date: formData.paymentDate || new Date(),
         notes: formData.notes,
+        is_demo: await isDemoUser(),
       },
       include: {
         user: true,
@@ -181,6 +183,7 @@ export async function recordGuestFee(formData: {
         payment_method: formData.paymentMethod || 'CASH',
         payment_date: formData.paymentDate || new Date(),
         notes: formData.notes || `Guest fee for game #${formData.gameId}`,
+        is_demo: await isDemoUser(),
       },
       include: {
         user: true,
@@ -218,8 +221,10 @@ export async function recordGuestFee(formData: {
  */
 export async function getLeaguePayments(leagueId: string) {
   try {
+    const isDemo = await demoFilter()
+
     const payments = await prisma.payment.findMany({
-      where: { league_id: leagueId },
+      where: { league_id: leagueId, is_demo: isDemo },
       include: {
         user: {
           select: {
@@ -279,8 +284,10 @@ export async function getUserPayments(userId?: string) {
       }
     }
 
+    const isDemo = await demoFilter()
+
     const payments = await prisma.payment.findMany({
-      where: { user_id: targetUserId },
+      where: { user_id: targetUserId, is_demo: isDemo },
       include: {
         league: true,
         membership: true,
@@ -342,8 +349,10 @@ export async function getMembershipPaymentSchedule(membershipId: string) {
       }
     }
 
+    const isDemo = await demoFilter()
+
     const schedules = await prisma.paymentSchedule.findMany({
-      where: { membership_id: membershipId },
+      where: { membership_id: membershipId, is_demo: isDemo },
       include: {
         payments: {
           orderBy: { payment_date: 'desc' },
@@ -449,11 +458,14 @@ export async function deletePayment(paymentId: string): Promise<{ success: boole
  */
 export async function getLeaguePaymentSummary(leagueId: string) {
   try {
+    const isDemo = await demoFilter()
+
     const [membershipPayments, guestPayments, rebates] = await Promise.all([
       prisma.payment.aggregate({
         where: {
           league_id: leagueId,
           payment_type: PaymentType.MEMBERSHIP_FEE,
+          is_demo: isDemo,
         },
         _sum: { amount: true },
         _count: true,
@@ -462,6 +474,7 @@ export async function getLeaguePaymentSummary(leagueId: string) {
         where: {
           league_id: leagueId,
           payment_type: PaymentType.GUEST_FEE,
+          is_demo: isDemo,
         },
         _sum: { amount: true },
         _count: true,
@@ -470,6 +483,7 @@ export async function getLeaguePaymentSummary(leagueId: string) {
         where: {
           league_id: leagueId,
           payment_type: PaymentType.REBATE,
+          is_demo: isDemo,
         },
         _sum: { amount: true },
         _count: true,
