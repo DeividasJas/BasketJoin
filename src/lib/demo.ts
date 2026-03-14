@@ -1,5 +1,3 @@
-'use server'
-
 import { auth } from '@/auth'
 
 export const DEMO_EMAIL = 'demo@basketjoin.com'

@@ -4,7 +4,7 @@ import GoogleProvider from 'next-auth/providers/google'
 import FacebookProvider from 'next-auth/providers/facebook'
 import { prisma } from '@/utils/prisma'
 import bcrypt from 'bcryptjs'
-import { DEMO_EMAIL } from '@/lib/demo'
+const DEMO_EMAIL = 'demo@basketjoin.com'
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   session: {
