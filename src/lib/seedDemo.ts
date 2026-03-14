@@ -30,6 +30,10 @@ export async function wipeDemoData(demoUserId: string) {
  * Returns the demo user's ID.
  */
 export async function ensureDemoUser(): Promise<string> {
+  // Set created_at to 60 days ago so seed games (up to 30 days old) show in attendance
+  const demoCreatedAt = new Date()
+  demoCreatedAt.setDate(demoCreatedAt.getDate() - 60)
+
   let demoUser = await prisma.users.findUnique({
     where: { email: DEMO_EMAIL },
   })
@@ -44,7 +48,14 @@ export async function ensureDemoUser(): Promise<string> {
         family_name: 'Admin',
         role: 'ADMIN',
         is_demo: true,
+        created_at: demoCreatedAt,
       },
+    })
+  } else {
+    // Reset created_at on each demo login so past seed games are visible
+    await prisma.users.update({
+      where: { id: demoUser.id },
+      data: { created_at: demoCreatedAt },
     })
   }
 
