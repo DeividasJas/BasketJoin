@@ -168,6 +168,7 @@ export default function AdminGamesList({
             value={currentLeagueId || ''}
             onChange={e => updateFilter('leagueId', e.target.value || null)}
             className="rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-1.5 text-xs text-zinc-600 focus:border-basket-400 focus:outline-none focus:ring-2 focus:ring-basket-400/20 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
+            style={{ fieldSizing: 'content' } as React.CSSProperties}
           >
             <option value="">All Leagues</option>
             {allLeagues.map(league => (

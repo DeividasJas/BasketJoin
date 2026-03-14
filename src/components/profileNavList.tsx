@@ -11,12 +11,11 @@ export default function ProfileNavList() {
     { label: 'Attendance', href: '/profile/attendance' },
     { label: 'Stats', href: '/profile/stats' },
     { label: 'Memberships', href: '/profile/memberships' },
-    { label: 'Settings', href: '/profile/settings' },
   ]
 
   return (
     <nav className="-mx-2 border-b border-zinc-200 dark:border-zinc-700/60">
-      <div className="scrollbar-none -mb-px flex gap-0 overflow-x-auto sm:justify-center">
+      <div className="scrollbar-none -mb-px flex justify-center gap-0 overflow-x-auto sm:justify-start">
         {profileSections.map(link => {
           const isActive = pathname === link.href
           return (

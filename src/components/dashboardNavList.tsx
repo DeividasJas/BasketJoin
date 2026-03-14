@@ -16,7 +16,7 @@ export default function DashboardNavList({ userRole }: { userRole: string }) {
 
   return (
     <nav className="border-b border-zinc-200 dark:border-zinc-700/60">
-      <ul className="flex gap-0 overflow-x-auto">
+      <ul className="flex justify-center gap-0 overflow-x-auto sm:justify-start">
         {dashboardSections.map(link => {
           const isActive = pathname.startsWith(link.href as string)
           return (

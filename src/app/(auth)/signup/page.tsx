@@ -7,7 +7,7 @@ import Image from 'next/image'
 import { signIn } from 'next-auth/react'
 import { motion } from 'framer-motion'
 import { Mail, Lock } from 'lucide-react'
-import SocialLoginButtons from '@/components/SocialLoginButtons'
+// import SocialLoginButtons from '@/components/SocialLoginButtons'
 import { Button } from '@/components/ui/button'
 
 const stagger = {
@@ -127,9 +127,9 @@ export default function SignupPage() {
             <p className="mt-1.5 text-[13px] text-zinc-500 dark:text-zinc-400">Join the court and find your next game</p>
           </motion.div>
 
-          <motion.div variants={fadeUp}>
+          {/* <motion.div variants={fadeUp}>
             <SocialLoginButtons callbackUrl="/game-status" />
-          </motion.div>
+          </motion.div> */}
 
           {error && (
             <motion.div

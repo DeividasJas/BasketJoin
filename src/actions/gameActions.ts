@@ -213,10 +213,16 @@ export const registerToGame = async (gameId: number): Promise<RegisterToGameResu
       },
       select: {
         id: true,
+        game_date: true,
+        status: true,
       },
     })
 
     if (!testFindGame) return { success: false, message: 'No games found' }
+
+    if (testFindGame.game_date < new Date() || testFindGame.status === 'COMPLETED' || testFindGame.status === 'CANCELLED') {
+      return { success: false, message: 'This game has already passed or is no longer available' }
+    }
 
     const existingRegistration = await prisma.game_registrations.findFirst({
       where: {

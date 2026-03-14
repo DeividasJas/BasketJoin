@@ -52,10 +52,19 @@ export async function ensureDemoUser(): Promise<string> {
       },
     })
   } else {
-    // Reset created_at on each demo login so past seed games are visible
+    // Reset all demo user data on each login
     await prisma.users.update({
       where: { id: demoUser.id },
-      data: { created_at: demoCreatedAt },
+      data: {
+        given_name: 'Demo',
+        family_name: 'Admin',
+        username: null,
+        phone_number: null,
+        picture: null,
+        role: 'ADMIN',
+        is_active: true,
+        created_at: demoCreatedAt,
+      },
     })
   }
 
@@ -194,11 +203,7 @@ export async function seedDemoData(demoUserId: string) {
       status: 'ACTIVE',
       gym_rental_cost: 7500,
       guest_fee_per_game: 1000,
-      payment_due_dates: JSON.stringify([
-        daysAgo(25).toISOString(),
-        daysFromNow(5).toISOString(),
-        daysFromNow(35).toISOString(),
-      ]),
+      payment_due_dates: JSON.stringify([daysAgo(25).toISOString(), daysFromNow(5).toISOString(), daysFromNow(35).toISOString()]),
       min_players: 10,
       max_players: 20,
       game_type: '5v5',
@@ -224,26 +229,19 @@ export async function seedDemoData(demoUserId: string) {
       status: 'UPCOMING',
       gym_rental_cost: 12000,
       guest_fee_per_game: 1500,
-      payment_due_dates: JSON.stringify([
-        daysFromNow(40).toISOString(),
-        daysFromNow(75).toISOString(),
-      ]),
+      payment_due_dates: JSON.stringify([daysFromNow(40).toISOString(), daysFromNow(75).toISOString()]),
       min_players: 6,
       max_players: 24,
       game_type: '3v3',
       game_description: '3v3 half-court tournament style',
       schedule_type: 'CUSTOM',
-      custom_dates: JSON.stringify([
-        daysFromNow(50).toISOString(),
-        daysFromNow(57).toISOString(),
-        daysFromNow(64).toISOString(),
-      ]),
+      custom_dates: JSON.stringify([daysFromNow(50).toISOString(), daysFromNow(57).toISOString(), daysFromNow(64).toISOString()]),
       is_demo: true,
     },
   })
 
   // --- Seed Games ---
-  const games = await Promise.all([
+  const [leagueWeek1, leagueWeek2, leagueWeek3, leagueWeek4, leagueWeek5, pickupNext, openRun, pickupLast] = await Promise.all([
     // Completed games
     prisma.games.create({
       data: {
@@ -273,10 +271,10 @@ export async function seedDemoData(demoUserId: string) {
         is_demo: true,
       },
     }),
-    // In-progress game
+    // In-progress game — started at the top of the current hour
     prisma.games.create({
       data: {
-        game_date: daysAgo(1),
+        game_date: new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), 0, 0, 0),
         location_id: downtown.id,
         max_players: 20,
         min_players: 10,
@@ -360,13 +358,15 @@ export async function seedDemoData(demoUserId: string) {
   ])
 
   // --- Seed Game Registrations ---
+  const games = [leagueWeek1, leagueWeek2, leagueWeek3, leagueWeek4, leagueWeek5, pickupNext, openRun, pickupLast]
+  // Demo user misses league week 2 and last week's pickup
+  const demoMissedGameIds = new Set([leagueWeek2.id, pickupLast.id])
   const registrationData = []
   for (const game of games) {
-    const playersForGame =
-      game.status === 'SCHEDULED'
-        ? allPlayers.slice(0, 4)
-        : allPlayers
+    const playersForGame = game.status === 'SCHEDULED' ? allPlayers.slice(0, 4) : allPlayers
     for (const playerId of playersForGame) {
+      // Skip demo user for missed games
+      if (playerId === demoUserId && demoMissedGameIds.has(game.id)) continue
       registrationData.push({
         user_id: playerId,
         game_id: game.id,
@@ -394,8 +394,8 @@ export async function seedDemoData(demoUserId: string) {
           pro_rated_amount: 15000, // $150.00
           is_demo: true,
         },
-      })
-    )
+      }),
+    ),
   )
 
   // --- Seed Payment Schedules ---
@@ -410,11 +410,7 @@ export async function seedDemoData(demoUserId: string) {
         due_date: new Date(dueDates[i]),
         amount_due: 5000, // $50.00 per period
         amount_paid: isPaid ? 5000 : 0,
-        status: isPaid
-          ? ('PAID' as const)
-          : new Date(dueDates[i]) < now
-            ? ('OVERDUE' as const)
-            : ('PENDING' as const),
+        status: isPaid ? ('PAID' as const) : new Date(dueDates[i]) < now ? ('OVERDUE' as const) : ('PENDING' as const),
         paid_at: isPaid ? daysAgo(20) : null,
         is_demo: true,
       })
@@ -452,9 +448,9 @@ export async function seedDemoData(demoUserId: string) {
     data: [
       {
         user_id: demoUserId,
-        game_id: games[3].id,
+        game_id: leagueWeek4.id,
         type: 'GAME_REMINDER',
-        message: `Upcoming game on ${games[3].game_date.toLocaleDateString()} at Downtown Recreation Center`,
+        message: `Upcoming game on ${leagueWeek4.game_date.toLocaleDateString()} at Downtown Recreation Center`,
         read: false,
         is_demo: true,
       },
@@ -467,7 +463,7 @@ export async function seedDemoData(demoUserId: string) {
       },
       {
         user_id: demoUserId,
-        game_id: games[0].id,
+        game_id: leagueWeek1.id,
         type: 'GAME_COMPLETED',
         message: 'League game week 1 has been completed. Check the results!',
         read: true,
