@@ -1,11 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/utils/prisma'
 import bcrypt from 'bcryptjs'
+import { DEMO_EMAIL } from '@/lib/demo'
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     const { email, password, given_name, family_name } = body
+
+    // Block demo email registration
+    if (email === DEMO_EMAIL) {
+      return NextResponse.json({ error: 'This email is reserved' }, { status: 400 })
+    }
 
     // Validation
     if (!email || !password) {
