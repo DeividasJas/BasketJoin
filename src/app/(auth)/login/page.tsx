@@ -9,6 +9,7 @@ import { motion } from 'framer-motion'
 import { Mail, Lock } from 'lucide-react'
 import SocialLoginButtons from '@/components/SocialLoginButtons'
 import { Button } from '@/components/ui/button'
+import { loginAsDemo } from '@/actions/demoActions'
 
 const stagger = {
   hidden: { opacity: 0 },
@@ -33,6 +34,20 @@ export default function LoginPage() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [isDemoLoading, setIsDemoLoading] = useState(false)
+
+  const handleDemoLogin = async () => {
+    setIsDemoLoading(true)
+    setError('')
+    try {
+      await loginAsDemo()
+    } catch {
+      // signIn redirects by throwing NEXT_REDIRECT — if we get here, something went wrong
+      setError('Demo login failed. Please try again.')
+    } finally {
+      setIsDemoLoading(false)
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -138,6 +153,27 @@ export default function LoginPage() {
             </Button>
           </motion.form>
         </div>
+
+        {/* Demo access */}
+        <motion.div className="mt-4" variants={fadeUp}>
+          <div className="relative mb-4">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-zinc-200 dark:border-zinc-700/50" />
+            </div>
+            <div className="relative flex justify-center text-xs">
+              <span className="bg-zinc-50 px-3 text-zinc-400 dark:bg-zinc-950 dark:text-zinc-500">or</span>
+            </div>
+          </div>
+          <Button
+            type="button"
+            onClick={handleDemoLogin}
+            isLoading={isDemoLoading}
+            className="h-12 w-full rounded-xl border border-zinc-200/80 bg-white/80 text-[13px] font-semibold text-zinc-700 shadow-sm transition-all hover:bg-zinc-50 hover:shadow-md active:scale-[0.98] disabled:opacity-60 dark:border-zinc-700/50 dark:bg-zinc-800/50 dark:text-zinc-200 dark:hover:bg-zinc-800/80"
+          >
+            Try Demo
+            <span className="ml-2 text-[11px] font-normal text-zinc-400 dark:text-zinc-500">Explore all features</span>
+          </Button>
+        </motion.div>
 
         <motion.p className="mt-8 text-center text-sm text-zinc-500 dark:text-zinc-400" variants={fadeUp}>
           Don&apos;t have an account?{' '}

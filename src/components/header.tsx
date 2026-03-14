@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { Links } from '@/types/navLinks'
 
-export default function Header({ isAuthenticated, navLinksArray, userRole }: { isAuthenticated: boolean; navLinksArray: Links[]; userRole: string }) {
+export default function Header({ isAuthenticated, navLinksArray, userRole, isDemo }: { isAuthenticated: boolean; navLinksArray: Links[]; userRole: string; isDemo: boolean }) {
   const pathname = usePathname()
 
   const navLinks = navLinksArray.map(({ href, label, requiredRoles }) => {
@@ -44,7 +44,16 @@ export default function Header({ isAuthenticated, navLinksArray, userRole }: { i
   return (
     <header className="fixed bottom-0 left-0 right-0 z-50 order-last border-t border-zinc-200 bg-white/80 backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-950/80 sm:relative sm:order-first sm:border-b sm:border-t-0">
       <nav className="mx-auto max-w-[900px]">
-        <ul className="flex items-center justify-around py-3 sm:py-4">{navLinks}</ul>
+        <ul className="flex items-center justify-around py-3 sm:py-4">
+          {navLinks}
+          {isDemo && (
+            <li>
+              <span className="rounded-full bg-amber-100 px-2.5 py-0.5 text-[11px] font-semibold text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">
+                Demo Mode
+              </span>
+            </li>
+          )}
+        </ul>
       </nav>
     </header>
   )

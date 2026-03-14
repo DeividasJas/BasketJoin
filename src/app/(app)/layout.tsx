@@ -8,11 +8,12 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   const session = await auth()
   const isAuth = !!session?.user
   const userRole = session?.user?.role || 'PLAYER'
+  const isDemo = session?.user?.is_demo ?? false
   const { navLinks } = await dynamicNavLinksFunction(isAuth)
 
   return (
     <>
-      <Header isAuthenticated={isAuth} navLinksArray={navLinks} userRole={userRole} />
+      <Header isAuthenticated={isAuth} navLinksArray={navLinks} userRole={userRole} isDemo={isDemo} />
       <ThemeChanger />
       {children}
       <Footer />
