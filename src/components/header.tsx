@@ -42,7 +42,7 @@ export default function Header({ isAuthenticated, navLinksArray, userRole, isDem
   })
 
   return (
-    <header className="fixed bottom-0 left-0 right-0 z-50 order-last border-t border-zinc-200 bg-white/80 backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-950/80 sm:relative sm:order-first sm:border-b sm:border-t-0">
+    <header className="fixed bottom-0 left-0 right-0 z-50 order-last border-t border-zinc-200 bg-white/80 backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-950/80 sm:sticky sm:top-0 sm:order-first sm:border-b sm:border-t-0">
       <nav className="mx-auto max-w-[900px]">
         <ul className="flex items-center justify-around py-3 sm:py-4">
           {navLinks}
