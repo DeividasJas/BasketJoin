@@ -24,7 +24,7 @@ export default function Header({ isAuthenticated, navLinksArray, userRole, isDem
       }
     }
 
-    const isActive = pathname == href
+    const isActive = pathname === href || (href !== '/' && pathname.startsWith(href as string))
 
     return (
       <li key={href as string}>
