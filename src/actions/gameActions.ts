@@ -5,14 +5,14 @@ import { CancelRegistration, RegisterToGameResult } from '@/types/prismaTypes'
 import { revalidatePath } from 'next/cache'
 import { isDemoUser, demoFilter } from '@/lib/demo'
 
-export const getGameByIdAndLocation = async (gameId: number, locationId: number = 1) => {
+export const getGameByIdAndLocation = async (gameId: number, locationId?: number) => {
   const user_id = await getUserId()
 
   try {
     const gameObject = await prisma.games.findUnique({
       where: {
         id: gameId,
-        location_id: locationId,
+        ...(locationId !== undefined && { location_id: locationId }),
       },
       include: {
         location: {
