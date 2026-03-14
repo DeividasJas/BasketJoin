@@ -1,6 +1,7 @@
 import { auth } from '@/auth'
-import { redirect } from 'next/navigation'
+import { redirect, notFound } from 'next/navigation'
 import { prisma } from '@/utils/prisma'
+import { demoFilter } from '@/lib/demo'
 import LocationForm from '@/components/admin/LocationForm'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
@@ -18,12 +19,14 @@ export default async function EditLocationPage({ params }: { params: Promise<{ i
     redirect('/')
   }
 
+  const isDemo = await demoFilter()
+
   const location = await prisma.locations.findUnique({
     where: { id: parseInt(id) },
   })
 
-  if (!location) {
-    redirect('/dashboard/locations')
+  if (!location || location.is_demo !== isDemo) {
+    return notFound()
   }
 
   return (

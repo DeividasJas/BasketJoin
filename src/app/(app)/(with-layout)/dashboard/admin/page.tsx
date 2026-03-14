@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation'
 import { auth } from '@/auth'
 import { prisma } from '@/utils/prisma'
 import { formatCurrency } from '@/lib/paymentUtils'
+import { demoFilter } from '@/lib/demo'
 import AdminUsersList from '@/components/admin/AdminUsersList'
 
 export default async function AdminPage() {
@@ -20,9 +21,12 @@ export default async function AdminPage() {
     redirect('/')
   }
 
+  const isDemo = await demoFilter()
+
   const [users, usersByRole, activeUsersCount, inactiveUsersCount, totalGames, scheduledGames, totalLeagues, activeLeagues, totalPayments, overdueSchedules] =
     await Promise.all([
       prisma.users.findMany({
+        where: { is_demo: isDemo },
         select: {
           id: true,
           email: true,
@@ -36,16 +40,17 @@ export default async function AdminPage() {
       }),
       prisma.users.groupBy({
         by: ['role'],
+        where: { is_demo: isDemo },
         _count: { id: true },
       }),
-      prisma.users.count({ where: { is_active: true } }),
-      prisma.users.count({ where: { is_active: false } }),
-      prisma.games.count(),
-      prisma.games.count({ where: { status: 'SCHEDULED' } }),
-      prisma.league.count(),
-      prisma.league.count({ where: { status: { in: ['ACTIVE', 'UPCOMING'] } } }),
-      prisma.payment.aggregate({ _sum: { amount: true } }),
-      prisma.paymentSchedule.count({ where: { status: 'OVERDUE' } }),
+      prisma.users.count({ where: { is_active: true, is_demo: isDemo } }),
+      prisma.users.count({ where: { is_active: false, is_demo: isDemo } }),
+      prisma.games.count({ where: { is_demo: isDemo } }),
+      prisma.games.count({ where: { status: 'SCHEDULED', is_demo: isDemo } }),
+      prisma.league.count({ where: { is_demo: isDemo } }),
+      prisma.league.count({ where: { status: { in: ['ACTIVE', 'UPCOMING'] }, is_demo: isDemo } }),
+      prisma.payment.aggregate({ where: { is_demo: isDemo }, _sum: { amount: true } }),
+      prisma.paymentSchedule.count({ where: { status: 'OVERDUE', is_demo: isDemo } }),
     ])
 
   const totalUsers = users.length

@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation'
 import { auth } from '@/auth'
 import { prisma } from '@/utils/prisma'
 import { formatCurrency } from '@/lib/paymentUtils'
+import { demoFilter } from '@/lib/demo'
 import { Calendar, TrendingUp, TrendingDown, AlertTriangle } from 'lucide-react'
 import PaymentSchedulesTable from '@/components/admin/PaymentSchedulesTable'
 
@@ -22,12 +23,15 @@ export default async function PaymentsPage({ searchParams }: { searchParams: Pro
     redirect('/schedule')
   }
 
+  const isDemo = await demoFilter()
+
   const statusFilter = params.status as 'PENDING' | 'PAID' | 'OVERDUE' | 'PARTIALLY_PAID' | undefined
 
   // Get all active/upcoming leagues
   const activeLeagues = await prisma.league.findMany({
     where: {
       status: { in: ['ACTIVE', 'UPCOMING'] },
+      is_demo: isDemo,
     },
     select: {
       id: true,
@@ -40,11 +44,13 @@ export default async function PaymentsPage({ searchParams }: { searchParams: Pro
     where: statusFilter
       ? {
           status: statusFilter,
+          is_demo: isDemo,
           league: {
             status: { in: ['ACTIVE', 'UPCOMING'] },
           },
         }
       : {
+          is_demo: isDemo,
           league: {
             status: { in: ['ACTIVE', 'UPCOMING'] },
           },

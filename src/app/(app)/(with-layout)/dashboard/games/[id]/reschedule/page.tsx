@@ -1,6 +1,7 @@
 import { auth } from '@/auth'
-import { redirect } from 'next/navigation'
+import { redirect, notFound } from 'next/navigation'
 import { prisma } from '@/utils/prisma'
+import { demoFilter } from '@/lib/demo'
 import RescheduleForm from '@/components/admin/RescheduleForm'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
@@ -18,6 +19,8 @@ export default async function ReschedulePage({ params }: { params: Promise<{ id:
     redirect('/')
   }
 
+  const isDemo = await demoFilter()
+
   const game = await prisma.games.findUnique({
     where: { id: parseInt(id) },
     include: {
@@ -32,8 +35,8 @@ export default async function ReschedulePage({ params }: { params: Promise<{ id:
     },
   })
 
-  if (!game) {
-    redirect('/admin')
+  if (!game || game.is_demo !== isDemo) {
+    return notFound()
   }
 
   return (

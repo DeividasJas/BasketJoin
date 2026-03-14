@@ -1,6 +1,7 @@
 import { auth } from '@/auth'
-import { redirect } from 'next/navigation'
+import { redirect, notFound } from 'next/navigation'
 import { prisma } from '@/utils/prisma'
+import { demoFilter } from '@/lib/demo'
 import { getAllLocations } from '@/actions/adminGameActions'
 import ChangeLocationForm from '@/components/admin/ChangeLocationForm'
 import Link from 'next/link'
@@ -19,6 +20,8 @@ export default async function ChangeLocationPage({ params }: { params: Promise<{
     redirect('/')
   }
 
+  const isDemo = await demoFilter()
+
   const [game, { locations }] = await Promise.all([
     prisma.games.findUnique({
       where: { id: parseInt(id) },
@@ -36,8 +39,8 @@ export default async function ChangeLocationPage({ params }: { params: Promise<{
     getAllLocations(),
   ])
 
-  if (!game) {
-    redirect('/admin')
+  if (!game || game.is_demo !== isDemo) {
+    return notFound()
   }
 
   return (

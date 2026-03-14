@@ -1,6 +1,7 @@
-import { redirect } from 'next/navigation'
+import { redirect, notFound } from 'next/navigation'
 import { auth } from '@/auth'
 import { prisma } from '@/utils/prisma'
+import { demoFilter } from '@/lib/demo'
 import LeagueForm from '@/components/admin/LeagueForm'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
@@ -22,6 +23,8 @@ export default async function EditLeaguePage({ params }: { params: Promise<{ id:
     redirect('/schedule')
   }
 
+  const isDemo = await demoFilter()
+
   const league = await prisma.league.findUnique({
     where: { id },
     select: {
@@ -38,15 +41,16 @@ export default async function EditLeaguePage({ params }: { params: Promise<{ id:
       max_players: true,
       game_type: true,
       game_description: true,
+      is_demo: true,
     },
   })
 
-  if (!league) {
-    redirect('/dashboard/leagues')
+  if (!league || league.is_demo !== isDemo) {
+    return notFound()
   }
 
   const allLocations = await prisma.locations.findMany({
-    where: { is_active: true },
+    where: { is_active: true, is_demo: isDemo },
     select: {
       id: true,
       name: true,

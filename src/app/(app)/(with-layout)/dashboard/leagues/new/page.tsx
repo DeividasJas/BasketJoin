@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation'
 import { auth } from '@/auth'
 import { prisma } from '@/utils/prisma'
+import { demoFilter } from '@/lib/demo'
 import LeagueForm from '@/components/admin/LeagueForm'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
@@ -21,8 +22,10 @@ export default async function NewLeaguePage() {
     redirect('/schedule')
   }
 
+  const isDemo = await demoFilter()
+
   const allLocations = await prisma.locations.findMany({
-    where: { is_active: true },
+    where: { is_active: true, is_demo: isDemo },
     select: {
       id: true,
       name: true,
