@@ -309,6 +309,7 @@ export const lastTenGamesFromUserRegistration = async () => {
 
     const lastTenGames = await prisma.games.findMany({
       take: 10,
+      orderBy: { game_date: 'asc' },
       where: {
         game_date: {
           gte: user?.created_at,
