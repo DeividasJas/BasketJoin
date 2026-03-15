@@ -6,6 +6,7 @@ import { revalidatePath } from 'next/cache'
 import { MembershipStatus, PaymentScheduleStatus, LeagueStatus } from '@/generated/prisma/client/client'
 import type { CreateMembershipResult } from '@/types/prismaTypes'
 import { calculateProRatedAmount, createPaymentSchedules } from '@/lib/paymentUtils'
+import { isDemoUser } from '@/lib/demo'
 
 /**
  * Join a league (create membership)
@@ -77,12 +78,15 @@ export async function joinLeague(leagueId: string, userId?: string): Promise<Cre
     const proRatedAmount = calculateProRatedAmount(league.gym_rental_cost, league.start_date, league.end_date, joinDate, paymentDueDates)
 
     // Create membership
+    const isDemo = await isDemoUser()
+
     const membership = await prisma.leagueMembership.create({
       data: {
         user_id: memberId,
         league_id: leagueId,
         status: MembershipStatus.ACTIVE,
         pro_rated_amount: proRatedAmount.totalAmount,
+        is_demo: isDemo,
       },
       include: {
         user: true,
@@ -111,6 +115,7 @@ export async function joinLeague(leagueId: string, userId?: string): Promise<Cre
           game_id: game.id,
           status: 'CONFIRMED',
           registration_type: 'MEMBER',
+          is_demo: isDemo,
         })),
         skipDuplicates: true,
       })
@@ -337,8 +342,10 @@ export async function getUserMemberships(userId?: string) {
       }
     }
 
+    const isDemo = await isDemoUser()
+
     const memberships = await prisma.leagueMembership.findMany({
-      where: { user_id: targetUserId },
+      where: { user_id: targetUserId, is_demo: isDemo },
       include: {
         league: true,
         payment_schedules: {
@@ -367,8 +374,10 @@ export async function getUserMemberships(userId?: string) {
  */
 export async function getLeagueMemberships(leagueId: string) {
   try {
+    const isDemo = await isDemoUser()
+
     const memberships = await prisma.leagueMembership.findMany({
-      where: { league_id: leagueId },
+      where: { league_id: leagueId, is_demo: isDemo },
       include: {
         user: {
           select: {

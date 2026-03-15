@@ -24,13 +24,13 @@ export default function Header({ isAuthenticated, navLinksArray, userRole }: { i
       }
     }
 
-    const isActive = pathname == href
+    const isActive = pathname === href || (href !== '/' && pathname.startsWith(href as string))
 
     return (
       <li key={href as string}>
         <Link
           href={href}
-          className={`relative px-3 py-2 text-[13px] font-medium transition-colors sm:px-4 ${
+          className={`relative whitespace-nowrap px-2 py-2 text-[12px] font-medium transition-colors sm:px-4 sm:text-[13px] ${
             isActive ? 'text-basket-400' : 'text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200'
           }`}
         >
@@ -42,9 +42,11 @@ export default function Header({ isAuthenticated, navLinksArray, userRole }: { i
   })
 
   return (
-    <header className="fixed bottom-0 left-0 right-0 z-50 order-last border-t border-zinc-200 bg-white/80 backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-950/80 sm:relative sm:order-first sm:border-b sm:border-t-0">
+    <header className="fixed bottom-0 left-0 right-0 z-50 order-last border-t border-zinc-200 bg-white/80 backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-950/80 sm:sticky sm:top-0 sm:order-first sm:border-b sm:border-t-0">
       <nav className="mx-auto max-w-[900px]">
-        <ul className="flex items-center justify-around py-3 sm:py-4">{navLinks}</ul>
+        <ul className="flex items-center justify-around overflow-x-auto py-3 [-ms-overflow-style:none] [scrollbar-width:none] sm:py-4 [&::-webkit-scrollbar]:hidden">
+          {navLinks}
+        </ul>
       </nav>
     </header>
   )

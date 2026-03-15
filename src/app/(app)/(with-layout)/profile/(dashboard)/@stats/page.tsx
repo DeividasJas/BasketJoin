@@ -1,10 +1,10 @@
 import Link from 'next/link'
 
 const stats = [
-  { label: 'Points', value: 12 },
-  { label: 'Rebounds', value: 12 },
-  { label: 'Assists', value: 12 },
-  { label: 'Steals', value: 12 },
+  { label: 'Points', value: 18.4 },
+  { label: 'Rebounds', value: 6.2 },
+  { label: 'Assists', value: 4.7 },
+  { label: 'Steals', value: 1.3 },
 ]
 
 export default async function ProfileDashboardStatsParallel() {

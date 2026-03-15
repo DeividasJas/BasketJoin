@@ -1,17 +1,14 @@
-import { Skeleton } from '@/components/ui/skeleton'
-
-export default function StatsGridSkeleton() {
+export default function StatsGridLoading() {
   return (
-    <div className="grid h-full w-full grid-cols-2 gap-2 text-zinc-300">
-      {[1, 2, 3, 4].map(item => (
-        <div key={item} className="flex h-fit flex-col items-center justify-center gap-[0.3rem] rounded-md bg-zinc-300 px-2 py-2 dark:bg-zinc-800">
-          <Skeleton className="h-[25px] w-[25px] rounded-full" />
-          <Skeleton className="mt-1 h-3 w-1/2" />
-          <Skeleton className="h-4 w-1/3" />
-        </div>
-      ))}
-      <div className="col-span-2 flex place-content-center">
-        <Skeleton className="h-8 w-1/3 rounded-md border-2 border-zinc-600" />
+    <div className="animate-pulse">
+      <div className="mb-4 h-3 w-24 rounded bg-zinc-200 dark:bg-zinc-700" />
+      <div className="grid grid-cols-4 gap-4">
+        {[1, 2, 3, 4].map(i => (
+          <div key={i} className="flex flex-col items-center gap-1">
+            <div className="h-7 w-8 rounded bg-zinc-200 dark:bg-zinc-700" />
+            <div className="h-2 w-10 rounded bg-zinc-100 dark:bg-zinc-800" />
+          </div>
+        ))}
       </div>
     </div>
   )

@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation'
-import DashboardNavList from '@/components/dashboardNavList'
+import SubNav from '@/components/subNav'
 import { auth } from '@/auth'
+import { Links } from '@/types/navLinks'
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const session = await auth()
@@ -9,7 +10,6 @@ export default async function DashboardLayout({ children }: { children: React.Re
     redirect('/login')
   }
 
-  // Check if user has ADMIN or ORGANIZER role
   const userRole = session.user.role
   const hasAdminAccess = userRole === 'ADMIN' || userRole === 'ORGANIZER'
 
@@ -17,10 +17,18 @@ export default async function DashboardLayout({ children }: { children: React.Re
     redirect('/')
   }
 
+  const dashboardLinks: Links[] = [
+    { label: 'Games', href: '/dashboard/games' },
+    { label: 'Locations', href: '/dashboard/locations' },
+    { label: 'Leagues', href: '/dashboard/leagues' },
+    { label: 'Payments', href: '/dashboard/payments' },
+    ...(userRole === 'ADMIN' ? [{ label: 'Admin', href: '/dashboard/admin' } as Links] : []),
+  ]
+
   return (
-    <div className="flex flex-col gap-6">
-      <DashboardNavList userRole={userRole} />
-      {children}
-    </div>
+    <>
+      <SubNav links={dashboardLinks} />
+      <div className="flex flex-col gap-6 pt-6">{children}</div>
+    </>
   )
 }

@@ -60,6 +60,7 @@ export default async function GameStatusPage() {
         participantsData={participantsData}
         maxPlayers={maxPlayers}
         minPlayers={minPlayers}
+        gameDate={gameData.game_date}
       />
     </div>
   )

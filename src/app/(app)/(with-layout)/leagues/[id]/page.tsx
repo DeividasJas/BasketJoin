@@ -1,6 +1,7 @@
-import { redirect } from 'next/navigation'
+import { redirect, notFound } from 'next/navigation'
 import { auth } from '@/auth'
 import { prisma } from '@/utils/prisma'
+import { isDemoUser } from '@/lib/demo'
 import JoinLeagueButton from '@/components/JoinLeagueButton'
 import { Calendar, MapPin, Users, FileText, CheckCircle, ArrowLeft } from 'lucide-react'
 import { formatCurrency, calculateProRatedAmount } from '@/lib/paymentUtils'
@@ -15,6 +16,8 @@ export default async function LeagueDetailPage({ params }: { params: Promise<{ i
     redirect('/login')
   }
 
+  const isDemo = await isDemoUser()
+
   const league = await prisma.league.findUnique({
     where: { id },
     include: {
@@ -28,8 +31,8 @@ export default async function LeagueDetailPage({ params }: { params: Promise<{ i
     },
   })
 
-  if (!league) {
-    redirect('/leagues')
+  if (!league || league.is_demo !== isDemo) {
+    return notFound()
   }
 
   const { isMember, membership } = await checkLeagueMembership(session.user.id, id)

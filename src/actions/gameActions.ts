@@ -3,15 +3,16 @@ import { prisma } from '@/utils/prisma'
 import { findCurrentUser, getUserId } from './userActions'
 import { CancelRegistration, RegisterToGameResult } from '@/types/prismaTypes'
 import { revalidatePath } from 'next/cache'
+import { isDemoUser } from '@/lib/demo'
 
-export const getGameByIdAndLocation = async (gameId: number, locationId: number = 1) => {
+export const getGameByIdAndLocation = async (gameId: number, locationId?: number) => {
   const user_id = await getUserId()
 
   try {
     const gameObject = await prisma.games.findUnique({
       where: {
         id: gameId,
-        location_id: locationId,
+        ...(locationId !== undefined && { location_id: locationId }),
       },
       include: {
         location: {
@@ -32,7 +33,8 @@ export const getGameByIdAndLocation = async (gameId: number, locationId: number 
         },
       },
     })
-    if (!gameObject) return { success: false, message: 'Game not found' }
+    const isDemo = await isDemoUser()
+    if (!gameObject || gameObject.is_demo !== isDemo) return { success: false, message: 'Game not found' }
 
     const participantsData = gameObject.game_registrations.map(registration => registration.user)
 
@@ -61,12 +63,15 @@ export const getNextUpcomingGame = async () => {
   const user_id = await getUserId()
 
   try {
+    const isDemo = await isDemoUser()
+
     const gameObject = await prisma.games.findFirst({
       where: {
         game_date: {
           gte: new Date(),
         },
         status: { not: 'CANCELLED' },
+        is_demo: isDemo,
       },
       orderBy: {
         game_date: 'asc',
@@ -134,12 +139,15 @@ export const getFirstGameByLocationId = async (locationId: number) => {
   const user_id = await getUserId()
 
   try {
+    const isDemo = await isDemoUser()
+
     const gameObject = await prisma.games.findFirst({
       where: {
         location_id: locationId,
         game_date: {
           gte: new Date(),
         },
+        is_demo: isDemo,
       },
       include: {
         location: {
@@ -206,10 +214,16 @@ export const registerToGame = async (gameId: number): Promise<RegisterToGameResu
       },
       select: {
         id: true,
+        game_date: true,
+        status: true,
       },
     })
 
     if (!testFindGame) return { success: false, message: 'No games found' }
+
+    if (testFindGame.game_date < new Date() || testFindGame.status === 'COMPLETED' || testFindGame.status === 'CANCELLED') {
+      return { success: false, message: 'This game has already passed or is no longer available' }
+    }
 
     const existingRegistration = await prisma.game_registrations.findFirst({
       where: {
@@ -232,6 +246,7 @@ export const registerToGame = async (gameId: number): Promise<RegisterToGameResu
       data: {
         user_id: user?.id,
         game_id: gameId,
+        is_demo: await isDemoUser(),
       },
     })
     if (!newRegistration) return { success: false, message: 'Registration failed' }
@@ -290,13 +305,18 @@ export const lastTenGamesFromUserRegistration = async () => {
 
     if (!success) return { success: false, message: 'User not found' }
 
+    const isDemo = await isDemoUser()
+
     const lastTenGames = await prisma.games.findMany({
       take: 10,
+      orderBy: { game_date: 'asc' },
       where: {
         game_date: {
           gte: user?.created_at,
           lte: new Date(),
         },
+        status: { in: ['COMPLETED', 'IN_PROGRESS'] },
+        is_demo: isDemo,
       },
       include: {
         game_registrations: true,
@@ -312,7 +332,10 @@ export const lastTenGamesFromUserRegistration = async () => {
 
 export const getAllGames = async () => {
   try {
+    const isDemo = await isDemoUser()
+
     const allGames = await prisma.games.findMany({
+      where: { is_demo: isDemo },
       orderBy: {
         game_date: 'asc',
       },

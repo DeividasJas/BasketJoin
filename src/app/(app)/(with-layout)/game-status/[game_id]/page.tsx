@@ -10,7 +10,7 @@ export default async function DynamicGameStatusPage({ params }: { params: Promis
   const isLoggedIn = !!session?.user
 
   const gameId = Number((await params).game_id)
-  const response = await getGameByIdAndLocation(Number(gameId), 1)
+  const response = await getGameByIdAndLocation(Number(gameId))
 
   if (!response.success)
     return (
@@ -63,6 +63,7 @@ export default async function DynamicGameStatusPage({ params }: { params: Promis
         participantsData={response.participantsData}
         maxPlayers={maxPlayers}
         minPlayers={minPlayers}
+        gameDate={gameDate}
       />
     </div>
   )

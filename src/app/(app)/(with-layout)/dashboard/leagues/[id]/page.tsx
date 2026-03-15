@@ -1,6 +1,7 @@
-import { redirect } from 'next/navigation'
+import { redirect, notFound } from 'next/navigation'
 import { auth } from '@/auth'
 import { prisma } from '@/utils/prisma'
+import { isDemoUser } from '@/lib/demo'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft, CheckCircle, Clock, Edit } from 'lucide-react'
@@ -24,6 +25,8 @@ export default async function LeagueDetailPage({ params }: { params: Promise<{ i
   if (user?.role !== 'ADMIN') {
     redirect('/schedule')
   }
+
+  const isDemo = await isDemoUser()
 
   const league = await prisma.league.findUnique({
     where: { id },
@@ -72,8 +75,8 @@ export default async function LeagueDetailPage({ params }: { params: Promise<{ i
     },
   })
 
-  if (!league) {
-    redirect('/dashboard/leagues')
+  if (!league || league.is_demo !== isDemo) {
+    return notFound()
   }
 
   const paymentDueDates: string[] = JSON.parse(league.payment_due_dates)

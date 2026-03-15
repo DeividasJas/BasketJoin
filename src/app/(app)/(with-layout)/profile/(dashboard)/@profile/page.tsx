@@ -1,17 +1,8 @@
-import Link from 'next/link'
 import Image from 'next/image'
-import { redirect } from 'next/navigation'
-import { Settings } from 'lucide-react'
 import { findCurrentUser } from '@/actions/userActions'
-import { auth } from '@/auth'
+import { format } from 'date-fns'
 
 export default async function ProfileDashboardProfileParallel() {
-  const session = await auth()
-
-  if (!session?.user) {
-    redirect('/login')
-  }
-
   const { success, user, message } = await findCurrentUser()
 
   if (!success) {
@@ -37,7 +28,7 @@ export default async function ProfileDashboardProfileParallel() {
       {/* Avatar */}
       <div className="relative mb-4 h-20 w-20 overflow-hidden rounded-full bg-zinc-200 ring-2 ring-zinc-200/80 dark:bg-zinc-700 dark:ring-zinc-700/80">
         {user.picture ? (
-          <Image src={user.picture} alt={fullName || 'Profile picture'} width={80} height={80} priority={true} className="h-full w-full object-cover" />
+          <Image src={user.picture} alt={fullName || 'Profile picture'} width={80} height={80} priority className="h-full w-full object-cover" />
         ) : (
           <div className="flex h-full w-full items-center justify-center text-2xl font-light text-zinc-400 dark:text-zinc-500">
             {user.given_name?.charAt(0) || '?'}
@@ -51,14 +42,11 @@ export default async function ProfileDashboardProfileParallel() {
       {/* Username */}
       {user.username && <p className="mt-0.5 text-sm text-zinc-400 dark:text-zinc-500">@{user.username}</p>}
 
-      {/* Settings link */}
-      <Link
-        href="/profile/settings"
-        className="mt-4 flex items-center gap-1.5 text-[12px] text-zinc-400 transition-colors hover:text-basket-400 dark:text-zinc-500 dark:hover:text-basket-400"
-      >
-        <Settings className="h-3.5 w-3.5" />
-        <span>Settings</span>
-      </Link>
+      {/* Email & joined */}
+      <div className="mt-1.5 flex flex-wrap items-center justify-center gap-x-3 text-[12px] text-zinc-400 dark:text-zinc-500">
+        {user.email && <span>{user.email}</span>}
+        {user.created_at && <span>Joined {format(user.created_at, 'MMM yyyy')}</span>}
+      </div>
     </div>
   )
 }

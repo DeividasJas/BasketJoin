@@ -3,6 +3,7 @@
 import { auth } from '@/auth'
 import { prisma } from '@/utils/prisma'
 import { revalidatePath } from 'next/cache'
+import { isDemoUser } from '@/lib/demo'
 
 // Helper function to check admin access
 async function checkAdminAccess() {
@@ -41,6 +42,7 @@ export async function createGame(data: {
         game_type: data.game_type,
         organizer_id: userId,
         status: 'SCHEDULED',
+        is_demo: await isDemoUser(),
       },
       include: {
         location: true,
@@ -184,12 +186,15 @@ export async function cancelGame(gameId: number, reason?: string) {
       ? `Game on ${new Date(game.game_date).toLocaleDateString()} at ${game.location.name} has been cancelled. Reason: ${reason}`
       : `Game on ${new Date(game.game_date).toLocaleDateString()} at ${game.location.name} has been cancelled.`
 
+    const isDemo = await isDemoUser()
+
     await prisma.notification.createMany({
       data: registrations.map(reg => ({
         user_id: reg.user_id,
         game_id: gameId,
         type: 'GAME_CANCELLED',
         message: notificationMessage,
+        is_demo: isDemo,
       })),
     })
 
@@ -235,12 +240,15 @@ export async function rescheduleGame(gameId: number, newDate: Date) {
     // Notify all registered players
     const notificationMessage = `Game has been rescheduled to ${new Date(newDate).toLocaleString()} at ${game.location.name}`
 
+    const isDemoReschedule = await isDemoUser()
+
     await prisma.notification.createMany({
       data: registrations.map(reg => ({
         user_id: reg.user_id,
         game_id: gameId,
         type: 'GAME_RESCHEDULED',
         message: notificationMessage,
+        is_demo: isDemoReschedule,
       })),
     })
 
@@ -286,12 +294,15 @@ export async function changeGameLocation(gameId: number, newLocationId: number) 
     // Notify all registered players
     const notificationMessage = `Game location has been changed to ${game.location.name} (${game.location.address})`
 
+    const isDemoLocation = await isDemoUser()
+
     await prisma.notification.createMany({
       data: registrations.map(reg => ({
         user_id: reg.user_id,
         game_id: gameId,
         type: 'GAME_LOCATION_CHANGED',
         message: notificationMessage,
+        is_demo: isDemoLocation,
       })),
     })
 
@@ -389,9 +400,10 @@ export async function getAllGamesForAdmin(
     await checkAdminAccess()
 
     const skip = (page - 1) * pageSize
+    const isDemo = await isDemoUser()
 
     // Build where clause
-    const whereClause: any = {}
+    const whereClause: any = { is_demo: isDemo }
 
     if (filters?.status) {
       whereClause.status = filters.status.toUpperCase()
@@ -439,6 +451,7 @@ export async function getAllGamesForAdmin(
         where: whereClause,
       }),
       prisma.league.findMany({
+        where: { is_demo: isDemo },
         include: {
           _count: {
             select: {
@@ -476,9 +489,12 @@ export async function getAllGamesForAdmin(
 // Get all locations
 export async function getAllLocations() {
   try {
+    const isDemo = await isDemoUser()
+
     const locations = await prisma.locations.findMany({
       where: {
         is_active: true,
+        is_demo: isDemo,
       },
       orderBy: {
         name: 'asc',

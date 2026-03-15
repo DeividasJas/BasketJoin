@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation'
 import { auth } from '@/auth'
 import { prisma } from '@/utils/prisma'
 import { formatCurrency } from '@/lib/paymentUtils'
+import { isDemoUser } from '@/lib/demo'
 import { Calendar, TrendingUp, TrendingDown, AlertTriangle } from 'lucide-react'
 import PaymentSchedulesTable from '@/components/admin/PaymentSchedulesTable'
 
@@ -22,12 +23,15 @@ export default async function PaymentsPage({ searchParams }: { searchParams: Pro
     redirect('/schedule')
   }
 
+  const isDemo = await isDemoUser()
+
   const statusFilter = params.status as 'PENDING' | 'PAID' | 'OVERDUE' | 'PARTIALLY_PAID' | undefined
 
   // Get all active/upcoming leagues
   const activeLeagues = await prisma.league.findMany({
     where: {
       status: { in: ['ACTIVE', 'UPCOMING'] },
+      is_demo: isDemo,
     },
     select: {
       id: true,
@@ -40,11 +44,13 @@ export default async function PaymentsPage({ searchParams }: { searchParams: Pro
     where: statusFilter
       ? {
           status: statusFilter,
+          is_demo: isDemo,
           league: {
             status: { in: ['ACTIVE', 'UPCOMING'] },
           },
         }
       : {
+          is_demo: isDemo,
           league: {
             status: { in: ['ACTIVE', 'UPCOMING'] },
           },
@@ -130,12 +136,18 @@ export default async function PaymentsPage({ searchParams }: { searchParams: Pro
           <p className="mt-1 text-[10px] tabular-nums text-zinc-400 dark:text-zinc-500">{pendingCount} pending</p>
         </div>
 
-        <div className={`relative overflow-hidden rounded-xl border p-4 ${overdueCount > 0 ? 'border-red-200 bg-red-50/50 dark:border-red-900/40 dark:bg-red-950/20' : 'border-zinc-200 bg-white dark:border-zinc-700/60 dark:bg-zinc-900'}`}>
+        <div
+          className={`relative overflow-hidden rounded-xl border p-4 ${overdueCount > 0 ? 'border-red-200 bg-red-50/50 dark:border-red-900/40 dark:bg-red-950/20' : 'border-zinc-200 bg-white dark:border-zinc-700/60 dark:bg-zinc-900'}`}
+        >
           <div className={`absolute right-3 top-3 rounded-lg p-1.5 ${overdueCount > 0 ? 'bg-red-100 dark:bg-red-500/10' : 'bg-zinc-100 dark:bg-zinc-800'}`}>
             <AlertTriangle className={`h-3.5 w-3.5 ${overdueCount > 0 ? 'text-red-500 dark:text-red-400' : 'text-zinc-400 dark:text-zinc-500'}`} />
           </div>
           <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-zinc-400 dark:text-zinc-500">Overdue</p>
-          <p className={`mt-2 font-serif text-xl font-semibold tabular-nums sm:text-2xl ${overdueCount > 0 ? 'text-red-600 dark:text-red-400' : 'text-zinc-800 dark:text-zinc-100'}`}>{overdueCount}</p>
+          <p
+            className={`mt-2 font-serif text-xl font-semibold tabular-nums sm:text-2xl ${overdueCount > 0 ? 'text-red-600 dark:text-red-400' : 'text-zinc-800 dark:text-zinc-100'}`}
+          >
+            {overdueCount}
+          </p>
         </div>
       </div>
 

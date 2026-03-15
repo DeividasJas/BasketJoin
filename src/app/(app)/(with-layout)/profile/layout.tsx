@@ -1,7 +1,15 @@
 import { redirect } from 'next/navigation'
-import ProfileNavList from '@/components/profileNavList'
+import SubNav from '@/components/subNav'
 import { ProfileProvider } from '@/context/profileContext'
 import { auth } from '@/auth'
+import { Links } from '@/types/navLinks'
+
+const profileLinks: Links[] = [
+  { label: 'General', href: '/profile' },
+  { label: 'Attendance', href: '/profile/attendance' },
+  { label: 'Stats', href: '/profile/stats' },
+  { label: 'Memberships', href: '/profile/memberships' },
+]
 
 export default async function LayoutProfile({ children }: { children: React.ReactNode }) {
   const session = await auth()
@@ -12,10 +20,8 @@ export default async function LayoutProfile({ children }: { children: React.Reac
 
   return (
     <ProfileProvider>
-      <div className="mx-auto w-full max-w-lg">
-        <ProfileNavList />
-        <div className="py-6">{children}</div>
-      </div>
+      <SubNav links={profileLinks} />
+      <div className="mx-auto w-full max-w-lg py-6">{children}</div>
     </ProfileProvider>
   )
 }

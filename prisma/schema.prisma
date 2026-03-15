@@ -117,6 +117,7 @@ model Users {
   picture            String?
   role               UserRole             @default(PLAYER)
   is_active          Boolean              @default(true)
+  is_demo            Boolean              @default(false)
   created_at         DateTime             @default(now())
   modified_at        DateTime             @updatedAt
   game_registrations Game_registrations[]
@@ -139,6 +140,7 @@ model Games {
   organizer_id       String?
   game_type          String?
   league_id          String?
+  is_demo            Boolean              @default(false)
   created_at         DateTime             @default(now())
   modified_at        DateTime             @updatedAt
   game_registrations Game_registrations[]
@@ -148,7 +150,7 @@ model Games {
   organizer Users?    @relation("GameOrganizer", fields: [organizer_id], references: [id])
   league    League?   @relation(fields: [league_id], references: [id], onDelete: SetNull)
 
-  @@unique([game_date, location_id])
+  @@unique([game_date, location_id, is_demo])
   @@index([league_id])
 }
 
@@ -159,6 +161,7 @@ model Game_registrations {
   status            RegistrationStatus @default(CONFIRMED)
   registration_type RegistrationType   @default(GUEST)
   guest_fee_paid    Boolean            @default(false)
+  is_demo           Boolean            @default(false)
   created_at        DateTime           @default(now())
   modified_at       DateTime           @updatedAt
 
@@ -179,6 +182,7 @@ model Locations {
   image_url      String?
   price_per_game Int?
   is_active      Boolean  @default(true)
+  is_demo        Boolean  @default(false)
   created_at     DateTime @default(now())
   modified_at    DateTime @updatedAt
   games          Games[]
@@ -192,6 +196,7 @@ model Notification {
   type       String
   message    String
   read       Boolean  @default(false)
+  is_demo    Boolean  @default(false)
   created_at DateTime @default(now())
 
   user Users  @relation(fields: [user_id], references: [id])
@@ -227,6 +232,9 @@ model League {
   recurring_pattern  String? // JSON: {frequency: "WEEKLY", dayOfWeek: 1, time: "19:00"}
   custom_dates       String? // JSON array of ISO date strings
 
+  // Demo
+  is_demo            Boolean        @default(false)
+
   // Timestamps
   created_at         DateTime       @default(now())
   modified_at        DateTime       @updatedAt
@@ -251,6 +259,7 @@ model LeagueMembership {
   status           MembershipStatus @default(ACTIVE)
   joined_at        DateTime         @default(now())
   pro_rated_amount Int // Total amount member owes (pro-rated from join date) in cents
+  is_demo          Boolean          @default(false)
   created_at       DateTime         @default(now())
   modified_at      DateTime         @updatedAt
 
@@ -276,6 +285,7 @@ model PaymentSchedule {
   notes         String?
   created_at    DateTime               @default(now())
   modified_at   DateTime               @updatedAt
+  is_demo       Boolean                @default(false)
   paid_at       DateTime?
 
   league     League           @relation(fields: [league_id], references: [id], onDelete: Cascade)
@@ -299,6 +309,7 @@ model Payment {
   payment_method      String? // BANK_TRANSFER, CASH, OTHER
   payment_date        DateTime    @default(now())
   notes               String?
+  is_demo             Boolean     @default(false)
   created_at          DateTime    @default(now())
 
   user             Users                @relation(fields: [user_id], references: [id], onDelete: Cascade)

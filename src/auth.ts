@@ -4,6 +4,8 @@ import GoogleProvider from 'next-auth/providers/google'
 import FacebookProvider from 'next-auth/providers/facebook'
 import { prisma } from '@/utils/prisma'
 import bcrypt from 'bcryptjs'
+// Inlined here to avoid circular import with @/lib/demo (which imports auth)
+const DEMO_EMAIL = 'demo@basketjoin.com'
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   session: {
@@ -69,6 +71,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             return false
           }
 
+          // Block OAuth login for demo account email
+          if (email === DEMO_EMAIL) {
+            return false
+          }
+
           // Check if user exists
           let existingUser = await prisma.users.findUnique({
             where: { email },
@@ -115,13 +122,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.picture = user.image
       }
 
-      // Fetch user role from database if not already in token
-      if (token.id && !token.role) {
+      // Single DB fetch for both role and is_demo
+      if (token.id && (!token.role || token.is_demo === undefined)) {
         const dbUser = await prisma.users.findUnique({
           where: { id: token.id as string },
-          select: { role: true },
+          select: { role: true, is_demo: true },
         })
         token.role = dbUser?.role || 'PLAYER'
+        token.is_demo = dbUser?.is_demo || false
       }
 
       return token
@@ -132,6 +140,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         session.user.email = token.email as string
         session.user.image = token.picture as string
         session.user.role = token.role as string
+        session.user.is_demo = token.is_demo as boolean
       }
       return session
     },

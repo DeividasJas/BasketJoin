@@ -1,15 +1,9 @@
-import { Skeleton } from '@/components/ui/skeleton'
-
 export default function Loading() {
   return (
-    <div className="h-full w-full">
-      <Skeleton className="mx-auto h-[100px] w-[100px] bg-zinc-700"></Skeleton>
-
-      <div className="mt-1 flex flex-col gap-1">
-        <Skeleton className="mx-auto h-4 w-20 bg-zinc-700" />
-        <Skeleton className="mx-auto h-4 w-20 bg-zinc-700" />
-        <Skeleton className="mx-auto h-4 w-20 bg-zinc-700" />
-      </div>
+    <div className="flex animate-pulse flex-col items-center">
+      <div className="mb-4 h-20 w-20 rounded-full bg-zinc-200 dark:bg-zinc-700" />
+      <div className="h-5 w-28 rounded bg-zinc-200 dark:bg-zinc-700" />
+      <div className="mt-2 h-3 w-40 rounded bg-zinc-100 dark:bg-zinc-800" />
     </div>
   )
 }

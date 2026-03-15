@@ -18,12 +18,16 @@ export default async function ProfileDashboardGameHistoryParallel() {
 
       {/* Attendance dots */}
       {lastTenGames && lastTenGames.length > 0 && (
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
           {lastTenGames.map((game, index) => {
             const wasPlaying = game.game_registrations.some(registration => registration.user_id === user?.id)
             return (
-              <div key={index} className="flex flex-col items-center gap-1.5">
-                <div className={`h-3 w-3 rounded-full ${wasPlaying ? 'bg-emerald-500' : 'bg-zinc-300 dark:bg-zinc-600'}`} />
+              <div key={index} className="group relative flex flex-col items-center">
+                <div
+                  className={`h-3.5 w-3.5 rounded-full transition-transform hover:scale-125 ${
+                    wasPlaying ? 'bg-emerald-500 shadow-sm shadow-emerald-500/30' : 'bg-zinc-200 dark:bg-zinc-700'
+                  }`}
+                />
               </div>
             )
           })}
@@ -38,7 +42,7 @@ export default async function ProfileDashboardGameHistoryParallel() {
             <span className="text-[10px] text-zinc-400 dark:text-zinc-500">Attended</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <div className="h-2 w-2 rounded-full bg-zinc-300 dark:bg-zinc-600" />
+            <div className="h-2 w-2 rounded-full bg-zinc-200 dark:bg-zinc-700" />
             <span className="text-[10px] text-zinc-400 dark:text-zinc-500">Missed</span>
           </div>
         </div>
