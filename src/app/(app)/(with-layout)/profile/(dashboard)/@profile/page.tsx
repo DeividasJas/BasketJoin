@@ -1,8 +1,5 @@
 import Image from 'next/image'
 import { findCurrentUser } from '@/actions/userActions'
-import EditProfileForm from '@/components/editProfileForm'
-import LogoutBtn from '@/components/logoutBtn'
-import ThemeChanger from '@/components/themeChangeBtn'
 import { format } from 'date-fns'
 
 export default async function ProfileDashboardProfileParallel() {
@@ -51,12 +48,6 @@ export default async function ProfileDashboardProfileParallel() {
         {user.created_at && <span>Joined {format(user.created_at, 'MMM yyyy')}</span>}
       </div>
 
-      {/* Actions */}
-      <div className="mt-5 flex items-center gap-2">
-        <EditProfileForm />
-        <ThemeChanger />
-        <LogoutBtn />
-      </div>
     </div>
   )
 }

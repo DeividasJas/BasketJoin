@@ -1,5 +1,8 @@
 import { auth } from '@/auth'
 import { redirect } from 'next/navigation'
+import EditProfileForm from '@/components/editProfileForm'
+import LogoutBtn from '@/components/logoutBtn'
+import ThemeChanger from '@/components/themeChangeBtn'
 
 export default async function ProfileDashboardLayout({
   stats,
@@ -32,6 +35,16 @@ export default async function ProfileDashboardLayout({
 
       {/* Game history */}
       <section>{gameHistory}</section>
+
+      {/* Divider */}
+      <div className="border-t border-zinc-200 dark:border-zinc-700/60" />
+
+      {/* Actions */}
+      <div className="flex items-center justify-center gap-2">
+        <EditProfileForm />
+        <ThemeChanger />
+        <LogoutBtn />
+      </div>
     </div>
   )
 }

@@ -8,7 +8,7 @@ export default function SubNav({ links }: { links: Links[] }) {
 
   return (
     <nav className="border-b border-zinc-200 dark:border-zinc-700/60">
-      <div className="scrollbar-none -mb-px flex justify-center gap-0 overflow-x-auto sm:justify-start">
+      <div className="-mb-px flex gap-0 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         {links.map(link => {
           const href = link.href as string
           const isExactRoot = links.some(l => (l.href as string).startsWith(href + '/'))
@@ -18,7 +18,7 @@ export default function SubNav({ links }: { links: Links[] }) {
             <Link
               key={href}
               href={href}
-              className={`relative whitespace-nowrap px-4 py-3 text-center text-[13px] font-medium transition-colors ${
+              className={`relative flex-1 whitespace-nowrap px-3 py-3 text-center text-[13px] font-medium transition-colors sm:flex-none sm:px-4 ${
                 isActive ? 'text-basket-400' : 'text-zinc-400 hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300'
               }`}
             >
