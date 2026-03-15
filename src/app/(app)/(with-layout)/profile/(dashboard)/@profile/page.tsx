@@ -47,7 +47,6 @@ export default async function ProfileDashboardProfileParallel() {
         {user.email && <span>{user.email}</span>}
         {user.created_at && <span>Joined {format(user.created_at, 'MMM yyyy')}</span>}
       </div>
-
     </div>
   )
 }

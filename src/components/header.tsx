@@ -44,7 +44,9 @@ export default function Header({ isAuthenticated, navLinksArray, userRole }: { i
   return (
     <header className="fixed bottom-0 left-0 right-0 z-50 order-last border-t border-zinc-200 bg-white/80 backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-950/80 sm:sticky sm:top-0 sm:order-first sm:border-b sm:border-t-0">
       <nav className="mx-auto max-w-[900px]">
-        <ul className="flex items-center justify-around overflow-x-auto py-3 sm:py-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">{navLinks}</ul>
+        <ul className="flex items-center justify-around overflow-x-auto py-3 [-ms-overflow-style:none] [scrollbar-width:none] sm:py-4 [&::-webkit-scrollbar]:hidden">
+          {navLinks}
+        </ul>
       </nav>
     </header>
   )

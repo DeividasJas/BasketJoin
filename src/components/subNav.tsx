@@ -8,7 +8,7 @@ export default function SubNav({ links }: { links: Links[] }) {
 
   return (
     <nav className="border-b border-zinc-200 dark:border-zinc-700/60">
-      <div className="-mb-px flex gap-0 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+      <div className="-mb-px flex gap-0 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {links.map(link => {
           const href = link.href as string
           const isExactRoot = links.some(l => (l.href as string).startsWith(href + '/'))
