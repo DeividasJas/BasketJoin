@@ -3,7 +3,7 @@
 import { auth } from '@/auth'
 import { prisma } from '@/utils/prisma'
 import { revalidatePath } from 'next/cache'
-import { isDemoUser, demoFilter } from '@/lib/demo'
+import { isDemoUser } from '@/lib/demo'
 
 // Helper function to check admin access
 async function checkAdminAccess() {
@@ -244,7 +244,7 @@ export async function getAllLocationsForAdmin(
     await checkAdminAccess()
 
     const skip = (page - 1) * pageSize
-    const isDemo = await demoFilter()
+    const isDemo = await isDemoUser()
 
     const where: any = { is_demo: isDemo }
 

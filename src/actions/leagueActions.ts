@@ -6,7 +6,7 @@ import { revalidatePath } from 'next/cache'
 import { LeagueStatus, GameStatus } from '@/generated/prisma/client/client'
 import type { CreateLeagueResult } from '@/types/prismaTypes'
 import { generateRecurringDates, validateScheduleConfig, parseCustomDates, type RecurringPattern } from '@/lib/scheduleUtils'
-import { isDemoUser, demoFilter } from '@/lib/demo'
+import { isDemoUser } from '@/lib/demo'
 
 /**
  * Create a new league with optional schedule generation
@@ -681,7 +681,7 @@ export async function cancelLeague(leagueId: string, reason?: string): Promise<{
  */
 export async function getAllLeagues() {
   try {
-    const isDemo = await demoFilter()
+    const isDemo = await isDemoUser()
 
     const leagues = await prisma.league.findMany({
       where: { is_demo: isDemo },
@@ -799,7 +799,7 @@ export async function getLeagueById(leagueId: string) {
  */
 export async function getActiveLeagues() {
   try {
-    const isDemo = await demoFilter()
+    const isDemo = await isDemoUser()
 
     const leagues = await prisma.league.findMany({
       where: { status: LeagueStatus.ACTIVE, is_demo: isDemo },
@@ -831,7 +831,7 @@ export async function getActiveLeagues() {
  */
 export async function getUpcomingLeagues() {
   try {
-    const isDemo = await demoFilter()
+    const isDemo = await isDemoUser()
 
     const leagues = await prisma.league.findMany({
       where: { status: LeagueStatus.UPCOMING, is_demo: isDemo },
@@ -863,7 +863,7 @@ export async function getUpcomingLeagues() {
  */
 export async function getBrowsableLeagues() {
   try {
-    const isDemo = await demoFilter()
+    const isDemo = await isDemoUser()
 
     const leagues = await prisma.league.findMany({
       where: {

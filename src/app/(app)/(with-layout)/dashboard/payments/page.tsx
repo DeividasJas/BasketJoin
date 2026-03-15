@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation'
 import { auth } from '@/auth'
 import { prisma } from '@/utils/prisma'
 import { formatCurrency } from '@/lib/paymentUtils'
-import { demoFilter } from '@/lib/demo'
+import { isDemoUser } from '@/lib/demo'
 import { Calendar, TrendingUp, TrendingDown, AlertTriangle } from 'lucide-react'
 import PaymentSchedulesTable from '@/components/admin/PaymentSchedulesTable'
 
@@ -23,7 +23,7 @@ export default async function PaymentsPage({ searchParams }: { searchParams: Pro
     redirect('/schedule')
   }
 
-  const isDemo = await demoFilter()
+  const isDemo = await isDemoUser()
 
   const statusFilter = params.status as 'PENDING' | 'PAID' | 'OVERDUE' | 'PARTIALLY_PAID' | undefined
 

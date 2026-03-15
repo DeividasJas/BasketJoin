@@ -1,7 +1,7 @@
 'use server'
 import { prisma } from '@/utils/prisma'
 import { auth } from '@/auth'
-import { demoFilter } from '@/lib/demo'
+import { isDemoUser } from '@/lib/demo'
 
 export const getAllUserGames = async () => {
   try {
@@ -11,7 +11,7 @@ export const getAllUserGames = async () => {
       return { success: false, message: 'Not authenticated' }
     }
 
-    const isDemo = await demoFilter()
+    const isDemo = await isDemoUser()
 
     const userPlayedGames = await prisma.game_registrations.findMany({
       where: {
@@ -38,7 +38,7 @@ export const getUserById = async (userId: string) => {
 
 export const getLatestGame = async () => {
   try {
-    const isDemo = await demoFilter()
+    const isDemo = await isDemoUser()
 
     const latestGame = await prisma.games.findFirst({
       where: {
@@ -67,7 +67,7 @@ export const getLatestGame = async () => {
 
 export const getLatestGameId = async () => {
   try {
-    const isDemo = await demoFilter()
+    const isDemo = await isDemoUser()
 
     const game = await prisma.games.findFirst({
       where: {
@@ -94,12 +94,13 @@ export const getLatestGameId = async () => {
 
 export const getGameById = async (gameId: number) => {
   try {
+    const isDemo = await isDemoUser()
     const game = await prisma.games.findUnique({
       where: {
         id: gameId,
       },
     })
-    if (!game) {
+    if (!game || game.is_demo !== isDemo) {
       return { success: false, message: 'Game not found' }
     }
     return { success: true, game }

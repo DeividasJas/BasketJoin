@@ -1,7 +1,7 @@
 import { redirect, notFound } from 'next/navigation'
 import { auth } from '@/auth'
 import { prisma } from '@/utils/prisma'
-import { demoFilter } from '@/lib/demo'
+import { isDemoUser } from '@/lib/demo'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft, CheckCircle, Clock, Edit } from 'lucide-react'
@@ -26,7 +26,7 @@ export default async function LeagueDetailPage({ params }: { params: Promise<{ i
     redirect('/schedule')
   }
 
-  const isDemo = await demoFilter()
+  const isDemo = await isDemoUser()
 
   const league = await prisma.league.findUnique({
     where: { id },

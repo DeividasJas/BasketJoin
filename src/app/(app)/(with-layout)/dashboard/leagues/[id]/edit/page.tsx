@@ -1,7 +1,7 @@
 import { redirect, notFound } from 'next/navigation'
 import { auth } from '@/auth'
 import { prisma } from '@/utils/prisma'
-import { demoFilter } from '@/lib/demo'
+import { isDemoUser } from '@/lib/demo'
 import LeagueForm from '@/components/admin/LeagueForm'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
@@ -23,7 +23,7 @@ export default async function EditLeaguePage({ params }: { params: Promise<{ id:
     redirect('/schedule')
   }
 
-  const isDemo = await demoFilter()
+  const isDemo = await isDemoUser()
 
   const league = await prisma.league.findUnique({
     where: { id },

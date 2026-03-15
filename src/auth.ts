@@ -4,6 +4,7 @@ import GoogleProvider from 'next-auth/providers/google'
 import FacebookProvider from 'next-auth/providers/facebook'
 import { prisma } from '@/utils/prisma'
 import bcrypt from 'bcryptjs'
+// Inlined here to avoid circular import with @/lib/demo (which imports auth)
 const DEMO_EMAIL = 'demo@basketjoin.com'
 
 export const { handlers, signIn, signOut, auth } = NextAuth({

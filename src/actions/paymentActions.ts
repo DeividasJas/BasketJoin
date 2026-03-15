@@ -6,7 +6,7 @@ import { revalidatePath } from 'next/cache'
 import { PaymentType } from '@/generated/prisma/client/client'
 import type { RecordPaymentResult } from '@/types/prismaTypes'
 import { getPaymentScheduleStatus } from '@/lib/paymentUtils'
-import { isDemoUser, demoFilter } from '@/lib/demo'
+import { isDemoUser } from '@/lib/demo'
 
 /**
  * Record a membership fee payment (admin marks payment as received)
@@ -221,7 +221,7 @@ export async function recordGuestFee(formData: {
  */
 export async function getLeaguePayments(leagueId: string) {
   try {
-    const isDemo = await demoFilter()
+    const isDemo = await isDemoUser()
 
     const payments = await prisma.payment.findMany({
       where: { league_id: leagueId, is_demo: isDemo },
@@ -284,7 +284,7 @@ export async function getUserPayments(userId?: string) {
       }
     }
 
-    const isDemo = await demoFilter()
+    const isDemo = await isDemoUser()
 
     const payments = await prisma.payment.findMany({
       where: { user_id: targetUserId, is_demo: isDemo },
@@ -349,7 +349,7 @@ export async function getMembershipPaymentSchedule(membershipId: string) {
       }
     }
 
-    const isDemo = await demoFilter()
+    const isDemo = await isDemoUser()
 
     const schedules = await prisma.paymentSchedule.findMany({
       where: { membership_id: membershipId, is_demo: isDemo },
@@ -458,7 +458,7 @@ export async function deletePayment(paymentId: string): Promise<{ success: boole
  */
 export async function getLeaguePaymentSummary(leagueId: string) {
   try {
-    const isDemo = await demoFilter()
+    const isDemo = await isDemoUser()
 
     const [membershipPayments, guestPayments, rebates] = await Promise.all([
       prisma.payment.aggregate({

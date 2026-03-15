@@ -1,7 +1,7 @@
 import { auth } from '@/auth'
 import { redirect } from 'next/navigation'
 import { prisma } from '@/utils/prisma'
-import { demoFilter } from '@/lib/demo'
+import { isDemoUser } from '@/lib/demo'
 import { format } from 'date-fns'
 import { Check, X, MapPin } from 'lucide-react'
 
@@ -10,7 +10,7 @@ export default async function AttendancePage() {
   if (!session?.user) redirect('/login')
 
   const userId = session.user.id
-  const isDemo = await demoFilter()
+  const isDemo = await isDemoUser()
 
   // Fetch all past games the user could have attended (since account creation)
   const user = await prisma.users.findUnique({

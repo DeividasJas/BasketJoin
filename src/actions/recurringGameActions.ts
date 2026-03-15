@@ -3,7 +3,7 @@
 import { auth } from '@/auth'
 import { prisma } from '@/utils/prisma'
 import { revalidatePath } from 'next/cache'
-import { isDemoUser, demoFilter } from '@/lib/demo'
+import { isDemoUser } from '@/lib/demo'
 
 // Safety limits
 const MAX_GAMES = 100
@@ -92,7 +92,7 @@ export async function previewRecurringDates(startDate: Date, recurrence: Recurre
 // Check for conflicts with existing games
 export async function checkRecurringConflicts(dates: Date[], locationId: number) {
   try {
-    const isDemo = await demoFilter()
+    const isDemo = await isDemoUser()
 
     const conflicts = await prisma.games.findMany({
       where: {
@@ -357,8 +357,10 @@ export async function deleteSeriesGames(seriesId: string, preservePastGames: boo
   try {
     await checkAdminAccess()
 
+    const isDemo = await isDemoUser()
     const whereClause: any = {
       league_id: seriesId,
+      is_demo: isDemo,
     }
 
     if (preservePastGames) {
@@ -398,6 +400,7 @@ export async function deleteSeriesGames(seriesId: string, preservePastGames: boo
           user_id: reg.user_id,
           type: 'GAME_CANCELLED',
           message: `Series game on ${game.game_date.toLocaleDateString()} at ${game.location.name} has been deleted`,
+          is_demo: isDemo,
         })),
       )
 
@@ -438,7 +441,7 @@ export async function checkFutureGamesInSeries(gameId: number, seriesId: string)
       }
     }
 
-    const isDemo = await demoFilter()
+    const isDemo = await isDemoUser()
 
     const futureGamesCount = await prisma.games.count({
       where: {
@@ -467,7 +470,7 @@ export async function checkFutureGamesInSeries(gameId: number, seriesId: string)
 export async function getSeriesGames(seriesId: string) {
   try {
     await checkAdminAccess()
-    const isDemo = await demoFilter()
+    const isDemo = await isDemoUser()
 
     const games = await prisma.games.findMany({
       where: {

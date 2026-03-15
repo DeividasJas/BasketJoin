@@ -1,7 +1,7 @@
 import { auth } from '@/auth'
 import { redirect, notFound } from 'next/navigation'
 import { prisma } from '@/utils/prisma'
-import { demoFilter } from '@/lib/demo'
+import { isDemoUser } from '@/lib/demo'
 import { getAllLocations } from '@/actions/adminGameActions'
 import ChangeLocationForm from '@/components/admin/ChangeLocationForm'
 import Link from 'next/link'
@@ -20,7 +20,7 @@ export default async function ChangeLocationPage({ params }: { params: Promise<{
     redirect('/')
   }
 
-  const isDemo = await demoFilter()
+  const isDemo = await isDemoUser()
 
   const [game, { locations }] = await Promise.all([
     prisma.games.findUnique({

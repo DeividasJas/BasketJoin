@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Form from 'next/form'
 import { Button } from '@/components/ui/button'
 import { updateUserForm } from '@/actions/userActions'
@@ -13,7 +13,16 @@ export default function EditProfileForm() {
   const { user, updateUser } = useProfileContext()
   const [isOpen, setIsOpen] = useState(false)
 
-  const handleSubmit: any = async (formData: FormData) => {
+  useEffect(() => {
+    if (!isOpen) return
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsOpen(false)
+    }
+    document.addEventListener('keydown', handleEscape)
+    return () => document.removeEventListener('keydown', handleEscape)
+  }, [isOpen])
+
+  const handleSubmit = async (formData: FormData) => {
     const response = await updateUserForm(formData)
     if (response.success) {
       updateUser(response.updatedUser)

@@ -2,7 +2,7 @@
 
 import { prisma } from '@/utils/prisma'
 import bcrypt from 'bcryptjs'
-import { DEMO_EMAIL } from '@/lib/demo'
+import { DEMO_EMAIL, DEMO_PASSWORD } from '@/lib/demo'
 
 /**
  * Wipes all is_demo: true data in FK-safe order.
@@ -39,7 +39,7 @@ export async function ensureDemoUser(): Promise<string> {
   })
 
   if (!demoUser) {
-    const hashedPassword = await bcrypt.hash('demo-password-not-used', 10)
+    const hashedPassword = await bcrypt.hash(DEMO_PASSWORD, 10)
     demoUser = await prisma.users.create({
       data: {
         email: DEMO_EMAIL,

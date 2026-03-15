@@ -7,7 +7,6 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { Mail, Lock } from 'lucide-react'
-// import SocialLoginButtons from '@/components/SocialLoginButtons'
 import { Button } from '@/components/ui/button'
 import { loginAsDemo } from '@/actions/demoActions'
 
@@ -96,10 +95,6 @@ export default function LoginPage() {
             <h1 className="text-xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">Welcome back</h1>
             <p className="mt-1.5 text-[13px] text-zinc-500 dark:text-zinc-400">Sign in to find your next game</p>
           </motion.div>
-
-          {/* <motion.div variants={fadeUp}>
-            <SocialLoginButtons callbackUrl="/game-status" />
-          </motion.div> */}
 
           {error && (
             <motion.div

@@ -6,7 +6,7 @@ import { revalidatePath } from 'next/cache'
 import { MembershipStatus, PaymentScheduleStatus, LeagueStatus } from '@/generated/prisma/client/client'
 import type { CreateMembershipResult } from '@/types/prismaTypes'
 import { calculateProRatedAmount, createPaymentSchedules } from '@/lib/paymentUtils'
-import { isDemoUser, demoFilter } from '@/lib/demo'
+import { isDemoUser } from '@/lib/demo'
 
 /**
  * Join a league (create membership)
@@ -342,7 +342,7 @@ export async function getUserMemberships(userId?: string) {
       }
     }
 
-    const isDemo = await demoFilter()
+    const isDemo = await isDemoUser()
 
     const memberships = await prisma.leagueMembership.findMany({
       where: { user_id: targetUserId, is_demo: isDemo },
@@ -374,7 +374,7 @@ export async function getUserMemberships(userId?: string) {
  */
 export async function getLeagueMemberships(leagueId: string) {
   try {
-    const isDemo = await demoFilter()
+    const isDemo = await isDemoUser()
 
     const memberships = await prisma.leagueMembership.findMany({
       where: { league_id: leagueId, is_demo: isDemo },

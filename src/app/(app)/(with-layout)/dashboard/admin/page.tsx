@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation'
 import { auth } from '@/auth'
 import { prisma } from '@/utils/prisma'
 import { formatCurrency } from '@/lib/paymentUtils'
-import { demoFilter } from '@/lib/demo'
+import { isDemoUser } from '@/lib/demo'
 import AdminUsersList from '@/components/admin/AdminUsersList'
 
 export default async function AdminPage() {
@@ -21,7 +21,7 @@ export default async function AdminPage() {
     redirect('/')
   }
 
-  const isDemo = await demoFilter()
+  const isDemo = await isDemoUser()
 
   const [users, usersByRole, activeUsersCount, inactiveUsersCount, totalGames, scheduledGames, totalLeagues, activeLeagues, totalPayments, overdueSchedules] =
     await Promise.all([
