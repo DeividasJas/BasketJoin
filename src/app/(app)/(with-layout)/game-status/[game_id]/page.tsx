@@ -63,6 +63,7 @@ export default async function DynamicGameStatusPage({ params }: { params: Promis
         participantsData={response.participantsData}
         maxPlayers={maxPlayers}
         minPlayers={minPlayers}
+        gameDate={gameDate}
       />
     </div>
   )

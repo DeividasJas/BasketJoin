@@ -66,6 +66,7 @@ export default function PlayersList({
   participantsData,
   maxPlayers = 12,
   minPlayers = 10,
+  gameDate,
 }: {
   gameId: number
   isLoggedIn?: boolean
@@ -73,6 +74,7 @@ export default function PlayersList({
   participantsData: Players
   maxPlayers?: number
   minPlayers?: number
+  gameDate?: Date
 }) {
   const [change, setChange] = useState(false)
   const [players, setPlayers] = useState<Players>(participantsData)
@@ -141,11 +143,13 @@ export default function PlayersList({
         </motion.div>
       )}
 
-      {/* Action buttons */}
-      <div className="mt-6 flex items-center justify-center gap-3">
-        <RegistrationBtn setChange={setChange} isActive={isActive} gameId={gameId} disabled={!isLoggedIn} />
-        <CancelRegistrationBtn setChange={setChange} isActive={isActive} gameId={gameId} />
-      </div>
+      {/* Action buttons — hidden if game has started or passed */}
+      {(!gameDate || gameDate > new Date()) && (
+        <div className="mt-6 flex items-center justify-center gap-3">
+          <RegistrationBtn setChange={setChange} isActive={isActive} gameId={gameId} disabled={!isLoggedIn} />
+          <CancelRegistrationBtn setChange={setChange} isActive={isActive} gameId={gameId} />
+        </div>
+      )}
     </div>
   )
 }
