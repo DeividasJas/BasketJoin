@@ -11,7 +11,8 @@ export default function SubNav({ links }: { links: Links[] }) {
       <div className="scrollbar-none -mb-px flex justify-center gap-0 overflow-x-auto sm:justify-start">
         {links.map(link => {
           const href = link.href as string
-          const isActive = pathname === href || (pathname !== href && pathname.startsWith(href + '/'))
+          const isExactRoot = links.some(l => (l.href as string).startsWith(href + '/'))
+          const isActive = isExactRoot ? pathname === href : pathname.startsWith(href)
 
           return (
             <Link
