@@ -23,7 +23,7 @@ export default function DashboardNavList({ userRole }: { userRole: string }) {
             <li key={link.href as string}>
               <Link
                 href={link.href}
-                className={`relative block px-4 py-2.5 text-[13px] font-medium transition-colors ${
+                className={`relative block px-4 py-2.5 text-center text-[13px] font-medium transition-colors ${
                   isActive ? 'text-basket-400' : 'text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200'
                 }`}
               >

@@ -4,15 +4,7 @@ import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { Links } from '@/types/navLinks'
 
-export default function Header({
-  isAuthenticated,
-  navLinksArray,
-  userRole,
-}: {
-  isAuthenticated: boolean
-  navLinksArray: Links[]
-  userRole: string
-}) {
+export default function Header({ isAuthenticated, navLinksArray, userRole }: { isAuthenticated: boolean; navLinksArray: Links[]; userRole: string }) {
   const pathname = usePathname()
 
   const navLinks = navLinksArray.map(({ href, label, requiredRoles }) => {

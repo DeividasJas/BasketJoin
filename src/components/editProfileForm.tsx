@@ -42,10 +42,7 @@ export default function EditProfileForm() {
 
           {/* Modal */}
           <div className="relative z-10 w-full max-w-[425px] rounded-lg border border-zinc-200 bg-zinc-50 p-6 shadow-lg dark:border-zinc-700 dark:bg-zinc-900">
-            <button
-              onClick={() => setIsOpen(false)}
-              className="absolute right-4 top-4 rounded-sm opacity-70 transition-opacity hover:opacity-100"
-            >
+            <button onClick={() => setIsOpen(false)} className="absolute right-4 top-4 rounded-sm opacity-70 transition-opacity hover:opacity-100">
               <X className="h-4 w-4" />
               <span className="sr-only">Close</span>
             </button>

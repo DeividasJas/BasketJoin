@@ -12,10 +12,8 @@ export default async function LayoutProfile({ children }: { children: React.Reac
 
   return (
     <ProfileProvider>
-      <div className="mx-auto w-full max-w-lg">
-        <ProfileNavList />
-        <div className="py-6">{children}</div>
-      </div>
+      <ProfileNavList />
+      <div className="mx-auto w-full max-w-lg py-6">{children}</div>
     </ProfileProvider>
   )
 }

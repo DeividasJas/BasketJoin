@@ -86,10 +86,7 @@ export default async function AttendancePage() {
 
             {/* Attendance rate bar */}
             <div className="mb-4 h-1.5 w-full overflow-hidden rounded-full bg-zinc-200 dark:bg-zinc-700/60">
-              <div
-                className="h-full rounded-full bg-emerald-500 transition-all"
-                style={{ width: `${total > 0 ? (attended / total) * 100 : 0}%` }}
-              />
+              <div className="h-full rounded-full bg-emerald-500 transition-all" style={{ width: `${total > 0 ? (attended / total) * 100 : 0}%` }} />
             </div>
 
             {/* Game list */}
@@ -100,16 +97,11 @@ export default async function AttendancePage() {
                 const regType = reg?.registration_type
 
                 return (
-                  <div
-                    key={game.id}
-                    className="flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800/40"
-                  >
+                  <div key={game.id} className="flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800/40">
                     {/* Status indicator */}
                     <div
                       className={`flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full ${
-                        didAttend
-                          ? 'bg-emerald-500/10 text-emerald-500'
-                          : 'bg-zinc-100 text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500'
+                        didAttend ? 'bg-emerald-500/10 text-emerald-500' : 'bg-zinc-100 text-zinc-400 dark:bg-zinc-800 dark:text-zinc-500'
                       }`}
                     >
                       {didAttend ? <Check className="h-3.5 w-3.5" /> : <X className="h-3.5 w-3.5" />}
@@ -118,12 +110,8 @@ export default async function AttendancePage() {
                     {/* Game info */}
                     <div className="flex min-w-0 flex-1 flex-col">
                       <div className="flex items-center gap-2">
-                        <span className="text-[13px] font-medium text-zinc-700 dark:text-zinc-200">
-                          {format(game.game_date, 'EEE, MMM d')}
-                        </span>
-                        <span className="text-[11px] text-zinc-400 dark:text-zinc-500">
-                          {format(game.game_date, 'h:mm a')}
-                        </span>
+                        <span className="text-[13px] font-medium text-zinc-700 dark:text-zinc-200">{format(game.game_date, 'EEE, MMM d')}</span>
+                        <span className="text-[11px] text-zinc-400 dark:text-zinc-500">{format(game.game_date, 'h:mm a')}</span>
                       </div>
                       {game.location && (
                         <span className="flex items-center gap-1 text-[11px] text-zinc-400 dark:text-zinc-500">
@@ -137,9 +125,7 @@ export default async function AttendancePage() {
                     {didAttend && regType && (
                       <span
                         className={`rounded-full px-2 py-0.5 text-[10px] font-medium ${
-                          regType === 'MEMBER'
-                            ? 'bg-basket-400/10 text-basket-400'
-                            : 'bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400'
+                          regType === 'MEMBER' ? 'bg-basket-400/10 text-basket-400' : 'bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400'
                         }`}
                       >
                         {regType === 'MEMBER' ? 'Member' : 'Guest'}
